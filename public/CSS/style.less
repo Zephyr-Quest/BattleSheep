@@ -1,0 +1,225 @@
+@charset "UTF-8";
+
+/* -------------------------------------------------------------------------- */
+/*                               Some variables                               */
+/* -------------------------------------------------------------------------- */
+
+// Colors
+@text-color: #fff;
+@bg-color: #000;
+@primary-color: #f5b815;
+@grey: #858585;
+
+// Fonts
+@text-font: 'Aclonica';
+@primary-font: 'KoHo';
+@secondary-font: sans-serif;
+
+/* -------------------------------------------------------------------------- */
+/*                                   General                                  */
+/* -------------------------------------------------------------------------- */
+
+body {
+    // User can't select text anymore
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+
+    background-color: @bg-color;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+
+    color: @text-color;
+}
+
+.btn_xl a {
+    font-size: 1.5rem;
+    color: @text-color;
+    text-decoration: none;
+    text-align: center;
+    font-family: @text-font, @secondary-font;
+    border: 4px solid @primary-color;
+    border-radius: 10px;
+    text-shadow: 1px 2px 3px #000;
+    margin-left: 16%;
+    padding: 1% 7% 1%;
+
+    &:hover { background-color: @primary-color; }
+}
+
+.btn {
+    font-size: 1.5rem;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    border: 3px solid @primary-color;
+    border-radius: 10px;
+    background-color: @primary-color;
+    text-shadow: 1px 2px 3px black;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   Header                                   */
+/* -------------------------------------------------------------------------- */
+
+header {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+
+    nav {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-pack: distribute;
+        justify-content: space-around;
+        text-align: center;
+        margin-right: 0%;
+
+        &:hover { color: @primary-color; }
+
+        table {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            border: 2px solid none;
+            border-collapse: collapse;
+
+            td {
+                border: 1px solid none;
+                color: @text-color;
+                padding: 2.5rem;
+                font-family: @primary-font, @secondary-font;
+                letter-spacing: 0.2rem;
+
+                .nav_link:hover a { color: @primary-color; }
+            }
+        }
+    }
+
+    a {
+        text-decoration: none;
+        color: @text-color;
+        font-family: @primary-font, @secondary-font;
+    }
+    
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                Main content                                */
+/* -------------------------------------------------------------------------- */
+
+main {
+    .title {
+        text-align: left;
+        margin-top: 10%;
+        margin-left: 16%;
+
+        h1 {
+            font-size: 2.5rem;
+            text-shadow: 1px 2px 3px black;
+            font-family: @primary-font, @secondary-font;
+            padding: 0%;
+            margin-bottom: 2%;
+            letter-spacing: 0.15rem;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            font-family: @primary-font, @secondary-font;
+            margin-bottom: 5%;
+            letter-spacing: 0.15rem;
+        }
+    }
+
+    .background {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        position: absolute;
+        z-index: -1;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+
+        img { height: 60%; }
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   Footer                                   */
+/* -------------------------------------------------------------------------- */
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 99%;
+    padding-bottom: 0%;
+    height: auto;
+
+    p {
+        font-size: 0.7rem;
+        color: @grey;
+        text-align: right;
+        font-family: @primary-font, @secondary-font;
+        padding-bottom: 0%;
+    }
+
+    a {
+        text-decoration: none;
+        color: @grey;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              Responsive design                             */
+/* -------------------------------------------------------------------------- */
+
+@media screen and (max-width: 1024px) {
+    body {
+        background-position: bottom;
+        background-size: 150%;
+    }
+    
+    header {
+        display: block;
+        
+        nav {
+            text-align: center;
+        
+            td { display: block; }
+        }
+    }
+
+    main {
+        margin-left: -10%;
+        
+        .logo img {
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%)
+        }
+
+        .background { display: none; }
+    }
+
+    footer {
+        position: relative;
+        padding-bottom: 0%;
+        
+        p {
+            display: none;
+            text-align: center;
+            width: 80%;
+            margin-bottom: 10%;
+            height: 20%;
+        }
+    }
+}
