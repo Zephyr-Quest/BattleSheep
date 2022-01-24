@@ -1,0 +1,55 @@
+.tab{
+    display: flex;
+    flex-direction: row;
+}
+
+table {
+    margin-top: 50px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin: 0 auto;
+}
+
+td {
+    border: 1px solid #000;
+    display: table-cell;
+    width: 70px;
+    height: 70px;
+    text-align: center;
+    padding: 0;
+}
+
+td button {
+    color: #000;
+}
+
+table tr:first-child td {
+    border-top-color: #000;
+}
+
+table tr:last-child td {
+    border-bottom-color: #000;
+}
+
+table tr td:first-child {
+    border-left-color: #000;
+}
+
+table tr td:last-child {
+    border-right-color: #000;
+}
+
+td button {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    border-style: none;
+    background-color: transparent;
+}
+
+.box {
+    cursor: move;
+    height: 70px;
+    width: 70px;
+    text-align: center;
+}
