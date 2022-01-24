@@ -2,7 +2,9 @@ class setPlayerGrid extends grid {
     constructor() {
         super();
         this.rotation = "row";
-
+        this.nbSheep = 4;
+        this.tabSheep = [];
+        
         // Set grid
         const playerGrid = document.getElementById("playerGrid");
         for (let row = 0; row < this.gridSize; row++) {
@@ -17,6 +19,13 @@ class setPlayerGrid extends grid {
         }
         this.displayOnScreen();
         this.displayGrid();
+        
+        // Set sheeps
+        for (let i = 0; i < this.nbSheep; i++) {
+            this.tabSheep[i] = new sheep((i+1), this.rotation);
+            console.log(this.tabSheep[i]);
+        }
+        this.displaySheepOnScreen();
 
         // Set buttons
         const rotateBtn = document.getElementById("rotate");
@@ -35,31 +44,32 @@ class setPlayerGrid extends grid {
             this.resetGrid();
             this.displayGrid();
             this.displayOnScreen();
+            this.removeSheep();
+            this.displaySheepOnScreen();
         })
 
         validBtn.addEventListener("click", () => { })
 
         // Set drag and drop
-        for (const box of boxs) {
-            box.addEventListener("dragstart", (event) => {
-                const box = event.target;
+        for (const currentbox of boxs) {
+            // console.log("start");
+            currentbox.addEventListener("dragstart", (event) => {
+                const currentbox = event.target;
+                const currentSheep = this.tabSheep[currentbox.id];
                 event.dataTransfer.setData('text/plain', event.target.id);
-                if (box.parentElement.classList[0] === "container") {
-                    const classbox = box.classList;
-                    const rotate = classbox[1];
-                    console.log("start: ", rotate);
+                if (currentbox.parentElement.classList[0] === "container") {
                     const id = event.dataTransfer.getData("text/plain");
                     const draggable = document.getElementById(id);
                     const parent = draggable.parentElement.id;
-                    console.log(parent, id);
-                    this.rangeSheep(parent[0], parent[2], rotate, id, undefined);
+                    this.rangeSheep(parent[0], parent[2], currentSheep.getRotation(), currentSheep.getSize(), undefined);
                     this.displayGrid();
                 }
             })
-            box.addEventListener("dragend", (event) => {
+            currentbox.addEventListener("dragend", (event) => {
                 // console.log("end");
-                event.currentTarget.classList.replace(box.classList[1], this.rotation);
-                console.log("end: ", box.classList[1]);
+                const currentbox = event.target;
+                const currentSheep = this.tabSheep[currentbox.id];
+                currentSheep.setRotation(this.rotation);
             })
         }
         for (const box of container) {
@@ -77,11 +87,13 @@ class setPlayerGrid extends grid {
             box.addEventListener("drop", (event) => {
                 // console.log("droped");
                 event.stopPropagation();
+                const currentContainer = event.target;
                 const id = event.dataTransfer.getData("text/plain");
-                const draggable = document.getElementById(id);
-                event.target.appendChild(draggable);
-                const parent = draggable.parentElement.id;
-                this.rangeSheep(parent[0], parent[2], this.rotation, id, id);
+                const currentbox = document.getElementById(id);
+                currentContainer.appendChild(currentbox);
+                const parent = currentbox.parentElement.id;
+                const currentSheep = this.tabSheep[currentbox.id];
+                this.rangeSheep(parent[0], parent[2], this.rotation, currentSheep.getSize(), currentSheep.getSize());
                 this.displayGrid();
             })
         }
@@ -100,6 +112,28 @@ class setPlayerGrid extends grid {
         for (let i = 0; i < range; i++) {
             if (rotate === "row") this.setCase(row, Number(col) + i, value);
             else this.setCase(Number(row) + i, col, value);
+        }
+    }
+
+    removeSheep(){
+        const containers = document.querySelectorAll(".container");
+        for (const currentContainer of containers) {
+            if (currentContainer.hasChildNodes()) {                
+                currentContainer.removeChild();
+            }
+        }
+    }
+
+    displaySheepOnScreen(){
+        const div = document.getElementById("sheepBox");
+        for (let i = 0; i < this.nbSheep; i++) {
+            if (!document.getElementById(i)) {
+                const divSheep = document.createElement("div");
+                divSheep.className = "box";
+                divSheep.id = i;
+                divSheep.innerText = i+1;
+                div.append(divSheep);
+            }
         }
     }
 }

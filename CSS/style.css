@@ -52,4 +52,7 @@ td button {
     height: 70px;
     width: 70px;
     text-align: center;
+    background-color: #000;
+    color: white;
+    margin: 10px;
 }
