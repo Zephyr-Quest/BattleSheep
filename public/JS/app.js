@@ -1,29 +1,21 @@
 import * as THREE from 'https://cdn.skypack.dev/three';
-import { OrbitControls } from 'https://cdn.skypack.dev/three/examples/jsm/controls/OrbitControls.js';
-import { MTLLoader } from 'https://cdn.skypack.dev/three/examples/jsm/loaders/MTLLoader.js';
-import { OBJLoader } from 'https://cdn.skypack.dev/three/examples/jsm/loaders/OBJLoader.js';
+import { GLTFLoader } from 'https://cdn.skypack.dev/three/examples/jsm/loaders/GLTFLoader.js';
 
 import { Config } from './config.js';
 
-let scene, renderer, camera, controls, sheep;
+let scene, renderer, camera, sheepModel, sheep;
 
 const backgroundSection = document.querySelector('.background');
+const mainNode = document.querySelector('main');
 
 /* --------------------------------- Models --------------------------------- */
 
 // Load the sheep model
-new MTLLoader().load(Config.modelsPath + Config.sheepModelMTL, (materials) => {
-    materials.preload();
+new GLTFLoader().load(Config.modelsPath + Config.sheepModelName, gltf => {
+    sheepModel = gltf;
 
-    const objLoader = new OBJLoader();
-    objLoader.setMaterials(materials);
-    objLoader.load(Config.modelsPath + Config.sheepModelMTL, (object) => {
-        sheep = object;
-
-        // Start ThreeJS
-        init();
-    });
-
+    // Load the other models
+    init();
 });
 
 /* -------------------------------------------------------------------------- */
@@ -40,7 +32,7 @@ function init() {
     // Setting up the renderer
     renderer = new THREE.WebGLRenderer({
         antialias: true,
-        // alpha: true
+        alpha: true
     });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(Config.screenWidth, Config.screenHeight);
@@ -48,13 +40,9 @@ function init() {
 
     // Setting up the camera
     camera = new THREE.PerspectiveCamera(75, Config.screenWidth / Config.screenHeight, 1, 10000);
-    camera.position.set(10, 10, 10);
+    camera.position.set(2, 0, 2);
     camera.lookAt(new THREE.Vector3(0, 0, 0));
     scene.add(camera);
-
-    // Setting up the camera controls
-    controls = new OrbitControls(camera, renderer.domElement);
-    controls.update();
 
     // Setting up lights
     const ambientLight = new THREE.AmbientLight(0xcccccc, 0.6);
@@ -68,9 +56,13 @@ function init() {
     // directionalLight2.target.position.set(0, 0, 0);
     // scene.add(directionalLight2);
 
-    console.log(sheep);
-    scene.add(sheep);
 
+    sheep = sheepModel.scene.clone();
+    scene.add(sheep);
+    sheep.rotation.y = 2 * Math.PI;
+    // sheep.rotation.y = 0;
+
+    mainNode.style = "flex";
     render();
 }
 
@@ -78,11 +70,10 @@ function init() {
  * Main loop function
  */
 function render() {
-    // DEBUG : Update OrbitControl (camera control)
-    controls.update();
-
     // Rendering the 3D scene
     renderer.render(scene, camera);
+
+    sheep.rotation.y += 0.01;
 
     // Wait before looping
     requestAnimationFrame(render);
