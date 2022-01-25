@@ -48,13 +48,7 @@ function init() {
     const ambientLight = new THREE.AmbientLight(0xcccccc, 0.6);
     scene.add(ambientLight);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    // directionalLight.position.set(10, 20, 10);
-    // directionalLight.target.position.set(0, 0, 0);
     scene.add(directionalLight);
-    // const directionalLight2 = new THREE.DirectionalLight(0xffffff, 1);
-    // directionalLight2.position.set(0, -10, 0);
-    // directionalLight2.target.position.set(0, 0, 0);
-    // scene.add(directionalLight2);
 
 
     sheep = sheepModel.scene.clone();

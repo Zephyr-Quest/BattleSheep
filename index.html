@@ -4,8 +4,8 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>ZephyrStudio - BattleSheep</title>
-        <meta name="description" content="Welcome in our one-line play" />
-        <meta name="author" content="Thomas RAFFRAY" />
+        <meta name="description" content="Welcome in our Web project" />
+        <meta name="author" content="Martin Delebecque" />
         <link rel="stylesheet" href="public/CSS/style.css" />
 
 
@@ -39,13 +39,8 @@
                             </section>
                         </td>
                         <td>
-                            <section class="nav_link">
-                                <a href="#">Sign up</a>
-                            </section>
-                        </td>
-                        <td>
                             <section class="btn">
-                                <a href="#">Play</a>
+                                <a href="start_game.html">Play</a>
                             </section>
                         </td>
                     </tr>
@@ -53,31 +48,36 @@
             </nav>
         </header>
 
-        <main style="display: none;">
-            <!-- Title -->
-            <section class="content">
+        <main class="home-main" style="display: none;">
+            <!-- Text displayed in the home page -->
+            <section class="home-content">
                 <h1>Be the wolf of <br>your enemy shepherd</h1>
                 <h2>Who will collect the most wool</h2>
-                
-                <!-- Play button -->
+
                 <section class="btn_xl">
-                    <a href="#">Play</a>
+                    <a href="start_game.html">Play</a>
                 </section>
             </section>
 
+            <!-- Form displayed when the play button is clicked -->
+            <form class="form-content" style="display: none;" method="post" action="#">
+                <a href="#" id="switch_form">
+                    <span class="selected">Sign up</span> | <span class="not-selected">Sign in</span>
+                </a>
 
+                <input type="text" name="pseudo" placeholder="Pseudo" /><br />
+                <input type="password" name="password" placeholder="Password" /><br />
+                <input type="password" name="confirm" placeholder="Confirm password" /><br />
+                <input type="submit" value="Play" />
+            </form>
+
+            <!-- The 3D sheep -->
             <section class="background"></section>
-
-
         </main>
 
         <footer>
             <!-- Credits -->
-            <p>
-                <a href="#">
-                    Declemy Maxime &#x2759 Delebecque Martin &#x2759 Marquant Enguerrand &#x2759 Mullier Tom &#x2759 Van Boxem Rémi
-                </a>
-            </p>
+            <p>Declemy Maxime &#x2759 Delebecque Martin &#x2759 Marquant Enguerrand &#x2759 Mullier Tom &#x2759 Van Boxem Rémi</p>
         </footer>
 
         <!-- ThreeJS -->

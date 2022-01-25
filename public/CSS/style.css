@@ -97,7 +97,7 @@ header a {
 /* -------------------------------------------------------------------------- */
 /*                                Main content                                */
 /* -------------------------------------------------------------------------- */
-main {
+.home-main {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -107,11 +107,11 @@ main {
   margin-top: 5%;
   width: 90%;
 }
-main .content {
+.home-main .home-content {
   text-align: left;
   text-transform: uppercase;
 }
-main .content h1 {
+.home-main .home-content h1 {
   font-size: 2.5rem;
   text-shadow: 1px 2px 3px black;
   font-family: 'KoHo', sans-serif;
@@ -119,20 +119,20 @@ main .content h1 {
   margin-bottom: 2%;
   letter-spacing: 0.15rem;
 }
-main .content h2 {
+.home-main .home-content h2 {
   font-size: 1.2rem;
   font-family: 'KoHo', sans-serif;
   margin-bottom: 5%;
   letter-spacing: 0.15rem;
 }
-main .content .btn_xl {
+.home-main .home-content .btn_xl {
   margin-top: 50px;
 }
-main .content .btn_xl a {
+.home-main .home-content .btn_xl a {
   display: block;
   width: 25%;
 }
-main .background canvas {
+.home-main .background canvas {
   width: 50%;
   height: 60%;
   touch-action: none;
@@ -153,10 +153,6 @@ footer p {
   text-align: right;
   font-family: 'KoHo', sans-serif;
   padding-bottom: 0%;
-}
-footer a {
-  text-decoration: none;
-  color: #858585;
 }
 /* -------------------------------------------------------------------------- */
 /*                              Responsive design                             */
