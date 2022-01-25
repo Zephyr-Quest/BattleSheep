@@ -5,10 +5,11 @@
 /* -------------------------------------------------------------------------- */
 
 // Colors
-@text-color: #fff;
-@bg-color: #000;
-@primary-color: #f5b815;
+@text-color: #000;
+@bg-color: #fff;
+@primary-color: #3ca50c;
 @grey: #858585;
+@header-bg-color: #eee;
 
 // Fonts
 @text-font: 'Aclonica';
@@ -30,6 +31,9 @@ body {
     background-repeat: no-repeat;
 
     color: @text-color;
+
+    padding: 0;
+    margin: 0;
 }
 
 .btn_xl a {
@@ -72,6 +76,9 @@ header {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
+    background-color: @header-bg-color;
+    width: 50%;
+    margin: auto;
 
     nav {
         display: -webkit-box;
@@ -149,7 +156,11 @@ main {
         top: 50%;
         transform: translateY(-50%);
 
-        img { height: 60%; }
+        canvas {
+            width: 50%;
+            height: 60%;
+            touch-action: none;
+        }
     }
 }
 
