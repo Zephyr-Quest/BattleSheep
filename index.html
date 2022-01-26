@@ -1,20 +1,14 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>ZephyrStudio - BattleSheep</title>
+        <title>BattleSheep by ZephyrStudio</title>
         <meta name="description" content="Welcome in our Web project" />
         <meta name="author" content="Martin Delebecque" />
         <link rel="stylesheet" href="public/CSS/style.css" />
 
-
-        <!-- Ajouter les logos -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
-            integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
-            crossorigin="anonymous" />
-
-        <!--police-->
+        <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link href="https://fonts.googleapis.com/css2?family=KoHo:wght@300&display=swap" rel="stylesheet" />
 
@@ -35,12 +29,12 @@
                     <tr>
                         <td>
                             <section class="nav_link">
-                                <a href="#">Rules</a>
+                                <a href="rules.html">Rules</a>
                             </section>
                         </td>
                         <td>
                             <section class="btn">
-                                <a href="start_game.html">Play</a>
+                                <a href="signup.html">Play</a>
                             </section>
                         </td>
                     </tr>
@@ -48,37 +42,27 @@
             </nav>
         </header>
 
-        <main class="home-main" style="display: none;">
+        <main class="home-main" id="home_main" style="display: none;">
             <!-- Text displayed in the home page -->
             <section class="home-content">
                 <h1>Be the wolf of <br>your enemy shepherd</h1>
                 <h2>Who will collect the most wool</h2>
 
                 <section class="btn_xl">
-                    <a href="start_game.html">Play</a>
+                    <a href="signup.html">Play</a>
                 </section>
             </section>
 
-            <!-- Form displayed when the play button is clicked -->
-            <form class="form-content" style="display: none;" method="post" action="#">
-                <a href="#" id="switch_form">
-                    <span class="selected">Sign up</span> | <span class="not-selected">Sign in</span>
-                </a>
-
-                <input type="text" name="pseudo" placeholder="Pseudo" /><br />
-                <input type="password" name="password" placeholder="Password" /><br />
-                <input type="password" name="confirm" placeholder="Confirm password" /><br />
-                <input type="submit" value="Play" />
-            </form>
-
             <!-- The 3D sheep -->
-            <section class="background"></section>
+            <section class="background" id="sheep_display"></section>
         </main>
 
         <footer>
             <!-- Credits -->
             <p>Declemy Maxime &#x2759 Delebecque Martin &#x2759 Marquant Enguerrand &#x2759 Mullier Tom &#x2759 Van Boxem Rémi</p>
         </footer>
+
+        <img src="public/img/grass.png" alt="Grass" class="grass-background" />
 
         <!-- ThreeJS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.js"

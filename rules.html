@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BattleSheep | Rules</title>
+    <meta name="description" content="BattleSheep rules" />
+    <meta name="author" content="Martin Delebecque" />
+    <link rel="stylesheet" href="public/CSS/style.css" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=KoHo:wght@300&display=swap" rel="stylesheet" />
+
+    <link rel="icon" type="image/png" sizes="16x16" href="public/img/ZephyrStudio_logo.png" />
+</head>
+
+<body>
+    <header>
+        <!-- Header and nav -->
+        <section class="logo">
+            <a href="index.html">
+                <img src="public/img/BattleSheep_logo.jpg" height="100" alt="Logo" />
+            </a>
+        </section>
+
+        <nav>
+            <table>
+                <tr>
+                    <td>
+                        <section class="nav_link">
+                            <a href="rules.html">Rules</a>
+                        </section>
+                    </td>
+                    <td>
+                        <section class="btn">
+                            <a href="signup.html">Play</a>
+                        </section>
+                    </td>
+                </tr>
+            </table>
+        </nav>
+    </header>
+
+    <main class="rules-main" id="home_main" style="display: none;">
+        <!-- Text displayed in the home page -->
+        <section class="rules-content">
+            <h1>Rules :</h1>
+            <p>
+                To win this game, you must sheer all of your enemy shepard sheeps. To achieve this mission, some weapons are
+                available :
+            </p>
+            <ul>
+                <li><strong>Sheers :</strong> The basic weapon, sheer the target point;</li>
+                <li><strong>Strimmer :</strong> <i>Only once during the game,</i> cut the 9 cases near to the target point;</li>
+                <li><strong>Baldness epidemic :</strong> <i>Only once during the game,</i> Sheer 5 cases near to the target point;
+                </li>
+                <li><strong>Unknown :</strong> <i>Only once during the game,</i> Sheer a whole flock if it contains only 2 sheeps or
+                    less.</li>
+            </ul>
+        </section>
+    
+        <!-- The 3D sheep -->
+        <section class="background" id="sheep_display"></section>
+    </main>
+
+    <footer>
+        <!-- Credits -->
+        <p>Declemy Maxime &#x2759 Delebecque Martin &#x2759 Marquant Enguerrand &#x2759 Mullier Tom &#x2759 Van Boxem
+            Rémi</p>
+    </footer>
+
+    <img src="public/img/grass.png" alt="Grass" class="grass-background" />
+
+
+    <!-- ThreeJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.js"
+        integrity="sha512-O6tq+fkhkfCEulJBqTOZ7dsNIA98zy+GTrDmoh5aJL4Wpi8BIcg+cAW5Cfj4cdqtDmLp/5j398Z6BPpjaYjLmQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script type="module" src="public/JS/app.js"></script>
+</body>
+
+</html>

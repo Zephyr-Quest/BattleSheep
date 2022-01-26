@@ -5,8 +5,8 @@ import { Config } from './config.js';
 
 let scene, renderer, camera, sheepModel, sheep;
 
-const backgroundSection = document.querySelector('.background');
-const mainNode = document.querySelector('main');
+const backgroundSection = document.getElementById('sheep_display');
+const mainNode = document.getElementById('home_main');
 
 /* --------------------------------- Models --------------------------------- */
 
@@ -53,8 +53,6 @@ function init() {
 
     sheep = sheepModel.scene.clone();
     scene.add(sheep);
-    sheep.rotation.y = 2 * Math.PI;
-    // sheep.rotation.y = 0;
 
     mainNode.style = "flex";
     render();

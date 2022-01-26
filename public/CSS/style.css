@@ -137,6 +137,88 @@ header a {
   height: 60%;
   touch-action: none;
 }
+.signup-main {
+  margin: auto;
+  width: 50%;
+  text-align: center;
+  margin-top: 5%;
+  font-family: 'KoHo', sans-serif;
+}
+.signup-main .switch-form {
+  text-decoration: none;
+  color: #000;
+  font-size: 18px;
+  cursor: pointer;
+}
+.signup-main .switch-form .selected {
+  color: #3ca50c;
+  font-weight: bold;
+}
+.signup-main form {
+  margin-top: 20px;
+}
+.signup-main form input {
+  font-family: 'KoHo', sans-serif;
+  background-color: transparent;
+  color: #000;
+  border: 3px solid #3ca50c;
+  outline: none;
+  border-radius: 5px;
+  padding: 10px 20px 10px;
+  margin-top: 10px;
+  font-weight: bold;
+}
+.signup-main form input[type='submit'] {
+  width: 15%;
+  cursor: pointer;
+  margin-top: 30px;
+  font-size: 20px;
+  text-transform: uppercase;
+}
+.signup-main form input[type='submit']:hover {
+  background-color: #3ca50c;
+  color: #eee;
+}
+.rules-main {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: auto;
+  margin-top: 5%;
+  width: 90%;
+}
+.rules-main .rules-content {
+  text-align: left;
+  font-family: 'KoHo', sans-serif;
+}
+.rules-main .rules-content h1 {
+  font-size: 2.5rem;
+  text-shadow: 1px 2px 3px black;
+  padding: 0%;
+  margin-bottom: 2%;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
+}
+.rules-main .rules-content p,
+.rules-main .rules-content ul li {
+  font-size: 18px;
+}
+.rules-main .background canvas {
+  width: 50%;
+  height: 60%;
+  touch-action: none;
+}
+.grass-background {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20vw;
+  z-index: -1;
+  opacity: 0.8;
+}
 /* -------------------------------------------------------------------------- */
 /*                                   Footer                                   */
 /* -------------------------------------------------------------------------- */
@@ -153,44 +235,4 @@ footer p {
   text-align: right;
   font-family: 'KoHo', sans-serif;
   padding-bottom: 0%;
-}
-/* -------------------------------------------------------------------------- */
-/*                              Responsive design                             */
-/* -------------------------------------------------------------------------- */
-@media screen and (max-width: 1024px) {
-  body {
-    background-position: bottom;
-    background-size: 150%;
-  }
-  header {
-    display: block;
-  }
-  header nav {
-    text-align: center;
-  }
-  header nav td {
-    display: block;
-  }
-  main {
-    margin-left: -10%;
-  }
-  main .logo img {
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  main .background {
-    display: none;
-  }
-  footer {
-    position: relative;
-    padding-bottom: 0%;
-  }
-  footer p {
-    display: none;
-    text-align: center;
-    width: 80%;
-    margin-bottom: 10%;
-    height: 20%;
-  }
 }
