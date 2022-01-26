@@ -23,9 +23,9 @@ class setPlayerGrid extends grid {
         // Set sheeps
         for (let i = 0; i < this.nbSheep; i++) {
             this.tabSheep[i] = new sheep((i+1), this.rotation);
-            console.log(this.tabSheep[i]);
+            // console.log(this.tabSheep[i]);
         }
-        this.displaySheepOnScreen();
+        this.CreateSheepOnScreen();
 
         // Set buttons
         const rotateBtn = document.getElementById("rotate");
@@ -44,8 +44,8 @@ class setPlayerGrid extends grid {
             this.resetGrid();
             this.displayGrid();
             this.displayOnScreen();
-            this.removeSheep();
-            this.displaySheepOnScreen();
+            this.CreateSheepOnScreen();
+            // location.reload();
         })
 
         validBtn.addEventListener("click", () => { })
@@ -55,6 +55,7 @@ class setPlayerGrid extends grid {
             // console.log("start");
             currentbox.addEventListener("dragstart", (event) => {
                 const currentbox = event.target;
+                console.log(event);
                 const currentSheep = this.tabSheep[currentbox.id];
                 event.dataTransfer.setData('text/plain', event.target.id);
                 if (currentbox.parentElement.classList[0] === "container") {
@@ -62,7 +63,6 @@ class setPlayerGrid extends grid {
                     const draggable = document.getElementById(id);
                     const parent = draggable.parentElement.id;
                     this.rangeSheep(parent[0], parent[2], currentSheep.getRotation(), currentSheep.getSize(), undefined);
-                    this.displayGrid();
                 }
             })
             currentbox.addEventListener("dragend", (event) => {
@@ -90,11 +90,13 @@ class setPlayerGrid extends grid {
                 const currentContainer = event.target;
                 const id = event.dataTransfer.getData("text/plain");
                 const currentbox = document.getElementById(id);
+                console.log(currentbox);
                 currentContainer.appendChild(currentbox);
                 const parent = currentbox.parentElement.id;
                 const currentSheep = this.tabSheep[currentbox.id];
                 this.rangeSheep(parent[0], parent[2], this.rotation, currentSheep.getSize(), currentSheep.getSize());
                 this.displayGrid();
+                this.displayOnScreen()
             })
         }
     }
@@ -102,8 +104,20 @@ class setPlayerGrid extends grid {
     displayOnScreen() {
         for (let row = 0; row < this.gridSize; row++) {
             for (let col = 0; col < this.gridSize; col++) {
-                const currentBtn = document.getElementById([row, col]);
-                currentBtn.innerHTML = (this.grid[row][col] === undefined ? "" : this.grid[row][col]);
+                // const currentBtn = document.getElementById([row, col]);
+                // currentBtn.innerHTML = (this.grid[row][col] === undefined ? "" : this.grid[row][col]);
+                const container = document.getElementById([row, col]);
+                if (this.grid[row][col] != undefined) {
+                    if (!container.hasChildNodes()) {
+                        const div = document.createElement("div");
+                        div.className = "box";
+                        div.id = this.grid[row][col] - 1;
+                        container.appendChild(div);
+                    }
+                }
+                else{
+                    container.innerHTML = "";
+                }
             }
         }
     }
@@ -115,16 +129,7 @@ class setPlayerGrid extends grid {
         }
     }
 
-    removeSheep(){
-        const containers = document.querySelectorAll(".container");
-        for (const currentContainer of containers) {
-            if (currentContainer.hasChildNodes()) {                
-                currentContainer.removeChild();
-            }
-        }
-    }
-
-    displaySheepOnScreen(){
+    CreateSheepOnScreen(){
         const div = document.getElementById("sheepBox");
         for (let i = 0; i < this.nbSheep; i++) {
             if (!document.getElementById(i)) {
@@ -133,6 +138,7 @@ class setPlayerGrid extends grid {
                 divSheep.id = i;
                 divSheep.innerText = i+1;
                 div.append(divSheep);
+                console.log(divSheep);
             }
         }
     }
