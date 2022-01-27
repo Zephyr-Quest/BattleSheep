@@ -5,6 +5,15 @@
 
 <img src="img/grass.png" alt="Grass" class="grass-background" />
 
+<!-- A ThreeJS fix -->
+<script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.137.0/build/three.module.js"
+        }
+    }
+</script>
+
 <!-- Import scripts -->
 <% scripts.forEach(script => { %>
     <script type="<%= script.type %>" src="JS/<%= script.name %>.js"></script>

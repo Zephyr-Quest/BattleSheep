@@ -1,7 +1,13 @@
-import * as THREE from 'https://cdn.skypack.dev/three';
-import { GLTFLoader } from 'https://cdn.skypack.dev/three/examples/jsm/loaders/GLTFLoader.js';
+// import * as THREE from 'https://cdn.skypack.dev/three';
+import * as THREE from 'three'
+import { GLTFLoader } from 'https://unpkg.com/three@0.137.0/examples/jsm/loaders/GLTFLoader.js';
 
-import { Config } from './config.js';
+const Config = {
+    screenWidth: 400,
+    screenHeight: 400,
+    modelsPath: 'models/',
+    sheepModelName: 'sheep.glb'
+};
 
 let scene, renderer, camera, sheepModel, sheep;
 
