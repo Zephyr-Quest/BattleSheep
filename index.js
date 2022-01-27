@@ -2,19 +2,45 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const path = require('path');
+const ejs = require('ejs');
 
-app.use(express.static(__dirname + '/public/'));
+// app.engine('.ejs', ejs.__express);
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/views/index.html');
+    res.render('index', {
+        title: 'BattleSheep by ZephyrStudio',
+        description: 'Welcome in our Web project !',
+        scripts: [
+            { name: 'home', type: 'module' }
+        ]
+    });
 });
 
 app.get('/signup', (req, res) => {
-    res.sendFile(__dirname + '/views/signup.html');
+    // Here : check if the user is already connected
+    // If he's not, send him the signup page
+    // else, redirect him to the scoreboard page
+    res.render('signup', {
+        title: 'BattleSheep | Sign up, Log in',
+        description: 'Sign up or log in to BattleSheep',
+        scripts: [
+            { name: 'signup', type: 'text/javascript' }
+        ]
+    });
 });
 
 app.get('/rules', (req, res) => {
-    res.sendFile(__dirname + '/views/rules.html');
+    res.render('rules', {
+        title: 'BattleSheep | Rules',
+        description: 'BattleSheep rules',
+        scripts: [
+            { name: 'home', type: 'module' }
+        ]
+    });
 });
 
 app.post('/login', (req, res)=>{

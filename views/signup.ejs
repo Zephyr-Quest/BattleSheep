@@ -1,0 +1,24 @@
+<%- include('templates/header.ejs') -%>
+
+<main class="signup-main">
+    <span class="switch-form" id="switch_form">
+        <span id="signup_link" class="selected">Sign up</span> | <span id="login_link">Log in</span>
+    </span>
+
+    <!-- The sign up form -->
+    <form method="post" action="#" class="signup-form" id="signup_form">
+        <input type="text" name="pseudo" placeholder="Pseudo" maxlength="20" autofocus /><br />
+        <input type="password" name="password" placeholder="Password" /><br />
+        <input type="password" name="confirm" placeholder="Confirm password" /><br />
+        <input type="submit" value="Play" />
+    </form>
+
+    <!-- The log in form -->
+    <form method="post" action="#" class="login-form" id="login_form" style="display: none;">
+        <input type="text" name="pseudo" placeholder="Pseudo" /><br />
+        <input type="password" name="password" placeholder="Password" /><br />
+        <input type="submit" value="Play" />
+    </form>
+</main>
+
+<%- include('templates/footer.ejs') -%>

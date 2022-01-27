@@ -1,0 +1,28 @@
+<%- include('templates/header.ejs') -%>
+
+<main class="rules-main" id="home_main" style="display: none;">
+    <!-- Text displayed in the home page -->
+    <section class="rules-content">
+        <h1>Rules :</h1>
+        <p>
+            To win this game, you must sheer all of your enemy shepard sheeps. To achieve this mission, some weapons are
+            available :
+        </p>
+        <ul>
+            <li><strong>Sheers :</strong> The basic weapon, sheer the target point;</li>
+            <li><strong>Strimmer :</strong> <i>Only once during the game,</i> cut the 9 cases near to the target point;
+            </li>
+            <li><strong>Baldness epidemic :</strong> <i>Only once during the game,</i> Sheer 5 cases near to the target
+                point;
+            </li>
+            <li><strong>Unknown :</strong> <i>Only once during the game,</i> Sheer a whole flock if it contains only 2
+                sheeps or
+                less.</li>
+        </ul>
+    </section>
+
+    <!-- The 3D sheep -->
+    <section class="background" id="sheep_display"></section>
+</main>
+
+<%- include('templates/footer.ejs') -%>
