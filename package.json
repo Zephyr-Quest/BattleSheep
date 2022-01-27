@@ -1,0 +1,23 @@
+{
+  "name": "battlesheep",
+  "version": "1.0.0",
+  "description": "BattleSheep Game, shoot the sheeps to win",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zephyr-Quest/BattleSheep.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Zephyr-Quest/BattleSheep/issues"
+  },
+  "homepage": "https://github.com/Zephyr-Quest/BattleSheep#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "socket.io": "^4.4.1"
+  }
+}
