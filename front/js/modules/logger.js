@@ -6,7 +6,8 @@ let logger = (function(){
             type: "POST",
             url: "/login/",
             data: {
-                login: username
+                login: username,
+                password : password
             },
             success: () => {
                 window.location.href = "/";
