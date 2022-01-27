@@ -6,10 +6,12 @@ const io = require('socket.io')(http);
 app.use(express.static(__dirname + '/front/'));
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/front/index.html');
+    res.sendFile(__dirname + '/front/html/index.html');
 });
 
-
+app.post('/login', (req, res)=>{
+    console.log("Forms recu");
+});
 
 
 
@@ -19,6 +21,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () =>{
         console.log("Déconnexion d'un utilisateur");
     });
+
 });
 
 
