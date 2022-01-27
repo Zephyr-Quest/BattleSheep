@@ -3,10 +3,18 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
-app.use(express.static(__dirname + '/front/'));
+app.use(express.static(__dirname + '/public/'));
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/front/html/index.html');
+    res.sendFile(__dirname + '/views/index.html');
+});
+
+app.get('/signup', (req, res) => {
+    res.sendFile(__dirname + '/views/signup.html');
+});
+
+app.get('/rules', (req, res) => {
+    res.sendFile(__dirname + '/views/rules.html');
 });
 
 app.post('/login', (req, res)=>{

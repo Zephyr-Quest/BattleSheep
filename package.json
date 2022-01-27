@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Zephyr-Quest/BattleSheep#readme",
   "dependencies": {
     "express": "^4.17.2",
+    "path": "^0.12.7",
     "socket.io": "^4.4.1"
   }
 }
