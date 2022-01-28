@@ -43,6 +43,8 @@ app.get('/rules', (req, res) => {
     });
 });
 
+app.get('/lobby', (req, res) => res.render('lobby'));
+
 app.post('/login', (req, res)=>{
     console.log("Forms recu");
 });

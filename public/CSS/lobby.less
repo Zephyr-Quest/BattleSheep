@@ -1,0 +1,85 @@
+@charset "UTF-8";
+
+/* -------------------------------------------------------------------------- */
+/*                               Some variables                               */
+/* -------------------------------------------------------------------------- */
+
+// Colors
+@text-color: #000;
+@bg-color: #eee;
+@primary-color: #3ca50c;
+@grey: #e4e4e4;
+@header-bg-color: #eee;
+
+// Fonts
+@text-font: 'Aclonica';
+@primary-font: 'KoHo';
+@secondary-font: sans-serif;
+
+/* -------------------------------------------------------------------------- */
+/*                                   General                                  */
+/* -------------------------------------------------------------------------- */
+
+body {
+    // User can't select text anymore
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+
+    background-color: @bg-color;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+
+    color: @text-color;
+
+    padding: 0;
+    margin: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                Main content                                */
+/* -------------------------------------------------------------------------- */
+
+main {
+    width: 50%;
+    margin: auto;
+
+    h1, h2 {
+        font-family: @primary-font, @secondary-font;
+        letter-spacing: 0.15rem;
+    }
+    
+    h1 {
+        font-size: 2.5rem;
+        text-align: center;
+        text-shadow: 1px 2px 3px black;
+    }
+    
+    ion-icon {
+        color: @primary-color;
+        margin-right: 10px;
+    }
+
+    .card {
+        box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.3);
+        padding: 10px;
+        padding-left: 30px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: left;
+
+        &:hover {
+            background-color: @grey;
+            transition: background-color 0.3s;
+        }
+    }
+
+    .scoreboard {
+        margin-bottom: 50px;
+        
+    }
+
+    .games {
+        margin-top: 50px;
+    }
+}
