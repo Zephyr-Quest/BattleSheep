@@ -2,7 +2,7 @@
 
 <main class="signup-main">
     <span class="switch-form" id="switch_form">
-        <span id="signup_link" class="selected">Sign up</span> | <span id="login_link">Log in</span>
+        <span id="signup_link" class="selected" title="Click to toggle the form">Sign up</span> | <span id="login_link">Log in</span>
     </span>
 
     <!-- The sign up form -->
@@ -10,14 +10,14 @@
         <input type="text" name="pseudo" placeholder="Pseudo" maxlength="20" autofocus /><br />
         <input type="password" name="password" placeholder="Password" /><br />
         <input type="password" name="confirm" placeholder="Confirm password" /><br />
-        <input type="submit" value="Play" />
+        <input type="submit" value="Play" title="Sign up" />
     </form>
 
     <!-- The log in form -->
     <form method="post" action="#" class="login-form" id="login_form" style="display: none;">
         <input type="text" name="pseudo" placeholder="Pseudo" /><br />
         <input type="password" name="password" placeholder="Password" /><br />
-        <input type="submit" value="Play" />
+        <input type="submit" value="Play" title="Log in" />
     </form>
 </main>
 

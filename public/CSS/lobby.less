@@ -44,7 +44,7 @@ main {
     width: 50%;
     margin: auto;
 
-    h1, h2 {
+    h1, h2, h3 {
         font-family: @primary-font, @secondary-font;
         letter-spacing: 0.15rem;
     }
@@ -53,6 +53,11 @@ main {
         font-size: 2.5rem;
         text-align: center;
         text-shadow: 1px 2px 3px black;
+    }
+
+    h2 {
+        display: flex;
+        align-items: center;
     }
     
     ion-icon {
@@ -67,6 +72,18 @@ main {
         border-radius: 10px;
         display: flex;
         justify-content: left;
+        align-items: center;
+        font-family: @primary-font, @secondary-font;
+        margin-bottom: 25px;
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .green {
+            color: @primary-color;
+        }
 
         &:hover {
             background-color: @grey;
@@ -75,11 +92,59 @@ main {
     }
 
     .scoreboard {
+        margin-top: 50px;
         margin-bottom: 50px;
         
+        .card {
+            h3 {
+                font-size: 2rem;
+                margin: 0;
+                margin-left: 10px;
+            }
+
+            ul {
+                margin-left: 50px;
+            }
+        }
     }
 
     .games {
         margin-top: 50px;
+
+        .card {
+            cursor: pointer;
+            padding-left: 40px;
+
+            ion-icon {
+                font-size: 2.5rem;
+            }
+
+            ul {
+                margin-left: 50px;
+            }
+        }
+
+        #new_game {
+            background-color: @primary-color;
+            color: @bg-color;
+            border: 3px solid @primary-color;
+            justify-content: center;
+            padding: 0;
+
+            &:hover {
+                background-color: transparent;
+                color: @primary-color;
+
+                ion-icon {
+                    color: @primary-color;
+                }
+            }
+
+            ion-icon {
+                color: @bg-color;
+                margin-right: 5px;
+                font-size: 1.5rem;
+            }
+        }
     }
 }
