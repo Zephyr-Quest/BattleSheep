@@ -16,6 +16,17 @@ body {
   padding: 0;
   margin: 0;
 }
+.log-out {
+  position: absolute;
+  top: 20px;
+  left: 25px;
+  font-size: 2.5rem;
+  color: #000;
+  cursor: pointer;
+}
+.log-out:hover {
+  color: #3ca50c;
+}
 /* -------------------------------------------------------------------------- */
 /*                                Main content                                */
 /* -------------------------------------------------------------------------- */
