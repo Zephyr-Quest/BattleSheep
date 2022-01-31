@@ -4,7 +4,7 @@ const loginSpan = document.getElementById("login_link");
 const signupForm = document.getElementById("signup_form");
 const loginForm = document.getElementById("login_form");
 
-toggleBtn.addEventListener('click', e => {
+toggleBtn.addEventListener('click', () => {
     signupSpan.classList.toggle("selected");
     loginSpan.classList.toggle("selected");
     signupForm.style.display = signupForm.style.display === 'none' ? 'block' : 'none';
