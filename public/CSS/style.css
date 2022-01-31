@@ -58,6 +58,10 @@ header {
   width: 75%;
   margin: auto;
 }
+header .logo img {
+  height: 100px;
+  width: auto;
+}
 header nav {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -235,4 +239,37 @@ footer p {
   text-align: right;
   font-family: 'KoHo', sans-serif;
   padding-bottom: 0%;
+}
+/* -------------------------------------------------------------------------- */
+/*                              Responsive Design                             */
+/* -------------------------------------------------------------------------- */
+@media screen and (max-width: 1400px) {
+  .signup-main form input[type="submit"] {
+    width: auto;
+  }
+}
+@media screen and (max-width: 870px) {
+  .background {
+    display: none;
+  }
+  header {
+    flex-direction: column;
+  }
+  header nav table tr td {
+    padding: 20px;
+  }
+  .home-main {
+    margin-top: 0;
+  }
+}
+@media screen and (max-width: 350px) {
+  header .logo a img {
+    width: 100%;
+    height: auto;
+  }
+}
+@media screen and (max-height: 750px) {
+  .grass-background {
+    display: none;
+  }
 }
