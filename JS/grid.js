@@ -16,7 +16,7 @@ class grid {
         let playerString = "";
         for (let row = 0; row < this.gridSize; row++) {
             for (let col = 0; col < this.gridSize; col++) {
-                playerString += (this.grid[row][col] === undefined ? "U" : this.grid[row][col]);
+                playerString += (this.grid[row][col] === undefined ? "U " : this.grid[row][col]);
                 playerString += (col < this.gridSize - 1 ? " " : "\n");
             }
         }
