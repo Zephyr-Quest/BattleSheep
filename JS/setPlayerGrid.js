@@ -50,7 +50,7 @@ class setPlayerGrid extends grid {
             this.displayOnScreen();
             this.CreateSheepOnScreen();
             for (let i = 0; i < this.nbSheep; i++) {
-                this.tabSheep[i].setFirstPosition(undefined);               
+                this.tabSheep[i].setFirstPosition(undefined);
             }
         })
 
@@ -79,6 +79,11 @@ class setPlayerGrid extends grid {
                             divSheep.innerText = this.tabSheep[preContainer.firstChild.classList[1]].getSize();
                         }
                         container.appendChild(divSheep);
+                    }
+                }
+                else if (container.hasChildNodes()) {
+                    if (!container.firstElementChild.hasAttribute("moving")) {
+                        container.innerHTML = "";
                     }
                 }
                 else {
@@ -126,25 +131,36 @@ class setPlayerGrid extends grid {
                     event.dataTransfer.setData('text/plain', currentBox.classList[1]);
                     if (currentBox.parentElement.classList[0] === "container") {
                         this.rangeSheep(currentSheep.getFirstPosition(), currentSheep.getRotation(), currentSheep.getSize(), undefined);
+                        currentBox.setAttribute("moving", "true");
+                        this.displayOnScreen();
                     }
                 })
                 currentBox.addEventListener("dragend", (event) => {
                     // console.log("end");
                     const currentBox = event.target;
                     const currentSheep = this.tabSheep[currentBox.classList[1]];
-                    currentSheep.setRotation(this.rotation);
+                    if (currentBox.parentElement.id != currentSheep.getFirstPosition()) {
+                        const container = document.getElementById(currentSheep.getFirstPosition())
+                        container.append(currentBox);
+                    }
+                    this.rangeSheep(currentSheep.getFirstPosition(), currentSheep.getRotation(), currentSheep.getSize(), currentSheep.getSize());
+                    this.displayGrid();
+                    currentBox.removeAttribute("moving");
+                    this.displayOnScreen();
+                    currentBox.setAttribute("drag", "true");
+                    this.setDrag();
                 })
             }
         }
     }
-    
+    condition
     setDrop() {
         const container = document.querySelectorAll(".container");
-        
+
         for (const box of container) {
             box.addEventListener("dragover", (event) => {
                 event.preventDefault();
-                // console.log("over");
+                // console.log("over");//     container.innerHTML = "";
             })
             box.addEventListener("dragleave", () => {
                 // console.log("leave");
@@ -163,11 +179,7 @@ class setPlayerGrid extends grid {
                 const currentSheep = this.tabSheep[currentBox.classList[1]];
                 const parent = currentBox.parentElement.id;
                 currentSheep.setFirstPosition(parent);
-                this.rangeSheep(currentSheep.getFirstPosition(), this.rotation, currentSheep.getSize(), currentSheep.getSize());
-                this.displayGrid();
-                this.displayOnScreen();
-                currentBox.setAttribute("drag", "true");
-                this.setDrag();
+                currentSheep.setRotation(this.rotation);
             })
         }
     }
