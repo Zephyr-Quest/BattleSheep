@@ -3,44 +3,31 @@ let manageUser = (function () {
     const bcrypt = require('bcrypt');
     const saltRounds = 10; // ~10 hashes/sec
 
-    let mdpHash = "";
-
-    let stock = (hash) => {
-        mdpHash = hash;
-    }
 
     return {
-        //! encryptPassword est sous async, crypt va etre plus simple à utiliser
-        encryptPassword(password) {
-            bcrypt.hash(password, saltRounds, function (err, hash) {
-                if (err) return 0;
-                else {
-                    console.log(password);
-                    console.log(hash);
-
-                    stock(hash);
-                    console.log(mdpHash);
+        cryptPassword(password) {
+            bcrypt.hash(password, saltRounds, function (err, crypted) {
+                if (err) {
+                    console.log(err);
+                    return 0;
                 }
-            });
-        },
+                mdpHash = crypted;
+                console.log('crypted: ' + crypted);
+                console.log('rounds used from hash:', bcrypt.getRounds(crypted));
 
-        checkUser(pass) {
-            bcrypt.compare(pass, mdpHash, function (err, match) {
-                if (err) return 0;
-                else {
-                    if (match) {
-                        console.log(match, pass, mdpHash)
-                    } else {
-                        console.log(match, pass, mdpHash)
+                bcrypt.compare(password, crypted, function (err, match) {
+                    if (err) {
+                        console.log(err);
+                        return 0;
                     }
-                }
-            });
-
-            console.log(bcrypt.compareSync(pass, mdpHash));
+                    if (match) {
+                        console.log(match, password, crypted)
+                    } else {
+                        console.log(match, password, crypted)
+                    }
+                })
+            })
         },
-
-
-
 
 
         crypt(pass) {
@@ -50,12 +37,38 @@ let manageUser = (function () {
             } catch (error) {
                 console.log(error);
             }
+        },
+
+        checkUser(pass) {
+            let toTest = mdpHash;
+            bcrypt.compare(pass, toTest, function (err, match) {
+
+                if (match) {
+                    console.log(match, pass, mdpHash)
+                } else {
+                    console.log(match, pass, mdpHash)
+                }
+            })
+
+
+
+            /*   try {
+                  let match = bcrypt.compareSync(pass, mdpHash)
+                  if (match) {
+                      console.log(match, pass, mdpHash)
+                  } else {
+                      console.log(match, pass, mdpHash)
+                  }
+              } catch (error) {
+                  console.log(error);
+              } */
         }
     }
 })();
 
 let password = "EngLePLusBeau";
 
-manageUser.encryptPassword(password);
+console.log("-------------------------------------");
+manageUser.cryptPassword(password);
 
-manageUser.checkUser(password);
+//manageUser.checkUser("EngLePlusBeau");
