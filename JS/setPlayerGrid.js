@@ -37,8 +37,6 @@ class setPlayerGrid extends grid {
         const rotateBtn = document.getElementById("rotate");
         const resetBtn = document.getElementById("reset");
         const validBtn = document.getElementById("valid");
-        const container = document.querySelectorAll(".container");
-        let boxs = document.querySelectorAll(".box");
 
         rotateBtn.addEventListener("click", () => {
             if (this.rotation === "row") this.rotation = "col";
@@ -51,31 +49,98 @@ class setPlayerGrid extends grid {
             this.displayGrid();
             this.displayOnScreen();
             this.CreateSheepOnScreen();
+            for (let i = 0; i < this.nbSheep; i++) {
+                this.tabSheep[i].setFirstPosition(undefined);               
+            }
         })
 
         validBtn.addEventListener("click", () => { })
 
-        // Set drag and drop
+        this.setDrop();
+    }
+
+    displayOnScreen() {
+        for (let row = 0; row < this.gridSize; row++) {
+            for (let col = 0; col < this.gridSize; col++) {
+                const container = document.getElementById([row, col]);
+                if (this.grid[row][col] != undefined) {
+                    if (!container.hasChildNodes()) {
+                        const divSheep = document.createElement("div");
+                        divSheep.setAttribute("draggable", "true");
+                        divSheep.classList.add("box");
+                        if (this.grid[row][col][1] == "r") {
+                            const preContainer = document.getElementById([row, col - 1]);
+                            divSheep.classList.add(preContainer.firstChild.classList[1]);
+                            divSheep.innerText = this.tabSheep[preContainer.firstChild.classList[1]].getSize();
+                        }
+                        else {
+                            const preContainer = document.getElementById([row - 1, col]);
+                            divSheep.classList.add(preContainer.firstChild.classList[1]);
+                            divSheep.innerText = this.tabSheep[preContainer.firstChild.classList[1]].getSize();
+                        }
+                        container.appendChild(divSheep);
+                    }
+                }
+                else {
+                    container.innerHTML = "";
+                }
+            }
+        }
+    }
+
+    rangeSheep(sheepPosition, rotate, range, value) {
+        const row = sheepPosition[0];
+        const col = sheepPosition[2];
+        for (let i = 0; i < range; i++) {
+            if (rotate === "row")
+                value == undefined ? this.setCase(row, Number(col) + i, value) : this.setCase(row, Number(col) + i, value + "r");
+            else value == undefined ? this.setCase(Number(row) + i, col, value) : this.setCase(Number(row) + i, col, value + "c");
+        }
+    }
+
+    CreateSheepOnScreen() {
+        const div = document.getElementById("sheepBox");
+        for (let i = 0; i < this.nbSheep; i++) {
+            if (!document.getElementById(i)) {
+                const divSheep = document.createElement("div");
+                divSheep.setAttribute("draggable", "true");
+                divSheep.classList.add("box");
+                divSheep.classList.add(i);
+                divSheep.id = i;
+                divSheep.innerText = this.tabSheep[i].getSize();
+                div.append(divSheep);
+            }
+        }
+        this.setDrag();
+    }
+
+    setDrag() {
+        const boxs = document.querySelectorAll(".box");
+
         for (const currentBox of boxs) {
             // console.log("start");
-            currentBox.addEventListener("dragstart", (event) => {
-                console.log(boxs)
-                const currentBox = event.target;
-                console.log(event.target);
-                const currentSheep = this.tabSheep[currentBox.classList[2]];
-                event.dataTransfer.setData('text/plain', currentBox.classList[2]);
-                if (currentBox.parentElement.classList[0] === "container") {
-                    this.rangeSheep(currentSheep.getFirstPosition(), currentSheep.getRotation(), currentSheep.getSize(), undefined);
-                }
-            })
-            currentBox.addEventListener("dragend", (event) => {
-                // console.log("end");
-                const currentBox = event.target;
-                const currentSheep = this.tabSheep[currentBox.classList[2]];
-                currentSheep.setRotation(this.rotation);
-                boxs = document.querySelectorAll(".box")
-            })
+            if (!currentBox.hasAttribute("drag")) {
+                currentBox.addEventListener("dragstart", (event) => {
+                    const currentBox = event.target;
+                    const currentSheep = this.tabSheep[currentBox.classList[1]];
+                    event.dataTransfer.setData('text/plain', currentBox.classList[1]);
+                    if (currentBox.parentElement.classList[0] === "container") {
+                        this.rangeSheep(currentSheep.getFirstPosition(), currentSheep.getRotation(), currentSheep.getSize(), undefined);
+                    }
+                })
+                currentBox.addEventListener("dragend", (event) => {
+                    // console.log("end");
+                    const currentBox = event.target;
+                    const currentSheep = this.tabSheep[currentBox.classList[1]];
+                    currentSheep.setRotation(this.rotation);
+                })
+            }
         }
+    }
+    
+    setDrop() {
+        const container = document.querySelectorAll(".container");
+        
         for (const box of container) {
             box.addEventListener("dragover", (event) => {
                 event.preventDefault();
@@ -95,69 +160,15 @@ class setPlayerGrid extends grid {
                 const data = event.dataTransfer.getData("text/plain");
                 const currentBox = document.getElementsByClassName(data)[0];
                 currentContainer.appendChild(currentBox);
-                const currentSheep = this.tabSheep[currentBox.classList[2]];
+                const currentSheep = this.tabSheep[currentBox.classList[1]];
                 const parent = currentBox.parentElement.id;
                 currentSheep.setFirstPosition(parent);
-                console.log(currentSheep.getFirstPosition());
                 this.rangeSheep(currentSheep.getFirstPosition(), this.rotation, currentSheep.getSize(), currentSheep.getSize());
                 this.displayGrid();
                 this.displayOnScreen();
+                currentBox.setAttribute("drag", "true");
+                this.setDrag();
             })
-        }
-    }
-
-    displayOnScreen() {
-        for (let row = 0; row < this.gridSize; row++) {
-            for (let col = 0; col < this.gridSize; col++) {
-                const container = document.getElementById([row, col]);
-                if (this.grid[row][col] != undefined) {
-                    if (!container.hasChildNodes()) {
-                        const divSheep = document.createElement("div");
-                        divSheep.setAttribute("draggable", "true");
-                        divSheep.classList.add("box");
-                        divSheep.classList.add(this.grid[row][col][0]);
-                        if (this.grid[row][col][1] == "r") {
-                            const preContainer = document.getElementById([row, col-1]);
-                            divSheep.classList.add(preContainer.firstChild.classList[2]);
-                            divSheep.innerText = this.tabSheep[preContainer.firstChild.classList[2]].getSize();
-                        }
-                        else {
-                            const preContainer = document.getElementById([row-1, col]);
-                            divSheep.classList.add(preContainer.firstChild.classList[2])
-                            divSheep.innerText = this.tabSheep[preContainer.firstChild.classList[2]].getSize();
-                        }
-                        container.appendChild(divSheep);
-                    }
-                }
-                else {
-                    container.innerHTML = "";
-                }
-            }
-        }
-    }
-
-    rangeSheep(sheepPosition, rotate, range, value) {
-        const row = sheepPosition[0];
-        const col = sheepPosition[2];
-        for (let i = 0; i < range; i++) {
-            if (rotate === "row")
-                value == undefined ? this.setCase(row, Number(col) + i, value) : this.setCase(row, Number(col) + i, value + "r");
-            else value == undefined ? this.setCase(Number(row) + i, col, value) : this.setCase(Number(row) + i, col, value + "l");
-        }
-    }
-
-    CreateSheepOnScreen() {
-        const div = document.getElementById("sheepBox");
-        for (let i = 0; i < this.nbSheep; i++) {
-            if (!document.getElementById(i)) {
-                const divSheep = document.createElement("div");
-                divSheep.setAttribute("draggable", "true");
-                divSheep.classList.add("box");
-                divSheep.classList.add(this.tabSheep[i].getSize());
-                divSheep.classList.add(i);
-                divSheep.innerText = this.tabSheep[i].getSize();
-                div.append(divSheep);
-            }
         }
     }
 }
