@@ -54,6 +54,10 @@ app.post('/login', (req, res)=>{
 io.on('connection', (socket) => {
     console.log("Connexion d'un utilisateur");
 
+
+    
+
+
     socket.on('disconnect', () =>{
         console.log("Déconnexion d'un utilisateur");
     });
