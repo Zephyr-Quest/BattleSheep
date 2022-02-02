@@ -14,9 +14,10 @@ app.get('/', (req, res) => {
     res.render('index', {
         title: 'BattleSheep by ZephyrStudio',
         description: 'Welcome in our Web project !',
-        scripts: [
-            { name: 'home', type: 'module' }
-        ]
+        scripts: [{
+            name: 'home',
+            type: 'module'
+        }]
     });
 });
 
@@ -27,9 +28,10 @@ app.get('/signup', (req, res) => {
     res.render('signup', {
         title: 'BattleSheep | Sign up, Log in',
         description: 'Sign up or log in to BattleSheep',
-        scripts: [
-            { name: 'signup', type: 'text/javascript' }
-        ]
+        scripts: [{
+            name: 'signup',
+            type: 'text/javascript'
+        }]
     });
 });
 
@@ -37,15 +39,16 @@ app.get('/rules', (req, res) => {
     res.render('rules', {
         title: 'BattleSheep | Rules',
         description: 'BattleSheep rules',
-        scripts: [
-            { name: 'home', type: 'module' }
-        ]
+        scripts: [{
+            name: 'home',
+            type: 'module'
+        }]
     });
 });
 
 app.get('/lobby', (req, res) => res.render('lobby'));
 
-app.post('/login', (req, res)=>{
+app.post('/login', (req, res) => {
     console.log("Forms recu");
 });
 
@@ -58,7 +61,7 @@ io.on('connection', (socket) => {
     
 
 
-    socket.on('disconnect', () =>{
+    socket.on('disconnect', () => {
         console.log("Déconnexion d'un utilisateur");
     });
 
