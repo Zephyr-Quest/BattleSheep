@@ -3,12 +3,11 @@ import { OrbitControls } from 'https://unpkg.com/three@0.137.0/examples/jsm/cont
 import { GLTFLoader } from 'https://unpkg.com/three@0.137.0/examples/jsm/loaders/GLTFLoader.js';
 
 import { Config } from './config.js';
-import { Model3D } from './Model3D.js';
+import { Model3D } from './model_3d.js';
 import { MeshManager } from './MeshManager.js';
+import { Elements } from './level_design.js';
 
 let scene, renderer, camera, controls;
-
-let map;
 
 /* ---------------------------------- Debug --------------------------------- */
 
@@ -79,6 +78,8 @@ loadManager.onLoad = loadModels;
  * Init function
  */
 function init() {
+    /* --------------------------- Scene and renderer --------------------------- */
+
     // Setting up the scene
     scene = new THREE.Scene();
 
@@ -91,31 +92,62 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // Setting up the camera
+    /* --------------------------------- Camera --------------------------------- */
+
+    const cameraPosition = Config.cameraPositions[Object.keys(Config.cameraPositions)[0]]
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
-    camera.position.set(30, 15, 30);
-    // camera.position.set(0, 50, 0);
+    camera.position.fromArray(cameraPosition.toArray());
     camera.lookAt(new THREE.Vector3(0, 0, 0));
     scene.add(camera);
 
-    // Setting up the camera controls
+    /* -------------------------------- Controls -------------------------------- */
+    
+    // Setting up the orbit controls
     controls = new OrbitControls(camera, renderer.domElement);
     controls.update();
 
-    // Setting up lights
+    window.addEventListener("keyup", e => {
+        // console.log(e);
+
+        if (e.code === 'Space')
+            console.log(camera.position);
+        else {
+            // Check camera controls
+            for (const keyCode in Config.cameraPositions) {
+                if (!Config.cameraPositions.hasOwnProperty(keyCode) || e.key !== keyCode)
+                    continue;
+
+                // Switch the camera position
+                const pos = Config.cameraPositions[keyCode];
+                camera.position.fromArray(pos.toArray());
+            }
+        }
+    });
+
+    /* --------------------------------- Lights --------------------------------- */
+
+    // Setting up the ambient light
     const ambientLight = new THREE.AmbientLight(0xcccccc, 0.6);
     scene.add(ambientLight);
+
+    // Setting up the directional light
     const directionalLight = new THREE.DirectionalLight(0xF1E6B7, 2);
     directionalLight.position.set(30, 20, 30);
-    // directionalLight.target.position.set(0, 0, 0);
     scene.add(directionalLight);
-    // const directionalLight2 = new THREE.DirectionalLight(0xffffff, 1);
-    // directionalLight2.position.set(0, -10, 0);
-    // directionalLight2.target.position.set(0, 0, 0);
-    // scene.add(directionalLight2);
 
-    map = new MeshManager("Map", 0, 0, 0);
-    map.addToScene(scene);
+    /* ------------------------------ Level design ------------------------------ */
+
+    // Display all element
+    for (const element of Elements) {
+        const currentMesh = new MeshManager(element.type, element.position);
+
+        // Set the rotation
+        if (element.hasOwnProperty('rotation'))
+            currentMesh.setRotationFromVector(element.rotation);
+
+        // Add the current element to the scene
+        currentMesh.addToScene(scene);
+    }
 
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
