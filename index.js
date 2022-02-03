@@ -95,9 +95,9 @@ if (app.get('env') === "production") {
 
 // Conexion 
 const con = mysql.createConnection({
-    host: "localhost",
+    host: "db",
     user: "root",
-    password: "",
+    password: "password",
     database: "battlesheep"
 })
 
