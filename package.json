@@ -4,7 +4,9 @@
   "description": "BattleSheep Game, shoot the sheeps to win",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "build": "docker build . -t battlesheep",
+    "start": "docker run -p 4200:4200 -d --rm --name=my_battlesheep battlesheep && docker logs -f my_battlesheep",
+    "stop": "docker stop my_battlesheep"
   },
   "repository": {
     "type": "git",

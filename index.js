@@ -48,7 +48,9 @@ app.get('/rules', (req, res) => {
 
 app.get('/lobby', (req, res) => res.render('lobby'));
 
-app.post('/login', (req, res) => {
+app.get('/game', (req, res) => res.render('game'));
+
+app.post('/login', (req, res)=>{
     console.log("Forms recu");
 });
 
