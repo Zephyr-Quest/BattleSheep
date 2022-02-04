@@ -26,3 +26,4 @@ services:
       db:
         condition: service_healthy
     restart: on-failure
+    command: "node index.js"

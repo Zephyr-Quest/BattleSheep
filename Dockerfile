@@ -8,8 +8,8 @@ RUN npm install
 # RUN npm ci --only=
 
 COPY . .
-RUN chmod +x wait_for_db.sh
+# RUN chmod +x wait_for_db.sh
 
 EXPOSE 4200
 
-CMD [ "node", "index.js" ]
+# CMD [ "node", "index.js" ]
