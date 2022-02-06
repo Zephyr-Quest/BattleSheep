@@ -6,7 +6,7 @@
   "scripts": {
     "docker-start": "docker-compose up -d && docker logs -f battlesheep_app_1",
     "docker-stop": "docker-compose down",
-    "start": "nodemon ."
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",

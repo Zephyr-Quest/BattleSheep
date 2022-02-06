@@ -14,6 +14,7 @@ let manageUser = (function () {
                 mdpHash = crypted;
                 console.log('crypted: ' + crypted);
                 console.log('rounds used from hash:', bcrypt.getRounds(crypted));
+                //! transmettre le mdr hash à la bdd
 
                 bcrypt.compare(password, crypted, function (err, match) {
                     if (err) {
@@ -21,7 +22,7 @@ let manageUser = (function () {
                         return 0;
                     }
                     if (match) {
-                        console.log(match, password, crypted)
+                        console.log(match, password, crypted) 
                     } else {
                         console.log(match, password, crypted)
                     }
