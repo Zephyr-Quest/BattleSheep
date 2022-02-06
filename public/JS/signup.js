@@ -56,15 +56,17 @@ signupForm.addEventListener('submit', e => {
     }
 
     // Check data
-    if (data.pseudo.length > 20) {
+    if (data.pseudo.length > 20 || data.pseudo.length < 3) {
         signupFormNodes.pseudo.style.borderColor = colors.red;
         return;
     }
-    if (data.password !== signupFormNodes.confirm.value) {
+    if (data.password !== signupFormNodes.confirm.value || data.password.length < 3) {
         signupFormNodes.password.style.borderColor = colors.red;
         signupFormNodes.confirm.style.borderColor = colors.red;
         return;
     }
+
+    console.log(data);
 
     // Send HTTP POST request
     http.post(

@@ -4,9 +4,13 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const path = require('path');
 const mysql = require('mysql');
+const bodyParser = require('body-parser');
+const {body, validationResult} = require('express-validator');
 
+const jsonParse = bodyParser.json();
+const urlencodedParse = bodyParser.urlencoded({ extended: false });
 const manageUser = require('./back/server/crypt.js');
-app.use(express.urlencoded({extended: false}));
+app.use(jsonParse);
 
 
 
@@ -42,26 +46,27 @@ app.get('/signup', (req, res) => {
     // Here : check if the user is already connected
     // If he's not, send him the signup page
     // else, redirect him to the scoreboard page
-    
-
-
-
     res.render('signup', {
         title: 'BattleSheep | Sign up, Log in',
         description: 'Sign up or log in to BattleSheep',
-        scripts: [{name: 'signup', type: 'text/javascript'}]
+        scripts: [
+            { name: 'signup', type: 'text/javascript' },
+            { name: 'http', type: 'text/javascript' }
+        ]
     });
 });
 
-const logger = require('./public/JS/logger.js')
+const logger = require('./public/JS/logger.js');
 
 // Faudra faire pareil avec '/login'
 app.post('/signup', (req, res) => {
     //logger.sendLogin(req.body.pseudo, req.body.password, req.body.confirm)
-    let pseudo = req.body.pseudo
-    console.log(pseudo);
-    pseudo.trim()
-    console.log(pseudo)
+    console.log(req.body);
+    
+    // let pseudo = req.body.pseudo
+    // console.log(pseudo);
+    // pseudo.trim()
+    // console.log(pseudo)
 
     // Everything is OK !
     res.send('OK');

@@ -13,9 +13,9 @@ const http = (function () {
 
             const options = {
                 method: 'POST',
-                body: data,
+                body: JSON.stringify(data),
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Content-Type': 'application/json'
                 }
             };
 
