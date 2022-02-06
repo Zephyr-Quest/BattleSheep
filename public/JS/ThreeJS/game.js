@@ -4,8 +4,8 @@ import { GLTFLoader } from 'https://unpkg.com/three@0.137.0/examples/jsm/loaders
 
 import { Config } from './config.js';
 import { Model3D } from './model_3d.js';
-import { MeshManager } from './MeshManager.js';
-import { Elements } from './level_design.js';
+import { MeshManager } from './level_design/MeshManager.js';
+import { Elements } from './level_design/level_design.js';
 
 let scene, renderer, camera, controls;
 
@@ -16,25 +16,11 @@ const stats = new Stats();
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom);
 
-/* --------------------------------- Texture -------------------------------- */
-
-// Textures load manager
-const loadManager = new THREE.LoadingManager();
-const textureLoader = new THREE.TextureLoader(loadManager);
-const skyboxImages = []
-
-// Load each texture of the skybox
-const skyboxExt = ["bk.tga", "dn.tga", "ft.tga", "lf.tga", "rt.tga", "up.tga"]
-for (const ext of skyboxExt) {
-    // Add the texture to the loader
-    skyboxImages.push(textureLoader.load(Config.skyboxPath + ext));
-    // currentType.texture.magFilter = THREE.NearestFilter;
-}
-
 /* --------------------------------- Models --------------------------------- */
 
 // Model load manager
 const modelLoader = new GLTFLoader();
+loadModels();
 
 /**
  * Load an empty model and restart (recursive, start 'init' when it's done)
@@ -67,9 +53,6 @@ function loadModels() {
     if (loaded) init();
 }
 
-// Load models after textures
-loadManager.onLoad = loadModels;
-
 /* -------------------------------------------------------------------------- */
 /*                           ThreeJS main functions                           */
 /* -------------------------------------------------------------------------- */
@@ -86,7 +69,7 @@ function init() {
     // Setting up the renderer
     renderer = new THREE.WebGLRenderer({
         antialias: true,
-        // alpha: true
+        alpha: true
     });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -100,6 +83,12 @@ function init() {
     camera.lookAt(new THREE.Vector3(0, 0, 0));
     scene.add(camera);
 
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }, false);
+
     /* -------------------------------- Controls -------------------------------- */
     
     // Setting up the orbit controls
@@ -111,7 +100,12 @@ function init() {
 
         if (e.code === 'Space')
             console.log(camera.position);
-        else {
+        else if (e.key === 'f') {
+            const renderDom = renderer.domElement;
+            if (renderDom.requestFullscreen) renderDom.requestFullscreen();
+            else if (renderDom.webkitRequestFullscreen) renderDom.webkitRequestFullscreen();
+            else if (renderDom.msRequestFullscreen) renderDom.msRequestFullscreen();
+        } else {
             // Check camera controls
             for (const keyCode in Config.cameraPositions) {
                 if (!Config.cameraPositions.hasOwnProperty(keyCode) || e.key !== keyCode)
@@ -127,7 +121,7 @@ function init() {
     /* --------------------------------- Lights --------------------------------- */
 
     // Setting up the ambient light
-    const ambientLight = new THREE.AmbientLight(0xcccccc, 0.6);
+    const ambientLight = new THREE.AmbientLight(0xcccccc, 1);
     scene.add(ambientLight);
 
     // Setting up the directional light
@@ -155,7 +149,7 @@ function init() {
     const lightCube = new THREE.Mesh(geometry, material);
     lightCube.position.fromArray(directionalLight.position.toArray());
     
-    scene.add(origin);
+    // scene.add(origin);
     scene.add(lightCube);
     
     render();

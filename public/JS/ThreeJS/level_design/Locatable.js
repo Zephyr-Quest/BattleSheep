@@ -86,7 +86,7 @@ export class Locatable {
      * Set the rotation from a vector
      * @returns The rotation vector
      */
-    setRotationFromArray(vector) {
+    setRotationFromVector(vector) {
         this.rotX = vector.x;
         this.rotY = vector.y;
         this.rotZ = vector.z;
