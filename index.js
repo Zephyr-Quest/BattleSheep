@@ -24,12 +24,12 @@ const session = require('express-session')({
     saveUninitialized: true,
     cookie: {maxAge: 2 * 60 * 60 * 1000, secure: false}
 });
+app.use(session)
 
 if (app.get('env') === 'production') {
     app.set('trust proxy', 1);
     session.cookie.secure = true;
 }
-
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
@@ -46,17 +46,25 @@ app.get('/signup', (req, res) => {
     // Here : check if the user is already connected
     // If he's not, send him the signup page
     // else, redirect him to the scoreboard page
-    res.render('signup', {
-        title: 'BattleSheep | Sign up, Log in',
-        description: 'Sign up or log in to BattleSheep',
-        scripts: [
-            { name: 'signup', type: 'text/javascript' },
-            { name: 'http', type: 'text/javascript' }
-        ]
-    });
+
+    let sessionData = req.session;
+    if (!sessionData.username) {
+        console.log('Utilisateur non connecté, envoi vers formulaire de connexion')
+        res.render('signup', {
+            title: 'BattleSheep | Sign up, Log in',
+            description: 'Sign up or log in to BattleSheep',
+            scripts: [{name: 'signup', type: 'text/javascript'}]
+        });
+    } else {
+        console.log('Utilisateur connecté, envoi vers le lobby')
+        res.render('lobby', {
+            title: 'BattleSheep | Lobby',
+            description: 'Lobby page, to join or host a game',
+            // scripts: [{name: '', type: ''}]
+        });
+    }
 });
 
-const logger = require('./public/JS/logger.js');
 
 // Faudra faire pareil avec '/login'
 app.post('/signup', (req, res) => {
@@ -77,11 +85,20 @@ app.post('/signup', (req, res) => {
     //req.session.username = req.body.pseudo;
     //req.session.save()
     //res.render('lobby');
+
+    // let pseudo = req.body.pseudo
+    // pseudo = pseudo.trim()
+    // pseudo = encodeURI(pseudo)
+    // console.log('Pseudo sécurisé')
+    // req.session.username = pseudo;
+    // req.session.save()
+    // console.log("Envoi vers le lobby")
+    // res.render('lobby', {
+    //     title: 'BattleSheep | Lobby',
+    //     description: 'Lobby page, to join or host a game',
+    //     // scripts: [{name: '', type: ''}]
+    // });
 });
-
-
-
-
 
 
 
