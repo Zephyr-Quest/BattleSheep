@@ -55,12 +55,19 @@ app.get('/signup', (req, res) => {
 
 const logger = require('./public/JS/logger.js')
 
+// Faudra faire pareil avec '/login'
 app.post('/signup', (req, res) => {
     //logger.sendLogin(req.body.pseudo, req.body.password, req.body.confirm)
     let pseudo = req.body.pseudo
     console.log(pseudo);
     pseudo.trim()
     console.log(pseudo)
+
+    // Everything is OK !
+    res.send('OK');
+
+    // Everything is not ok (error...)
+    // res.status(statusCode).send(error);
 
     //req.session.username = req.body.pseudo;
     //req.session.save()
