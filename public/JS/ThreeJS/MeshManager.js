@@ -1,16 +1,17 @@
 import { Locatable } from "./Locatable.js";
-import { Model3D } from "./Model3D.js";
+import { Model3D } from "./model_3d.js";
+import { Config } from "./config.js";
 
 /* -------------------------------------------------------------------------- */
 /*                         Manage a displayed 3D model                        */
 /* -------------------------------------------------------------------------- */
 export class MeshManager extends Locatable {
-    constructor(name, x, y, z) {
-        super(x, y, z);
+    constructor(name, position) {
+        super(position.x, position.y, position.z);
 
         this.name = name;
         this.scaleFactor = Model3D[name].scale;
-        this.positionDelta = Model3D[name].position;
+        this.positionDelta = Config.positionDelta;
         this.mesh = null;
     }
 
