@@ -14,8 +14,9 @@ let manageUser = (function () {
                 mdpHash = crypted;
                 console.log('crypted: ' + crypted);
                 console.log('rounds used from hash:', bcrypt.getRounds(crypted));
-                //! transmettre le mdr hash à la bdd
 
+                //! transmettre le mdp hash à la bdd
+                
                 bcrypt.compare(password, crypted, function (err, match) {
                     if (err) {
                         console.log(err);
@@ -30,7 +31,7 @@ let manageUser = (function () {
             })
         },
 
-
+        
         crypt(pass) {
             try {
                 let mdp = bcrypt.hashSync(pass, saltRounds);
@@ -67,9 +68,10 @@ let manageUser = (function () {
     }
 })();
 
-let password = "EngLePLusBeau";
+//let password = "EngLePLusBeau";
 
-console.log("-------------------------------------");
-manageUser.cryptPassword(password);
+//manageUser.cryptPassword(password);
 
 //manageUser.checkUser("EngLePlusBeau");
+
+module.exports = manageUser;
