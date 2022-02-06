@@ -8,12 +8,13 @@ const colors = {
 /* -------------------------------------------------------------------------- */
 
 // Toggle form
-const toggleBtn = document.getElementById("switch_form");
-const signupSpan = document.getElementById("signup_link");
-const loginSpan = document.getElementById("login_link");
+const toggleBtn
+    = document.getElementById('switch_form');
+const signupSpan = document.getElementById('signup_link');
+const loginSpan = document.getElementById('login_link');
 
 // Signup form
-const signupForm = document.getElementById("signup_form");
+const signupForm = document.getElementById('signup_form');
 const signupFormNodes = {
     pseudo: signupForm.querySelector('input[name="pseudo"]'),
     password: signupForm.querySelector('input[name="password"]'),
@@ -21,7 +22,7 @@ const signupFormNodes = {
 };
 
 // Login form
-const loginForm = document.getElementById("login_form");
+const loginForm = document.getElementById('login_form');
 const loginFormNodes = {
     pseudo: signupForm.querySelector('input[name="pseudo"]'),
     password: signupForm.querySelector('input[name="password"]')
@@ -32,10 +33,12 @@ const loginFormNodes = {
 /* -------------------------------------------------------------------------- */
 
 toggleBtn.addEventListener('click', () => {
-    signupSpan.classList.toggle("selected");
-    loginSpan.classList.toggle("selected");
-    signupForm.style.display = signupForm.style.display === 'none' ? 'block' : 'none';
-    loginForm.style.display = loginForm.style.display === 'none' ? 'block' : 'none';
+    signupSpan.classList.toggle('selected');
+    loginSpan.classList.toggle('selected');
+    signupForm.style.display
+        = signupForm.style.display === 'none' ? 'block' : 'none';
+    loginForm.style.display
+        = loginForm.style.display === 'none' ? 'block' : 'none';
 });
 
 signupForm.addEventListener('submit', e => {
@@ -60,7 +63,8 @@ signupForm.addEventListener('submit', e => {
         signupFormNodes.pseudo.style.borderColor = colors.red;
         return;
     }
-    if (data.password !== signupFormNodes.confirm.value || data.password.length < 3) {
+    if (data.password !== signupFormNodes.confirm.value
+        || data.password.length < 3) {
         signupFormNodes.password.style.borderColor = colors.red;
         signupFormNodes.confirm.style.borderColor = colors.red;
         return;
@@ -70,9 +74,5 @@ signupForm.addEventListener('submit', e => {
 
     // Send HTTP POST request
     http.post(
-        '/signup',
-        data,
-        res => console.log(res),
-        err => console.error(err)
-    );
+        '/signup', data, res => console.log(res), err => console.error(err));
 });

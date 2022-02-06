@@ -10,7 +10,7 @@ const {body, validationResult} = require('express-validator');
 const jsonParse = bodyParser.json();
 const urlencodedParse = bodyParser.urlencoded({ extended: false });
 const manageUser = require('./back/server/crypt.js');
-app.use(jsonParse);
+
 
 
 
@@ -24,15 +24,20 @@ const session = require('express-session')({
     saveUninitialized: true,
     cookie: {maxAge: 2 * 60 * 60 * 1000, secure: false}
 });
+app.use(jsonParse);
 app.use(session)
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
 if (app.get('env') === 'production') {
     app.set('trust proxy', 1);
     session.cookie.secure = true;
 }
-app.set('views', path.join(__dirname, 'views'));
-app.use(express.static(path.join(__dirname, 'public')));
-app.set('view engine', 'ejs');
+
+
+
+
 
 app.get('/', (req, res) => {
     res.render('index', {
@@ -68,7 +73,6 @@ app.get('/signup', (req, res) => {
 
 // Faudra faire pareil avec '/login'
 app.post('/signup', (req, res) => {
-    //logger.sendLogin(req.body.pseudo, req.body.password, req.body.confirm)
     console.log(req.body);
     
     // let pseudo = req.body.pseudo
