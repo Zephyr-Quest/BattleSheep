@@ -3,9 +3,27 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const path = require('path');
-const ejs = require('ejs');
+const mysql = require('mysql');
 
-// app.engine('.ejs', ejs.__express);
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
+const session = require('express-session')({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 2 * 60 * 60 * 1000,
+        secure: false
+    }
+});
+
+if (app.get('env') === "production") {
+    app.set('trust proxy', 1);
+    session.cookie.secure = true;
+}
+
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
@@ -55,7 +73,6 @@ app.post('/login', (req, res)=>{
 });
 
 
-
 io.on('connection', (socket) => {
     console.log("Connexion d'un utilisateur");
 
@@ -66,44 +83,25 @@ io.on('connection', (socket) => {
 });
 
 
-
-http.listen(4200, () => {
-    console.log('Serveur lancé sur le port 4200');
+http.listen(process.env.APP_PORT, () => {
+    console.log('Serveur lancé sur le port', process.env.APP_PORT);
 });
-
-
 
 /* -------------------------------------------------------------------------- */
 /*                                     BDD                                    */
 /* -------------------------------------------------------------------------- */
 
-const session = require('express-session')({
-    secret: "1234",
-    resave: true,
-    saveUninitialized: true,
-    cookie: {
-        maxAge: 2 * 60 * 60 * 1000,
-        secure: false
-    }
-});
-const mysql = require('mysql');
-
-if (app.get('env') === "production") {
-    app.set('trust proxy', 1);
-    session.cookie.secure = true;
-}
-
 // Conexion 
 const con = mysql.createConnection({
-    host: "db",
-    user: "root",
-    password: "password",
-    database: "battlesheep"
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USERNAME,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.DATABASE_NAME
 })
 
 con.connect(err => {
     if (err) throw err;
-    else console.log("Connexion effectuée");
+    else console.log("Connexion à", process.env.DATABASE_NAME);
 
     /**
      * Insert user and password in table

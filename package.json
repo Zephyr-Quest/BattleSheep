@@ -4,9 +4,9 @@
   "description": "BattleSheep Game, shoot the sheeps to win",
   "main": "index.js",
   "scripts": {
-    "build": "docker build . -t battlesheep",
-    "start": "docker run -p 4200:4200 -d --rm --name=my_battlesheep battlesheep && docker logs -f my_battlesheep",
-    "stop": "docker stop my_battlesheep"
+    "docker-start": "docker-compose up -d && docker logs -f battlesheep_app_1",
+    "docker-stop": "docker-compose down",
+    "start": "nodemon ."
   },
   "repository": {
     "type": "git",
@@ -19,10 +19,12 @@
   },
   "homepage": "https://github.com/Zephyr-Quest/BattleSheep#readme",
   "dependencies": {
+    "dotenv": "^16.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.2",
     "express-session": "^1.17.2",
     "mysql": "^2.18.1",
+    "nodemon": "^2.0.15",
     "path": "^0.12.7",
     "socket.io": "^4.4.1"
   }

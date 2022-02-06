@@ -5,27 +5,27 @@ services:
     build: ./db
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: battlesheep
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
     ports:
-      - "3306:3306"
+      - 3306:3306
     restart: always
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 20s
       retries: 10
 
-  web:
-    build: .
-    environment:
-      MYSQL_DATABASE: battlesheep
-      MYSQL_USER: root
-      MYSQL_PASSWORD: password
-      MYSQL_HOST: db
+  app:
+    build:
+      context: .
+      args:
+        PORT: ${APP_PORT}
     ports:
-      - "4200:4200"
+      - "${APP_PORT}:${APP_PORT}"
+    volumes:
+      - .:/app:z
     depends_on:
       db:
         condition: service_healthy
     restart: on-failure
-    command: "node index.js"
+    command: npm start
