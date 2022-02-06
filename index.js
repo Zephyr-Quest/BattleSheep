@@ -58,7 +58,10 @@ app.get('/signup', (req, res) => {
         res.render('signup', {
             title: 'BattleSheep | Sign up, Log in',
             description: 'Sign up or log in to BattleSheep',
-            scripts: [{name: 'signup', type: 'text/javascript'}]
+            scripts: [
+                { name: 'http', type: 'text/javascript' },
+                { name: 'signup', type: 'text/javascript' }
+            ]
         });
     } else {
         console.log('Utilisateur connecté, envoi vers le lobby')
