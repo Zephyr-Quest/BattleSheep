@@ -1,15 +1,14 @@
 const colors = {
     green: '#3ca50c',
     red: '#FF3333'
-}
+};
 
 /* -------------------------------------------------------------------------- */
 /*                             Get all HTML nodes                             */
 /* -------------------------------------------------------------------------- */
 
 // Toggle form
-const toggleBtn
-    = document.getElementById('switch_form');
+const toggleBtn = document.getElementById('switch_form');
 const signupSpan = document.getElementById('signup_link');
 const loginSpan = document.getElementById('login_link');
 
@@ -74,5 +73,6 @@ signupForm.addEventListener('submit', e => {
 
     // Send HTTP POST request
     http.post(
-        '/signup', data, res => console.log(res), err => console.error(err));
+        '/signup', data, () => window.location.href = 'lobby',
+        err => console.error(err));
 });

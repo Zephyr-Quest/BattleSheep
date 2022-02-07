@@ -8,15 +8,14 @@ const bodyParser = require('body-parser');
 const {body, validationResult} = require('express-validator');
 
 const jsonParse = bodyParser.json();
-const urlencodedParse = bodyParser.urlencoded({ extended: false });
+// const urlencodedParse = bodyParser.urlencoded({extended: false});
 const manageUser = require('./back/server/crypt.js');
-
 
 
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
-}
+} 
 
 const session = require('express-session')({
     secret: process.env.SESSION_SECRET,
@@ -35,7 +34,7 @@ if (app.get('env') === 'production') {
     session.cookie.secure = true;
 }
 
-
+//!---------------------
 
 
 
@@ -51,16 +50,16 @@ app.get('/signup', (req, res) => {
     // Here : check if the user is already connected
     // If he's not, send him the signup page
     // else, redirect him to the scoreboard page
-
     let sessionData = req.session;
     if (!sessionData.username) {
-        console.log('Utilisateur non connecté, envoi vers formulaire de connexion')
+        console.log(
+            'Utilisateur non connecté, envoi vers formulaire de connexion')
         res.render('signup', {
             title: 'BattleSheep | Sign up, Log in',
             description: 'Sign up or log in to BattleSheep',
             scripts: [
-                { name: 'http', type: 'text/javascript' },
-                { name: 'signup', type: 'text/javascript' }
+                {name: 'http', type: 'text/javascript'},
+                {name: 'signup', type: 'text/javascript'}
             ]
         });
     } else {
@@ -75,38 +74,32 @@ app.get('/signup', (req, res) => {
 
 
 // Faudra faire pareil avec '/login'
-app.post('/signup', (req, res) => {
-    console.log(req.body);
-    
-    // let pseudo = req.body.pseudo
-    // console.log(pseudo);
-    // pseudo.trim()
-    // console.log(pseudo)
+app.post(
+    '/signup', body('pseudo').isLength({min: 3}).trim().escape(),
+    body('password').isLength({min: 3}).trim(), (req, res) => {
+        let pseudo = req.body.pseudo;
+        let password = req.body.password;
+        console.log(pseudo)
+        pseudo = pseudo.trim();
+        pseudo = encodeURI(pseudo); 
 
-    // Everything is OK !
-    res.send('OK');
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            console.log('-----ERROR-----')
+            console.log(errors);
+            res.status(statusCode).send(errors);
+            // return res.status(400).json({ errors: errors.array() });
+        } 
+        else {
+            console.log('PSEUDO', pseudo)
+            // manageUser.cryptPassword(password)
 
-    // Everything is not ok (error...)
-    // res.status(statusCode).send(error);
-
-    //req.session.username = req.body.pseudo;
-    //req.session.save()
-    //res.render('lobby');
-
-    // let pseudo = req.body.pseudo
-    // pseudo = pseudo.trim()
-    // pseudo = encodeURI(pseudo)
-    // console.log('Pseudo sécurisé')
-    // req.session.username = pseudo;
-    // req.session.save()
-    // console.log("Envoi vers le lobby")
-    // res.render('lobby', {
-    //     title: 'BattleSheep | Lobby',
-    //     description: 'Lobby page, to join or host a game',
-    //     // scripts: [{name: '', type: ''}]
-    // });
-});
-
+            req.session.username = req.body.pseudo;
+            req.session.save();
+            console.log('Envoi vers le lobby');
+            res.send('OK');
+        }
+    });
 
 
 app.get('/rules', (req, res) => {

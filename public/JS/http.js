@@ -7,19 +7,21 @@ const http = (function () {
             .catch(reject);
     }
 
-    return {
+    return { 
         post(path, data, resolve, reject) {
             const url = HOST + path;
-
+ 
             const options = {
                 method: 'POST',
                 body: JSON.stringify(data),
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
             };
+
+
 
             customFecth(url, options, resolve, reject);
         }
     }
-})();
+})(); 
