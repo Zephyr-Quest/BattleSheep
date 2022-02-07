@@ -95,29 +95,6 @@ function init() {
     controls = new OrbitControls(camera, renderer.domElement);
     controls.update();
 
-    window.addEventListener("keyup", e => {
-        // console.log(e);
-
-        if (e.code === 'Space')
-            console.log(camera.position);
-        else if (e.key === 'f') {
-            const renderDom = renderer.domElement;
-            if (renderDom.requestFullscreen) renderDom.requestFullscreen();
-            else if (renderDom.webkitRequestFullscreen) renderDom.webkitRequestFullscreen();
-            else if (renderDom.msRequestFullscreen) renderDom.msRequestFullscreen();
-        } else {
-            // Check camera controls
-            for (const keyCode in Config.cameraPositions) {
-                if (!Config.cameraPositions.hasOwnProperty(keyCode) || e.key !== keyCode)
-                    continue;
-
-                // Switch the camera position
-                const pos = Config.cameraPositions[keyCode];
-                camera.position.fromArray(pos.toArray());
-            }
-        }
-    });
-
     /* --------------------------------- Lights --------------------------------- */
 
     // Setting up the ambient light
@@ -126,7 +103,7 @@ function init() {
 
     // Setting up the directional light
     const directionalLight = new THREE.DirectionalLight(0xF1E6B7, 2);
-    directionalLight.position.set(30, 20, 30);
+    directionalLight.position.fromArray(Config.lightPosition.toArray());
     scene.add(directionalLight);
 
     /* ------------------------------ Level design ------------------------------ */
@@ -151,6 +128,53 @@ function init() {
     
     // scene.add(origin);
     scene.add(lightCube);
+
+    window.addEventListener("keyup", e => {
+        // console.log(e);
+
+        if (e.code === 'Space')
+            console.log(camera.position);
+        else if (e.key === 'f') {
+            const renderDom = renderer.domElement;
+            if (renderDom.requestFullscreen) renderDom.requestFullscreen();
+            else if (renderDom.webkitRequestFullscreen) renderDom.webkitRequestFullscreen();
+            else if (renderDom.msRequestFullscreen) renderDom.msRequestFullscreen();
+        } else if (e.key === 'u') {
+            directionalLight.position.add(new THREE.Vector3(5, 0, 0));
+            lightCube.position.add(new THREE.Vector3(5, 0, 0));
+            console.log(directionalLight.position);
+        } else if (e.key === 'i') {
+            directionalLight.position.add(new THREE.Vector3(0, 5, 0));
+            lightCube.position.add(new THREE.Vector3(0, 5, 0));
+            console.log(directionalLight.position);
+        } else if (e.key === 'o') {
+            directionalLight.position.add(new THREE.Vector3(0, 0, 5));
+            lightCube.position.add(new THREE.Vector3(0, 0, 5));
+            console.log(directionalLight.position);
+        } else if (e.key === 'j') {
+            directionalLight.position.add(new THREE.Vector3(-5, 0, 0));
+            lightCube.position.add(new THREE.Vector3(-5, 0, 0));
+            console.log(directionalLight.position);
+        } else if (e.key === 'k') {
+            directionalLight.position.add(new THREE.Vector3(0, -5, 0));
+            lightCube.position.add(new THREE.Vector3(0, -5, 0));
+            console.log(directionalLight.position);
+        } else if (e.key === 'l') {
+            directionalLight.position.add(new THREE.Vector3(0, 0, -5));
+            lightCube.position.add(new THREE.Vector3(0, 0, -5));
+            console.log(directionalLight.position);
+        } else {
+            // Check camera controls
+            for (const keyCode in Config.cameraPositions) {
+                if (!Config.cameraPositions.hasOwnProperty(keyCode) || e.key !== keyCode)
+                    continue;
+
+                // Switch the camera position
+                const pos = Config.cameraPositions[keyCode];
+                camera.position.fromArray(pos.toArray());
+            }
+        }
+    });
     
     render();
 }

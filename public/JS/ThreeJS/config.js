@@ -6,9 +6,10 @@ import { Vector3 } from 'three';
 export const Config = {
     modelsPath: '../models/',
     skyboxPath: '../img/skybox/skybox_',
-    // positionDelta: new Vector3(-12, -0.55, -13),
+    lightPosition: new Vector3(-170, 80, 25),
     cameraPositions: {
-        "q": new Vector3(0, 8, 15),
-        "d": new Vector3(0, 8, -15)
+        "q": new Vector3(0, 19, 36),
+        "s": new Vector3(0, 39, 0),
+        "d": new Vector3(0, 19, -36)
     }
 };

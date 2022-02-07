@@ -11,6 +11,7 @@ export class MeshManager extends Locatable {
         this.name = name;
         this.scaleFactor = Model3D[name].scale;
         this.positionDelta = Model3D[name].positionDelta;
+        this.rotationDelta = Model3D[name].rotationDelta;
         this.mesh = null;
     }
 
@@ -19,12 +20,12 @@ export class MeshManager extends Locatable {
         
         // Set the position
         this.mesh.position.fromArray(this.getPositionArray());
-
-        // Update the position
         this.mesh.position.add(this.positionDelta);
 
         // Set the rotation
-        this.mesh.rotation.fromArray(this.getRotationArray());
+        const rot = this.getRotationVector();
+        rot.add(this.rotationDelta);
+        this.mesh.rotation.setFromVector3(rot);
 
         // Update the size
         this.mesh.scale.multiplyScalar(this.scaleFactor);
