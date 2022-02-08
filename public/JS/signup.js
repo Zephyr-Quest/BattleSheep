@@ -23,8 +23,8 @@ const signupFormNodes = {
 // Login form
 const loginForm = document.getElementById('login_form');
 const loginFormNodes = {
-    pseudo: signupForm.querySelector('input[name="pseudo"]'),
-    password: signupForm.querySelector('input[name="password"]')
+    pseudo: loginForm.querySelector('input[name="pseudo"]'),
+    password: loginForm.querySelector('input[name="password"]')
 };
 
 /* -------------------------------------------------------------------------- */
@@ -39,6 +39,8 @@ toggleBtn.addEventListener('click', () => {
     loginForm.style.display
         = loginForm.style.display === 'none' ? 'block' : 'none';
 });
+
+/* ------------------------------- signup Form ------------------------------ */
 
 signupForm.addEventListener('submit', e => {
     e.preventDefault();
@@ -72,7 +74,45 @@ signupForm.addEventListener('submit', e => {
     console.log(data);
 
     // Send HTTP POST request
-    http.post(
-        '/signup', data, () => window.location.href = 'lobby',
-        err => console.error(err));
+    http.post('/signup',
+              data,
+              () => window.location.href = 'lobby',
+              err => console.error(err));
+});
+
+/* ------------------------------- login Form ------------------------------- */
+
+loginForm.addEventListener('submit', e => {
+    e.preventDefault();
+
+    // Get form data
+    const data = {
+        pseudo: loginFormNodes.pseudo.value,
+        password: loginFormNodes.password.value
+    };
+
+    // Reset input styles
+    for (const inputName in loginFormNodes) {
+        if (loginFormNodes.hasOwnProperty(inputName)) {
+            const input = loginFormNodes[inputName];
+            input.style.borderColor = colors.green;
+        }
+    }
+
+    // Check data
+    if (data.pseudo.length > 20 || data.pseudo.length < 3) {
+        loginFormNodes.pseudo.style.borderColor = colors.red;
+        return;
+    }
+    if (data.password.length < 3) {
+        loginFormNodes.password.style.borderColor = colors.red;
+        return;
+    }
+
+    console.log(data) 
+    http.post('/login',
+    data,
+    () => window.location.href = 'lobby',
+    err => console.error(err));
+
 });

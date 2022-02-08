@@ -10,12 +10,13 @@ const {body, validationResult} = require('express-validator');
 const jsonParse = bodyParser.json();
 // const urlencodedParse = bodyParser.urlencoded({extended: false});
 const manageUser = require('./back/server/crypt.js');
+const {connect} = require('http2');
 
 
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
-} 
+}
 
 const session = require('express-session')({
     secret: process.env.SESSION_SECRET,
@@ -23,6 +24,7 @@ const session = require('express-session')({
     saveUninitialized: true,
     cookie: {maxAge: 2 * 60 * 60 * 1000, secure: false}
 });
+
 app.use(jsonParse);
 app.use(session)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -34,8 +36,10 @@ if (app.get('env') === 'production') {
     session.cookie.secure = true;
 }
 
-//!---------------------
 
+/* -------------------------------------------------------------------------- */
+/*                         Get the different request                          */
+/* -------------------------------------------------------------------------- */
 
 
 app.get('/', (req, res) => {
@@ -72,34 +76,64 @@ app.get('/signup', (req, res) => {
     }
 });
 
+app.post('/signup',
+         body('pseudo').isLength({min: 3}).trim().escape(),
+         body('password').isLength({min: 3}).trim(),
+         (req, res) => {
+             console.log("---SIGN UP---")
 
-// Faudra faire pareil avec '/login'
-app.post(
-    '/signup', body('pseudo').isLength({min: 3}).trim().escape(),
-    body('password').isLength({min: 3}).trim(), (req, res) => {
-        let pseudo = req.body.pseudo;
-        let password = req.body.password;
-        console.log(pseudo)
-        pseudo = pseudo.trim();
-        pseudo = encodeURI(pseudo); 
+             let pseudo = req.body.pseudo;
+             let password = req.body.password;
 
-        const errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            console.log('-----ERROR-----')
-            console.log(errors);
-            res.status(statusCode).send(errors);
-            // return res.status(400).json({ errors: errors.array() });
-        } 
-        else {
-            console.log('PSEUDO', pseudo)
-            // manageUser.cryptPassword(password)
+             const errors = validationResult(req)
+             if (!errors.isEmpty()) {
+                 console.log('---ERROR---')
+                 console.log(errors);
+                 res.status(400).json({errors: errors.array()});
+             }
+             else {
+                 console.log('PSEUDO', pseudo);
+                 console.log('MDP', password);
+                 // manageUser.cryptPassword(password)
+                    //! envoi à la BDD
 
-            req.session.username = req.body.pseudo;
-            req.session.save();
-            console.log('Envoi vers le lobby');
-            res.send('OK');
-        }
-    });
+                 req.session.username = req.body.pseudo;
+                 req.session.save();
+                 console.log('Envoi vers le lobby');
+                 res.send('OK');
+             }
+         });
+// Pas d'inquiétude sur cette fin de fonction,
+// c'est juste clang-format qui fout la merde
+// Résolu dès que clang 14 est release
+
+app.post('/login',
+         body('pseudo').isLength({min: 3}).trim().escape(),
+         body('password').isLength({min: 3}).trim(),
+         (req, res) => {
+             console.log("---LOG IN---")
+
+             let pseudo = req.body.pseudo;
+             let password = req.body.password;
+
+             const errors = validationResult(req)
+             if (!errors.isEmpty()) {
+                 console.log('---ERROR---')
+                 console.log(errors);
+                 res.status(400).json({errors: errors.array()});
+             }
+             else {
+                 console.log('PSEUDO', pseudo);
+                 console.log('MDP', password);
+                    //! check avec la BDD
+
+                 req.session.username = req.body.pseudo;
+                 req.session.save();
+                 console.log('Envoi vers le lobby');
+                 res.send('OK');
+             }
+         });
+
 
 
 app.get('/rules', (req, res) => {
@@ -164,8 +198,8 @@ con.connect(err => {
             sql = 'INSERT into users SET ?'
             con.query(sql, users, (err, result) => {
                 if (err) throw err;
-                console.log('1 element inserted')
-                console.log(result)
+                console.log('1 element inserted');
+                console.log(result);
             })
         } catch (error) {
             console.log(error);
@@ -187,11 +221,11 @@ con.connect(err => {
             if (err) throw err;
             if (result == '') console.log('Utilisateur introuvable');
             else {
-                console.log('Résultat trouvé : ')
-                console.log(result)
+                console.log('Résultat trouvé : ');
+                console.log(result);
                 return result;
             }
-        })
+        });
     }
 
     /**
@@ -205,9 +239,9 @@ con.connect(err => {
         let quer = 'SELECT * from users WHERE username=\'' + usr + '\'';
         con.query(quer, (err, result) => {
             if (err) throw err;
-            console.log(result)
-            return result
-        })
+            console.log(result);
+            return result;
+        });
     }
 
     /**
@@ -221,8 +255,8 @@ con.connect(err => {
         let quer = 'SELECT * from users WHERE id=\'' + id + '\'';
         con.query(quer, (err, result) => {
             if (err) throw err;
-            console.log(result)
-            return result
-        })
+            console.log(result);
+            return result;
+        });
     }
-})
+});
