@@ -109,10 +109,9 @@ loginForm.addEventListener('submit', e => {
         return;
     }
 
-    console.log(data) 
+    console.log(data)
     http.post('/login',
-    data,
-    () => window.location.href = 'lobby',
-    err => console.error(err));
-
+              data,
+              () => window.location.href = 'lobby',
+              err => console.error(err));
 });
