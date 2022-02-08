@@ -14,15 +14,21 @@ let turningGrass = null;
 
 /* ---------------------------------- Debug --------------------------------- */
 
+const DEBUG_RAYCASTER = false;
+
 // Stats
 const stats = new Stats();
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom);
 
-// Raycaster
+/* -------------------------------- Raycaster ------------------------------- */
+
+// Init the raycaster
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
-window.addEventListener('click', event => {
+
+// Use raycaster on click
+const raycasterOnClick = event => {
     // Convert coordinates
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -34,13 +40,13 @@ window.addEventListener('click', event => {
     if (intersects.length > 0) {
         // Choose the best result from raycaster
         const currentIntersect = intersects[0];
-        console.log(currentIntersect);
+        if (DEBUG_RAYCASTER) console.log(currentIntersect);
 
         // Try to get the real clicked element
         let clicked;
         try {
             let searching = true, currentParent = currentIntersect.object;
-            
+
             // Search a referenced mesh
             while (searching) {
                 if (currentParent.parent instanceof THREE.Mesh || currentParent.parent instanceof THREE.Group)
@@ -50,23 +56,27 @@ window.addEventListener('click', event => {
 
             clicked = allObjects[currentParent.name];
         } catch (error) {
-            console.error('Error finding the clicked element');
+            if (DEBUG_RAYCASTER) console.error('Error finding the clicked element');
             return;
         }
 
-        console.log(clicked);
+        if (DEBUG_RAYCASTER) console.log(clicked);
+        
+        // Down the previous selected grass
+        if (turningGrass !== null) {
+            turningGrass.downGrass();
+            turningGrass = null;
+        }
+        
         if (clicked.type === 'Grass') {
             clicked.upGrass()
 
-            // Down the previous selected grass
-            if (turningGrass !== null)
-                turningGrass.downGrass();
-
             // Turn the selected grass
             turningGrass = clicked;
+            console.log(turningGrass.getGridPosition());
         }
     }
-}, false);
+};
 
 /* --------------------------------- Models --------------------------------- */
 
@@ -117,6 +127,7 @@ function init() {
 
     // Setting up the scene
     scene = new THREE.Scene();
+    scene.background = Config.backgroundColor;
 
     // Setting up the renderer
     renderer = new THREE.WebGLRenderer({
@@ -161,7 +172,6 @@ function init() {
     /* ------------------------------ Level design ------------------------------ */
 
     // Display all element
-    console.log(Elements);
     for (const element of Elements) {
         const currentMesh = new MeshManager(element.name, element.type, element.position);
 
@@ -173,7 +183,6 @@ function init() {
         allObjects[element.name] = currentMesh;
         currentMesh.addToScene(scene);
     }
-    console.log(allObjects);
 
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -184,52 +193,11 @@ function init() {
     // scene.add(origin);
     scene.add(lightCube);
 
-    window.addEventListener("keyup", e => {
-        // console.log(e);
-
-        if (e.code === 'Space')
-            console.log(camera.position);
-        else if (e.key === 'f') {
-            const renderDom = renderer.domElement;
-            if (renderDom.requestFullscreen) renderDom.requestFullscreen();
-            else if (renderDom.webkitRequestFullscreen) renderDom.webkitRequestFullscreen();
-            else if (renderDom.msRequestFullscreen) renderDom.msRequestFullscreen();
-        } else if (e.key === 'u') {
-            directionalLight.position.add(new THREE.Vector3(5, 0, 0));
-            lightCube.position.add(new THREE.Vector3(5, 0, 0));
-            console.log(directionalLight.position);
-        } else if (e.key === 'i') {
-            directionalLight.position.add(new THREE.Vector3(0, 5, 0));
-            lightCube.position.add(new THREE.Vector3(0, 5, 0));
-            console.log(directionalLight.position);
-        } else if (e.key === 'o') {
-            directionalLight.position.add(new THREE.Vector3(0, 0, 5));
-            lightCube.position.add(new THREE.Vector3(0, 0, 5));
-            console.log(directionalLight.position);
-        } else if (e.key === 'j') {
-            directionalLight.position.add(new THREE.Vector3(-5, 0, 0));
-            lightCube.position.add(new THREE.Vector3(-5, 0, 0));
-            console.log(directionalLight.position);
-        } else if (e.key === 'k') {
-            directionalLight.position.add(new THREE.Vector3(0, -5, 0));
-            lightCube.position.add(new THREE.Vector3(0, -5, 0));
-            console.log(directionalLight.position);
-        } else if (e.key === 'l') {
-            directionalLight.position.add(new THREE.Vector3(0, 0, -5));
-            lightCube.position.add(new THREE.Vector3(0, 0, -5));
-            console.log(directionalLight.position);
-        } else {
-            // Check camera controls
-            for (const keyCode in Config.cameraPositions) {
-                if (!Config.cameraPositions.hasOwnProperty(keyCode) || e.key !== keyCode)
-                    continue;
-
-                // Switch the camera position
-                const pos = Config.cameraPositions[keyCode];
-                camera.position.fromArray(pos.toArray());
-            }
-        }
-    });
+    
+    /* --------------------------------- Events --------------------------------- */
+    
+    window.addEventListener("click", raycasterOnClick, false);
+    window.addEventListener("keyup", keyUp);
     
     render();
 }
@@ -258,4 +226,55 @@ function render() {
 
     // Wait before looping
     requestAnimationFrame(render);
+}
+
+/**
+ * Callback of keyup event
+ * @param {KeyboardEvent} e The keyup event object
+ */
+function keyUp(e) {
+    // console.log(e);
+
+    if (e.code === 'Space')
+        console.log(camera.position);
+    else if (e.key === 'f') {
+        const renderDom = renderer.domElement;
+        if (renderDom.requestFullscreen) renderDom.requestFullscreen();
+        else if (renderDom.webkitRequestFullscreen) renderDom.webkitRequestFullscreen();
+        else if (renderDom.msRequestFullscreen) renderDom.msRequestFullscreen();
+    } else if (e.key === 'u') {
+        directionalLight.position.add(new THREE.Vector3(5, 0, 0));
+        lightCube.position.add(new THREE.Vector3(5, 0, 0));
+        console.log(directionalLight.position);
+    } else if (e.key === 'i') {
+        directionalLight.position.add(new THREE.Vector3(0, 5, 0));
+        lightCube.position.add(new THREE.Vector3(0, 5, 0));
+        console.log(directionalLight.position);
+    } else if (e.key === 'o') {
+        directionalLight.position.add(new THREE.Vector3(0, 0, 5));
+        lightCube.position.add(new THREE.Vector3(0, 0, 5));
+        console.log(directionalLight.position);
+    } else if (e.key === 'j') {
+        directionalLight.position.add(new THREE.Vector3(-5, 0, 0));
+        lightCube.position.add(new THREE.Vector3(-5, 0, 0));
+        console.log(directionalLight.position);
+    } else if (e.key === 'k') {
+        directionalLight.position.add(new THREE.Vector3(0, -5, 0));
+        lightCube.position.add(new THREE.Vector3(0, -5, 0));
+        console.log(directionalLight.position);
+    } else if (e.key === 'l') {
+        directionalLight.position.add(new THREE.Vector3(0, 0, -5));
+        lightCube.position.add(new THREE.Vector3(0, 0, -5));
+        console.log(directionalLight.position);
+    } else {
+        // Check camera controls
+        for (const keyCode in Config.cameraPositions) {
+            if (!Config.cameraPositions.hasOwnProperty(keyCode) || e.key !== keyCode)
+                continue;
+
+            // Switch the camera position
+            const pos = Config.cameraPositions[keyCode];
+            camera.position.fromArray(pos.toArray());
+        }
+    }
 }

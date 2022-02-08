@@ -1,4 +1,4 @@
-import { Vector3 } from "three";
+import { Vector3, Vector2 } from "three";
 
 /* -------------------------------------------------------------------------- */
 /*              Represent a 3D object with position and rotation              */
@@ -90,5 +90,18 @@ export class Locatable {
         this.rotX = vector.x;
         this.rotY = vector.y;
         this.rotZ = vector.z;
+    }
+
+    /**
+     * Convert the position to a grid position
+     * @returns The grid position
+     */
+    getGridPosition() {
+        // let y = - (k * 27);
+        const x = (this.x + 10) / 2.5;
+        let y = (this.z - 2) / 2.5;
+        if (!Number.isInteger(y))
+            y = (this.z - 2 + 27) / 2.5;
+        return new Vector2(x, y);
     }
 }

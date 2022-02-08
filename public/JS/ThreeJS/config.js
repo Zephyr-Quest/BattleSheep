@@ -1,4 +1,4 @@
-import { Vector3 } from 'three';
+import { Vector3, Color } from 'three';
 
 /* -------------------------------------------------------------------------- */
 /*                             All of config data                             */
@@ -11,5 +11,6 @@ export const Config = {
         "q": new Vector3(0, 19, 36),
         "s": new Vector3(0, 39, 0),
         "d": new Vector3(0, 19, -36)
-    }
+    },
+    backgroundColor: new Color(0x0099ff)
 };

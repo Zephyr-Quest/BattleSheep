@@ -21,19 +21,17 @@ let grassCounter, sheepCounter;
 grassCounter = sheepCounter = 0;
 for (let k = 0; k < 2; k++)
     for (let i = 0; i < 10; i++)
-        for (let j = 0; j < 10; j++)
-            if ((i != 5 || j != 5) && (i != 6 || j != 5)) {
-                tmpElements.push({ type: 'Grass', name: 'Grass' + grassCounter, position: new Vector3(i * 2.5 - 10, 0, j * 2.5 + 2 - (k * 27)) });
-                grassCounter++;
-            } else {
-                addSheep('Sheep' + sheepCounter, new Vector3(i * 2.5 - 10, 0, j * 2.5 + 2 - (k * 27)));
-                sheepCounter++;
-            }
+        for (let j = 0; j < 10; j++) {
+            tmpElements.push({ type: 'Grass', name: 'Grass' + grassCounter, position: new Vector3(i * 2.5 - 10, 0, j * 2.5 + 2 - (k * 27)) });
+            grassCounter++;
+        }
+            // if ((i != 5 || j != 5) && (i != 6 || j != 5)) {
+            // }
 
-function addSheep(name, position) {
+function addSheep(id, position) {
     tmpElements.push({
         type: 'Sheep',
-        name,
+        name: 'Sheep' + id,
         position,
         rotation: new Vector3(0, Math.random() * (Math.PI * 2), 0)
     });
