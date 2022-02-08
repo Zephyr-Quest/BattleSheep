@@ -9,12 +9,64 @@ import { Elements } from './level_design/level_design.js';
 
 let scene, renderer, camera, controls;
 
+const allObjects = {};
+let turningGrass = null;
+
 /* ---------------------------------- Debug --------------------------------- */
 
 // Stats
 const stats = new Stats();
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom);
+
+// Raycaster
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+window.addEventListener('click', event => {
+    // Convert coordinates
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    // Interpret raycaster data
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(scene.children);
+
+    if (intersects.length > 0) {
+        // Choose the best result from raycaster
+        const currentIntersect = intersects[0];
+        console.log(currentIntersect);
+
+        // Try to get the real clicked element
+        let clicked;
+        try {
+            let searching = true, currentParent = currentIntersect.object;
+            
+            // Search a referenced mesh
+            while (searching) {
+                if (currentParent.parent instanceof THREE.Mesh || currentParent.parent instanceof THREE.Group)
+                    currentParent = currentParent.parent;
+                else searching = false;
+            }
+
+            clicked = allObjects[currentParent.name];
+        } catch (error) {
+            console.error('Error finding the clicked element');
+            return;
+        }
+
+        console.log(clicked);
+        if (clicked.type === 'Grass') {
+            clicked.upGrass()
+
+            // Down the previous selected grass
+            if (turningGrass !== null)
+                turningGrass.downGrass();
+
+            // Turn the selected grass
+            turningGrass = clicked;
+        }
+    }
+}, false);
 
 /* --------------------------------- Models --------------------------------- */
 
@@ -109,16 +161,19 @@ function init() {
     /* ------------------------------ Level design ------------------------------ */
 
     // Display all element
+    console.log(Elements);
     for (const element of Elements) {
-        const currentMesh = new MeshManager(element.type, element.position);
+        const currentMesh = new MeshManager(element.name, element.type, element.position);
 
         // Set the rotation
         if (element.hasOwnProperty('rotation'))
             currentMesh.setRotationFromVector(element.rotation);
 
         // Add the current element to the scene
+        allObjects[element.name] = currentMesh;
         currentMesh.addToScene(scene);
     }
+    console.log(allObjects);
 
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -188,6 +243,12 @@ function render() {
 
     // DEBUG : Update OrbitControl (camera control)
     controls.update();
+
+    // Turn the selected grass
+    if (turningGrass !== null) {
+        turningGrass.rotY += 0.01;
+        turningGrass.updateScene();
+    }
 
     // Rendering the 3D scene
     renderer.render(scene, camera);
