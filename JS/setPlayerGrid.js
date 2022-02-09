@@ -53,12 +53,12 @@ class setPlayerGrid extends grid {
                 this.tabSheep[i].setFirstPosition(undefined);
             }
         })
-
+        
         validBtn.addEventListener("click", () => { })
-
+        
         this.setDrop();
     }
-
+    
     displayOnScreen() {
         for (let row = 0; row < this.gridSize; row++) {
             for (let col = 0; col < this.gridSize; col++) {
@@ -79,6 +79,7 @@ class setPlayerGrid extends grid {
                             divSheep.innerText = this.tabSheep[preContainer.firstChild.classList[1]].getSize();
                         }
                         container.appendChild(divSheep);
+                        this.setDrag(divSheep);
                     }
                 }
                 else if (container.hasChildNodes()) {
@@ -92,17 +93,17 @@ class setPlayerGrid extends grid {
             }
         }
     }
-    
+
     rangeSheep(sheepPosition, rotate, range, value) {
         const row = sheepPosition[0];
         const col = sheepPosition[2];
         for (let i = 0; i < range; i++) {
             if (rotate === "row")
-            value == undefined ? this.setCase(row, Number(col) + i, value) : this.setCase(row, Number(col) + i, value + "r");
+                value == undefined ? this.setCase(row, Number(col) + i, value) : this.setCase(row, Number(col) + i, value + "r");
             else value == undefined ? this.setCase(Number(row) + i, col, value) : this.setCase(Number(row) + i, col, value + "c");
         }
     }
-    
+
     CreateSheepOnScreen() {
         const div = document.getElementById("sheepBox");
         for (let i = 0; i < this.nbSheep; i++) {
@@ -114,45 +115,39 @@ class setPlayerGrid extends grid {
                 divSheep.id = i;
                 divSheep.innerText = this.tabSheep[i].getSize();
                 div.append(divSheep);
+                this.setDrag(divSheep);
             }
         }
-        this.setDrag();
     }
-    
-    setDrag() {
-        const boxs = document.querySelectorAll(".box");
-        
-        for (const currentBox of boxs) {
-            if (!currentBox.hasAttribute("drag")) {
-                currentBox.addEventListener("dragstart", (event) => {
-                    // console.log("start");
-                    const currentBox = event.target;
-                    const currentSheep = this.tabSheep[currentBox.classList[1]];
-                    event.dataTransfer.setData('text/plain', currentBox.classList[1]);
-                    if (currentBox.parentElement.classList[0] === "container") {
-                        this.rangeSheep(currentSheep.getFirstPosition(), currentSheep.getRotation(), currentSheep.getSize(), undefined);
-                        currentBox.setAttribute("moving", "true");
-                        this.displayOnScreen();
-                        console.log(currentBox.parentElement.id, currentBox.hasAttribute("drag"))                    
-                    }
-                })
-                currentBox.addEventListener("dragend", (event) => {
-                    // console.log("end");
-                    const currentBox = event.target;
-                    const currentSheep = this.tabSheep[currentBox.classList[1]];
-                    if (currentBox.parentElement.id != currentSheep.getFirstPosition()) {
-                        const container = document.getElementById(currentSheep.getFirstPosition())
-                        container.append(currentBox);
-                    }
-                    this.rangeSheep(currentSheep.getFirstPosition(), currentSheep.getRotation(), currentSheep.getSize(), currentSheep.getSize());
-                    this.displayGrid();
-                    currentBox.removeAttribute("moving");
-                    this.displayOnScreen();
-                    currentBox.setAttribute("drag", "true");
-                    this.setDrag();
-                })
+
+    setDrag(currentBox) {
+        console.log(currentBox)
+        currentBox.addEventListener("dragstart", (event) => {
+            // console.log("start");
+            const currentBox = event.target;
+            const currentSheep = this.tabSheep[currentBox.classList[1]];
+            event.dataTransfer.setData('text/plain', currentBox.classList[1]);
+            if (currentBox.parentElement.classList[0] === "container") {
+                this.rangeSheep(currentSheep.getFirstPosition(), currentSheep.getRotation(), currentSheep.getSize(), undefined);
+                currentBox.setAttribute("moving", "true");
+                this.displayOnScreen();
+                // console.log(currentBox.parentElement.id, currentBox.hasAttribute("drag"))
             }
-        }
+        })
+
+        currentBox.addEventListener("dragend", (event) => {
+            // console.log("end");
+            const currentBox = event.target;
+            const currentSheep = this.tabSheep[currentBox.classList[1]];
+            if (currentBox.parentElement.id != currentSheep.getFirstPosition()) {
+                const container = document.getElementById(currentSheep.getFirstPosition())
+                container.append(currentBox);
+            }
+            this.rangeSheep(currentSheep.getFirstPosition(), currentSheep.getRotation(), currentSheep.getSize(), currentSheep.getSize());
+            this.displayGrid();
+            currentBox.removeAttribute("moving");
+            this.displayOnScreen();
+        })
     }
 
     setDrop() {
