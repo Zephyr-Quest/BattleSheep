@@ -92,17 +92,17 @@ class setPlayerGrid extends grid {
             }
         }
     }
-
+    
     rangeSheep(sheepPosition, rotate, range, value) {
         const row = sheepPosition[0];
         const col = sheepPosition[2];
         for (let i = 0; i < range; i++) {
             if (rotate === "row")
-                value == undefined ? this.setCase(row, Number(col) + i, value) : this.setCase(row, Number(col) + i, value + "r");
+            value == undefined ? this.setCase(row, Number(col) + i, value) : this.setCase(row, Number(col) + i, value + "r");
             else value == undefined ? this.setCase(Number(row) + i, col, value) : this.setCase(Number(row) + i, col, value + "c");
         }
     }
-
+    
     CreateSheepOnScreen() {
         const div = document.getElementById("sheepBox");
         for (let i = 0; i < this.nbSheep; i++) {
@@ -118,14 +118,14 @@ class setPlayerGrid extends grid {
         }
         this.setDrag();
     }
-
+    
     setDrag() {
         const boxs = document.querySelectorAll(".box");
-
+        
         for (const currentBox of boxs) {
-            // console.log("start");
             if (!currentBox.hasAttribute("drag")) {
                 currentBox.addEventListener("dragstart", (event) => {
+                    // console.log("start");
                     const currentBox = event.target;
                     const currentSheep = this.tabSheep[currentBox.classList[1]];
                     event.dataTransfer.setData('text/plain', currentBox.classList[1]);
@@ -133,6 +133,7 @@ class setPlayerGrid extends grid {
                         this.rangeSheep(currentSheep.getFirstPosition(), currentSheep.getRotation(), currentSheep.getSize(), undefined);
                         currentBox.setAttribute("moving", "true");
                         this.displayOnScreen();
+                        console.log(currentBox.parentElement.id, currentBox.hasAttribute("drag"))                    
                     }
                 })
                 currentBox.addEventListener("dragend", (event) => {
@@ -153,7 +154,7 @@ class setPlayerGrid extends grid {
             }
         }
     }
-    condition
+
     setDrop() {
         const container = document.querySelectorAll(".container");
 
