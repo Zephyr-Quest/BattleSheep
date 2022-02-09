@@ -19,6 +19,7 @@ class setPlayerGrid extends grid {
         }
         this.displayOnScreen();
         this.displayGrid();
+        this.setDrop();
 
         // Set sheeps
         for (let i = 0; i < this.nbSheep; i++) {
@@ -55,8 +56,6 @@ class setPlayerGrid extends grid {
         })
         
         validBtn.addEventListener("click", () => { })
-        
-        this.setDrop();
     }
     
     displayOnScreen() {
@@ -121,7 +120,6 @@ class setPlayerGrid extends grid {
     }
 
     setDrag(currentBox) {
-        console.log(currentBox)
         currentBox.addEventListener("dragstart", (event) => {
             // console.log("start");
             const currentBox = event.target;
@@ -131,7 +129,6 @@ class setPlayerGrid extends grid {
                 this.rangeSheep(currentSheep.getFirstPosition(), currentSheep.getRotation(), currentSheep.getSize(), undefined);
                 currentBox.setAttribute("moving", "true");
                 this.displayOnScreen();
-                // console.log(currentBox.parentElement.id, currentBox.hasAttribute("drag"))
             }
         })
 
