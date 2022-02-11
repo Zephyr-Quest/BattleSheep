@@ -1,3 +1,3 @@
 (function () {
-    let game = new setPlayerGrid();
+    let currentGame = new setPlayerGrid();
 })();
