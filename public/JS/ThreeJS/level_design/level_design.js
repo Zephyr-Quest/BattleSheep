@@ -41,7 +41,7 @@ function createGrass(pos, playerId) {
     const grass = {
         type: 'Grass',
         name: 'Grass' + grassCounter,
-        position: new Vector3(pos.x * 2.5 - 10, 0, pos.y * 2.5 + 2 - (playerId * 27)),
+        position: getPositionFromPlayerId(pos, playerId),
         rotation: getRandomRotationY()
     };
     grassCounter++;
@@ -58,7 +58,7 @@ function createSheep(pos, playerId) {
     const sheep = {
         type: 'Sheep',
         name: 'Sheep' + sheepCounter,
-        position: new Vector3(pos.x * 2.5 - 10, 0, pos.y * 2.5 + 2 - (playerId * 27)),
+        position: getPositionFromPlayerId(pos, playerId),
         rotation: getRandomRotationY()
     };
     sheepCounter++;
@@ -71,6 +71,19 @@ function createSheep(pos, playerId) {
  */
 function getRandomRotationY() {
     return new Vector3(0, Math.random() * (Math.PI * 2), 0);
+}
+
+/**
+ * Convert the position with the player id
+ * @param {THREE.Vector2} pos The position to convert
+ * @param {Number} playerId The player id
+ * @returns The position Vector3
+ */
+function getPositionFromPlayerId(pos, playerId) {
+    if (playerId === 0)
+        return new Vector3(pos.x * 2.5 - 10, 0, pos.y * 2.5 + 2);
+    else
+        return new Vector3(pos.x * (-2.5) + 12.5, 0, pos.y * (-2.5) - 2.5);
 }
 
 /* --------------------------------- Exports -------------------------------- */

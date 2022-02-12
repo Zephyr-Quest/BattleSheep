@@ -105,7 +105,7 @@ function init() {
     scene.add(lightCube);
 
     const grid = [
-        [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
@@ -116,7 +116,7 @@ function init() {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ]
-    const playerId = 0;
+    const playerId = 1;
     view.displayPlayerGrid(grid, playerId);
 
 

@@ -78,7 +78,6 @@ export class MeshManager extends Locatable {
 
         // Up the grass
         this.y--;
-        this.rotY = 0;
         this.updateScene();
     }
 };

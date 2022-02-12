@@ -97,14 +97,14 @@ export class Locatable {
      * @returns The grid position
      */
     getGridPosition() {
-        // let y = - (k * 27);
-        const x = (this.x + 10) / 2.5;
-        let y = (this.z - 2) / 2.5;
-        let z = 0;
-        if (!Number.isInteger(y)) {
-            y = (this.z - 2 + 27) / 2.5;
-            z = 1;
+        let x, y, z = this.z > 0 ? 0 : 1;
+        if (z === 0) {
+            x = (this.x + 10) / 2.5;
+            y = (this.z - 2) / 2.5;
+        } else {
+            x = (this.x - 12.5) / (-2.5);
+            y = (this.z + 2.5) / (-2.5);
         }
-        return new Vector3(x, y, z);
+        return new Vector3(Math.abs(x), Math.abs(y), z);
     }
 }

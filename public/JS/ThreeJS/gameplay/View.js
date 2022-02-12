@@ -131,4 +131,8 @@ export class View {
                 this.displayElement(newSheep);
             }
     }
+
+    uncoverGridCase(pos, playerId) {
+
+    }
 };
