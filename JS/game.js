@@ -116,6 +116,7 @@ class game extends grid {
             box.addEventListener("mouseleave", (event) => {
                 console.log("leave")
                 this.animation(event, "leave");
+                console.log("end leave");
             })
 
             box.addEventListener("mouseenter", (event) => {
@@ -130,11 +131,15 @@ class game extends grid {
         const idBox = event.path[1].id;
         let r = Number(idBox[0]);
         let c = Number(idBox[2]);
-        let boxToWrite = document.getElementById([r, c]);
+
+        // Pb résolue !
+        // En écrivant dans la cellule du tableau, tu enlevais le boutton à l'intérieur
+        // Or c'est sur les bouttons que tes events 'mouseenter' et 'mouseleave' sont définis
+        let boxToWrite = document.getElementById([r, c]).querySelector('button');
 
         // Shears
         if (this.currentWeapon.name == "shears") {
-            boxToWrite.innerHTML = value;
+            boxToWrite.innerText = value;
             console.log("shears");
         }
 
