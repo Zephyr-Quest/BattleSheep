@@ -65,7 +65,7 @@ function init() {
     scene.add(ambientLight);
 
     // Setting up the directional light
-    const directionalLight = new THREE.DirectionalLight(0xF1E6B7, 2);
+    const directionalLight = new THREE.DirectionalLight(0xF1E6B7, 1.5);
     directionalLight.position.fromArray(Config.lightPosition.toArray());
     scene.add(directionalLight);
 
@@ -103,6 +103,21 @@ function init() {
     lightCube.position.fromArray(directionalLight.position.toArray());
     // scene.add(origin);
     scene.add(lightCube);
+
+    const grid = [
+        [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+        [0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 1, 1, 1, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ]
+    const playerId = 0;
+    view.displayPlayerGrid(grid, playerId);
 
 
     render();

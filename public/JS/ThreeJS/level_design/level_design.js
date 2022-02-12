@@ -1,4 +1,4 @@
-import { Vector3 } from 'three';
+import { Vector2, Vector3 } from 'three';
 
 /* -------------------------------------------------------------------------- */
 /*                         List all displayed elements                        */
@@ -7,7 +7,8 @@ const tmpElements = [
     { type: 'Map' , name: 'Map0', position: new Vector3(0, 0, 0) }
 ];
 
-// Add fences
+/* --------------------------------- Fences --------------------------------- */
+
 const fenceLocations = [
     new Vector3(-6, 0, 0),
     new Vector3(0, 0, 0),
@@ -16,25 +17,66 @@ const fenceLocations = [
 for (let i = 0; i < fenceLocations.length; i++)
     tmpElements.push({ type: 'Fence', name: 'Fence' + i, position: fenceLocations[i] });
 
-// Add grass and 2 sheeps
+/* ---------------------------------- Grid ---------------------------------- */
+
+// Init counter
 let grassCounter, sheepCounter;
 grassCounter = sheepCounter = 0;
-for (let k = 0; k < 2; k++)
+
+// Add all grass
+for (let playerId = 0; playerId < 2; playerId++)
     for (let i = 0; i < 10; i++)
         for (let j = 0; j < 10; j++) {
-            tmpElements.push({ type: 'Grass', name: 'Grass' + grassCounter, position: new Vector3(i * 2.5 - 10, 0, j * 2.5 + 2 - (k * 27)) });
-            grassCounter++;
+            const currentPos = new Vector2(i, j)
+            tmpElements.push(createGrass(currentPos, playerId));
         }
-            // if ((i != 5 || j != 5) && (i != 6 || j != 5)) {
-            // }
 
-function addSheep(id, position) {
-    tmpElements.push({
-        type: 'Sheep',
-        name: 'Sheep' + id,
-        position,
-        rotation: new Vector3(0, Math.random() * (Math.PI * 2), 0)
-    });
+/**
+ * Generate a grass level design object
+ * @param {THREE.Vector2} pos The 2D position
+ * @param {Number} playerId The grid id
+ * @returns The grass data
+ */
+function createGrass(pos, playerId) {
+    const grass = {
+        type: 'Grass',
+        name: 'Grass' + grassCounter,
+        position: new Vector3(pos.x * 2.5 - 10, 0, pos.y * 2.5 + 2 - (playerId * 27)),
+        rotation: getRandomRotationY()
+    };
+    grassCounter++;
+    return grass;
 }
 
-export const Elements = tmpElements;
+/**
+ * Generate a sheep level design object
+ * @param {THREE.Vector2} pos The 2D position
+ * @param {Number} playerId The grid id
+ * @returns The sheep data
+ */
+function createSheep(pos, playerId) {
+    const sheep = {
+        type: 'Sheep',
+        name: 'Sheep' + sheepCounter,
+        position: new Vector3(pos.x * 2.5 - 10, 0, pos.y * 2.5 + 2 - (playerId * 27)),
+        rotation: getRandomRotationY()
+    };
+    sheepCounter++;
+    return sheep;
+}
+
+/**
+ * Generate a random rotation vector
+ * @returns The random rotation vector
+ */
+function getRandomRotationY() {
+    return new Vector3(0, Math.random() * (Math.PI * 2), 0);
+}
+
+/* --------------------------------- Exports -------------------------------- */
+
+export {
+    tmpElements as Elements,
+    createGrass,
+    createSheep
+};

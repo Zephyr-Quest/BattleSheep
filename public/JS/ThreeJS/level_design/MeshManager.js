@@ -32,6 +32,14 @@ export class MeshManager extends Locatable {
     }
 
     /**
+     * Remove the mesh from the ThreeJS scene
+     * @param {THREE.Scene} scene The ThreeJS scene
+     */
+    removeFromScene(scene) {
+        scene.remove(this.mesh);
+    }
+
+    /**
      * Update the mesh with all params
      */
     updateScene() {

@@ -100,8 +100,11 @@ export class Locatable {
         // let y = - (k * 27);
         const x = (this.x + 10) / 2.5;
         let y = (this.z - 2) / 2.5;
-        if (!Number.isInteger(y))
+        let z = 0;
+        if (!Number.isInteger(y)) {
             y = (this.z - 2 + 27) / 2.5;
-        return new Vector2(x, y);
+            z = 1;
+        }
+        return new Vector3(x, y, z);
     }
 }
