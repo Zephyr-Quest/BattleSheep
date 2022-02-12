@@ -1,7 +1,5 @@
-import { Vector3 } from "three";
-
 import { Locatable } from "./Locatable.js";
-import { Model3D } from "../model_3d.js";
+import { Model3D } from "./model_3d.js";
 
 /* -------------------------------------------------------------------------- */
 /*                         Manage a displayed 3D model                        */

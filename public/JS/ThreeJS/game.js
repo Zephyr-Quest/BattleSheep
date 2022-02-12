@@ -1,119 +1,25 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'https://unpkg.com/three@0.137.0/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from 'https://unpkg.com/three@0.137.0/examples/jsm/loaders/GLTFLoader.js';
 
 import { Config } from './config.js';
-import { Model3D } from './model_3d.js';
-import { MeshManager } from './level_design/MeshManager.js';
-import { Elements } from './level_design/level_design.js';
 
-let scene, renderer, camera, controls;
+// Gameplay imports
+import { CustomRaycaster } from './gameplay/Raycaster.js';
+import { View } from './gameplay/View.js';
 
-const allObjects = {};
-let turningGrass = null;
+let scene, renderer, camera, controls, raycaster;
 
 /* ---------------------------------- Debug --------------------------------- */
 
+let stats;
+const DEBUG_STATS = true;
+const USE_ORBIT_CONTROLS = true;
 const DEBUG_RAYCASTER = false;
 
-// Stats
-const stats = new Stats();
-stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-document.body.appendChild(stats.dom);
+/* ---------------------------------- View ---------------------------------- */
 
-/* -------------------------------- Raycaster ------------------------------- */
-
-// Init the raycaster
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-
-// Use raycaster on click
-const raycasterOnClick = event => {
-    // Convert coordinates
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-    // Interpret raycaster data
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(scene.children);
-
-    if (intersects.length > 0) {
-        // Choose the best result from raycaster
-        const currentIntersect = intersects[0];
-        if (DEBUG_RAYCASTER) console.log(currentIntersect);
-
-        // Try to get the real clicked element
-        let clicked;
-        try {
-            let searching = true, currentParent = currentIntersect.object;
-
-            // Search a referenced mesh
-            while (searching) {
-                if (currentParent.parent instanceof THREE.Mesh || currentParent.parent instanceof THREE.Group)
-                    currentParent = currentParent.parent;
-                else searching = false;
-            }
-
-            clicked = allObjects[currentParent.name];
-        } catch (error) {
-            if (DEBUG_RAYCASTER) console.error('Error finding the clicked element');
-            return;
-        }
-
-        if (DEBUG_RAYCASTER) console.log(clicked);
-        
-        // Down the previous selected grass
-        if (turningGrass !== null) {
-            turningGrass.downGrass();
-            turningGrass = null;
-        }
-        
-        if (clicked.type === 'Grass') {
-            clicked.upGrass()
-
-            // Turn the selected grass
-            turningGrass = clicked;
-            console.log(turningGrass.getGridPosition());
-        }
-    }
-};
-
-/* --------------------------------- Models --------------------------------- */
-
-// Model load manager
-const modelLoader = new GLTFLoader();
-loadModels();
-
-/**
- * Load an empty model and restart (recursive, start 'init' when it's done)
- */
-function loadModels() {
-    let loaded = true;
-
-    // Try to find an unloaded model in 'Model3D'
-    for (let modelName in Model3D) {
-        if (!Model3D.hasOwnProperty(modelName)) continue;
-
-        const currentModel = Model3D[modelName];
-        if (currentModel.model === null) {
-            // The model is not loaded yet
-            loaded = false;
-
-            // Add the model to the load manager
-            modelLoader.load(Config.modelsPath + currentModel.modelName, gltf => {
-                currentModel.model = gltf;
-
-                // Load the other models
-                loadModels();
-            });
-
-            break;
-        }
-    }
-
-    // Start ThreeJS when it's done
-    if (loaded) init();
-}
+const view = new View();
+view.loadModels(init);
 
 /* -------------------------------------------------------------------------- */
 /*                           ThreeJS main functions                           */
@@ -128,6 +34,7 @@ function init() {
     // Setting up the scene
     scene = new THREE.Scene();
     scene.background = Config.backgroundColor;
+    view.scene = scene;
 
     // Setting up the renderer
     renderer = new THREE.WebGLRenderer({
@@ -146,17 +53,10 @@ function init() {
     camera.lookAt(new THREE.Vector3(0, 0, 0));
     scene.add(camera);
 
-    window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    }, false);
-
     /* -------------------------------- Controls -------------------------------- */
-    
-    // Setting up the orbit controls
-    controls = new OrbitControls(camera, renderer.domElement);
-    controls.update();
+
+    // Setting up the raycaster
+    raycaster = new CustomRaycaster(scene, camera, view, DEBUG_RAYCASTER);
 
     /* --------------------------------- Lights --------------------------------- */
 
@@ -172,33 +72,39 @@ function init() {
     /* ------------------------------ Level design ------------------------------ */
 
     // Display all element
-    for (const element of Elements) {
-        const currentMesh = new MeshManager(element.name, element.type, element.position);
+    view.displayAllElements();
+    
+    /* --------------------------------- Events --------------------------------- */
+    
+    raycaster.initEvent();
+    window.addEventListener("keyup", onKeyUp);
+    window.addEventListener('resize', onResize, false);
 
-        // Set the rotation
-        if (element.hasOwnProperty('rotation'))
-            currentMesh.setRotationFromVector(element.rotation);
+    /* ---------------------------------- Debug --------------------------------- */
 
-        // Add the current element to the scene
-        allObjects[element.name] = currentMesh;
-        currentMesh.addToScene(scene);
+    // Display FPS
+    if (DEBUG_STATS) {
+        stats = new Stats();
+        stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+        document.body.appendChild(stats.dom);
     }
 
+    // Init OrbitControls
+    if (USE_ORBIT_CONTROLS) {
+        controls = new OrbitControls(camera, renderer.domElement);
+        controls.update();
+    }
+
+    // Display the origin and the light position
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const origin = new THREE.Mesh(geometry, material);
     const lightCube = new THREE.Mesh(geometry, material);
     lightCube.position.fromArray(directionalLight.position.toArray());
-    
     // scene.add(origin);
     scene.add(lightCube);
 
-    
-    /* --------------------------------- Events --------------------------------- */
-    
-    window.addEventListener("click", raycasterOnClick, false);
-    window.addEventListener("keyup", keyUp);
-    
+
     render();
 }
 
@@ -207,22 +113,22 @@ function init() {
  */
 function render() {
     // DEBUG : Start calcul frame rate
-    stats.begin();
+    if (DEBUG_STATS) stats.begin();
 
     // DEBUG : Update OrbitControl (camera control)
-    controls.update();
+    if (USE_ORBIT_CONTROLS) controls.update();
 
     // Turn the selected grass
-    if (turningGrass !== null) {
-        turningGrass.rotY += 0.01;
-        turningGrass.updateScene();
+    if (view.sceneState.turningGrass !== null) {
+        view.sceneState.turningGrass.rotY += 0.01;
+        view.sceneState.turningGrass.updateScene();
     }
 
     // Rendering the 3D scene
     renderer.render(scene, camera);
 
     // DEBUG : Stop calcul frame rate
-    stats.end();
+    if (DEBUG_STATS) stats.end();
 
     // Wait before looping
     requestAnimationFrame(render);
@@ -232,7 +138,7 @@ function render() {
  * Callback of keyup event
  * @param {KeyboardEvent} e The keyup event object
  */
-function keyUp(e) {
+function onKeyUp(e) {
     // console.log(e);
 
     if (e.code === 'Space')
@@ -277,4 +183,13 @@ function keyUp(e) {
             camera.position.fromArray(pos.toArray());
         }
     }
+}
+
+/**
+ * Update the 3D scene when the user resize the page
+ */
+function onResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
 }

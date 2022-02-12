@@ -27,6 +27,7 @@ if (app.get('env') === "production") {
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
+app.use('/favicon.ico', express.static(path.join(__dirname, 'public', 'img', 'favicon.ico')));
 
 app.get('/', (req, res) => {
     res.render('index', {
