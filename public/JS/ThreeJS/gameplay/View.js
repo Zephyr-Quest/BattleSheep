@@ -45,7 +45,6 @@ export class View {
             if (current.texture !== null) continue;
 
             // Add the texture to the loader
-            console.log(Config.texturesPath + current.fileName);
             current.texture = this.textureLoader.load(Config.texturesPath + current.fileName);
             current.texture.magFilter = NearestFilter;
         }

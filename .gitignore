@@ -133,3 +133,5 @@ dist
 
 pass.sql
 .vscode
+
+*.blend1

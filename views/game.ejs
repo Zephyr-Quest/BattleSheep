@@ -2,24 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="The main page to play BattleSheep game" />
+    <meta name="author" content="Martin Delebecque" />
+    <link rel="stylesheet" href="CSS/game.css" />
     <title>BattleSheep</title>
 
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            /* background: #0099ff;
-            background: -moz-linear-gradient(top, #0099ff, #00ccff);
-            background: -webkit-linear-gradient(top, #0099ff, #00ccff);
-            background: -ms-linear-gradient(top, #0099ff, #00ccff);
-            background: -o-linear-gradient(top, #0099ff, #00ccff);
-            background: linear-gradient(top, #0099ff, #00ccff); */
-        }
-    </style>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=KoHo:wght@300&display=swap" rel="stylesheet" />
+
+    <link rel="icon" type="image/png" sizes="16x16" href="img/ZephyrStudio_logo.png" />
 </head>
 <body>
+    <header>
+        <!-- The score and timer display -->
+        <section>
+            <img src="img/sheep.png" alt="Sheep" />
+            <span class="scoreboard">
+                <span id="score">0</span> / 20
+            </span>
+        </section>
+        <section>
+            <span id="minutes">00</span> : <span id="seconds">00</span>
+            <ion-icon name="hourglass-outline"></ion-icon>
+        </section>
+    </header>
+
     <!-- ThreeJS -->
     <script type="text/javascript" src="JS/ThreeJS/stats.min.js"></script>
     <script type="importmap">
@@ -32,5 +42,9 @@
     
     <!-- Main script -->
     <script type="module" src="JS/ThreeJS/game.js"></script>
+
+    <!-- Ionicons -->
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 </body>
 </html>

@@ -1,0 +1,75 @@
+@charset "UTF-8";
+/* -------------------------------------------------------------------------- */
+/*                               Some variables                               */
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                   General                                  */
+/* -------------------------------------------------------------------------- */
+body {
+  padding: 0;
+  margin: 0;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+/* -------------------------------------------------------------------------- */
+/*                                     HUD                                    */
+/* -------------------------------------------------------------------------- */
+header {
+  position: fixed;
+  padding: 0;
+  margin: 0;
+  top: 0;
+  left: 42%;
+  right: 42%;
+  display: flex;
+  justify-content: center;
+  font-family: 'KoHo', sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.4);
+}
+header section {
+  border-bottom: 3px solid #3ca50c;
+  background-color: rgba(238, 238, 238, 0.5);
+  color: #fff;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 0 5px 0;
+}
+header section:nth-child(1) {
+  border-left: 3px solid #3ca50c;
+  border-right: 1.5px solid #3ca50c;
+  border-radius: 0 0 0 10px;
+}
+header section:nth-child(1) img {
+  width: 30px;
+  height: auto;
+}
+header section:nth-child(1) .scoreboard {
+  margin-left: 10px;
+}
+header section:nth-child(2) {
+  border-left: 1.5px solid #3ca50c;
+  border-right: 3px solid #3ca50c;
+  border-radius: 0 0 10px 0;
+}
+header section:nth-child(2) span {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+header section:nth-child(2) ion-icon {
+  margin-left: 5px;
+}
+/* -------------------------------------------------------------------------- */
+/*                              Responsive design                             */
+/* -------------------------------------------------------------------------- */
+@media screen and (max-width: 1400px) {
+  header {
+    left: 35%;
+    right: 35%;
+  }
+}
