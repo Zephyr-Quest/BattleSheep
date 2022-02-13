@@ -57,7 +57,7 @@ app.get('/signup', (req, res) => {
     let sessionData = req.session;
     if (!sessionData.username) {
         console.log(
-            'Utilisateur non connecté, envoi vers formulaire de connexion')
+            'Utilisateur non connecté, envoi vers formulaire de connexion');
         res.render('signup', {
             title: 'BattleSheep | Sign up, Log in',
             description: 'Sign up or log in to BattleSheep',
@@ -95,7 +95,7 @@ app.post('/signup',
                  console.log('PSEUDO', pseudo);
                  console.log('MDP', password);
                  // manageUser.cryptPassword(password)
-                    //! envoi à la BDD
+                 //! envoi à la BDD
 
                  req.session.username = req.body.pseudo;
                  req.session.save();
@@ -125,7 +125,7 @@ app.post('/login',
              else {
                  console.log('PSEUDO', pseudo);
                  console.log('MDP', password);
-                    //! check avec la BDD
+                 //! check avec la BDD
 
                  req.session.username = req.body.pseudo;
                  req.session.save();
@@ -148,13 +148,23 @@ app.get('/lobby', (req, res) => res.render('lobby'));
 
 app.get('/game', (req, res) => res.render('game'));
 
+app.get('/logout', (req, res) => {
+    console.log("---DECONNEXION---")
+    req.session.destroy()
+    res.render('index', {
+        title: 'BattleSheep by ZephyrStudio',
+        description: 'Welcome in our Web project !',
+        scripts: [{name: 'home', type: 'module'}]
+    });
+});
+
 
 
 io.on('connection', (socket) => {
-    console.log('Connexion d\'un utilisateur');
+    console.log('Connexion d\'un joueur au jeu');
 
     socket.on('disconnect', () => {
-        console.log('Déconnexion d\'un utilisateur');
+        console.log('Déconnexion d\'un joueur');
     });
 });
 
@@ -167,13 +177,13 @@ http.listen(process.env.APP_PORT, () => {
 /*                                     BDD                                    */
 /* -------------------------------------------------------------------------- */
 
-// Conexion
+// Connexion
 const con = mysql.createConnection({
     host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USERNAME,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.DATABASE_NAME
-})
+});
 
 con.connect(err => {
     if (err) throw err;
@@ -185,7 +195,7 @@ con.connect(err => {
      * @param   {string}  user  username to insert
      * @param   {string}  pass  password
      *
-     * @return  {error}        return if error
+     * @return  {error}         return if error
      */
     function signUp(user, pass) {
         // Insert element
@@ -193,14 +203,14 @@ con.connect(err => {
             return;
         }
         try {
-            const users = {username: user, password: pass}
+            const users = {username: user, password: pass};
 
-            sql = 'INSERT into users SET ?'
+            sql = 'INSERT into users SET ?';
             con.query(sql, users, (err, result) => {
                 if (err) throw err;
                 console.log('1 element inserted');
                 console.log(result);
-            })
+            });
         } catch (error) {
             console.log(error);
         }
@@ -212,11 +222,11 @@ con.connect(err => {
      * @param   {string}  user  username
      * @param   {string}  pass  password
      *
-     * @return  {Array}        array of users matching
+     * @return  {Array}         array of users matching
      */
-    function signIn(usr, pass) {
-        let quer = 'SELECT * from users WHERE username=\'' + usr
-                   + '\' AND password=\'' + pass + '\'';
+    function signIn(user, pass) {
+        let quer = "SELECT * from users WHERE username='" + user
+                   + "' AND password='" + pass + "'";
         con.query(quer, (err, result) => {
             if (err) throw err;
             if (result == '') console.log('Utilisateur introuvable');
@@ -233,10 +243,10 @@ con.connect(err => {
      *
      * @param   {string}  user  username
      *
-     * @return  {Array}       usr and pass
+     * @return  {Array}         user and pass
      */
     function getListFromUser(usr) {
-        let quer = 'SELECT * from users WHERE username=\'' + usr + '\'';
+        let quer = "SELECT * from users WHERE username='" + usr + "'";
         con.query(quer, (err, result) => {
             if (err) throw err;
             console.log(result);
@@ -249,10 +259,10 @@ con.connect(err => {
      *
      * @param   {string}  id  id
      *
-     * @return  {Array}       usr and pass
+     * @return  {Array}       user and pass
      */
     function getListFromId(id) {
-        let quer = 'SELECT * from users WHERE id=\'' + id + '\'';
+        let quer = "SELECT * from users WHERE id='" + id + "'";
         con.query(quer, (err, result) => {
             if (err) throw err;
             console.log(result);
