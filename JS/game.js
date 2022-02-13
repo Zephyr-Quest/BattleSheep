@@ -2,7 +2,7 @@ class game extends grid {
     constructor() {
         super();
 
-        // Set grid
+        // Set enemy grid
         const enemyGrid = document.getElementById("enemyGrid");
         for (let row = 0; row < this.gridSize; row++) {
             const tr = document.createElement('tr');
@@ -50,7 +50,6 @@ class game extends grid {
             // Listener
             button.addEventListener("click", () => {
                 this.currentWeapon = this.weapons[button.id];
-                console.log(this.currentWeapon);
             })
         }
 
@@ -60,7 +59,7 @@ class game extends grid {
     displayOnScreen() {
         for (let row = 0; row < this.gridSize; row++) {
             for (let col = 0; col < this.gridSize; col++) {
-                const currentBtn = document.getElementById([row, col]).firstChild;
+                const currentBtn = document.getElementById([row, col]).firstChild; 
                 currentBtn.innerHTML = (this.grid[row][col] === undefined ? "" : this.grid[row][col]);
             }
         }
@@ -69,11 +68,13 @@ class game extends grid {
     // Fonction qui va disparaitre par la suite, va être géré par le back mais utile pour les tests pour l'instant
     attack(r, c) {
         // Shears
-        if (this.currentWeapon.name == "shears") this.setCase(r, c, this.currentWeapon.rank + " ");
+        if (this.currentWeapon.name == "shears") {
+            this.setCase(r, c, this.currentWeapon.rank + " ");
+        }
 
 
         // Torpedo
-        if (this.currentWeapon.name == "torpedo") {
+        else if (this.currentWeapon.name == "torpedo") {
             this.setCase(r, c, this.currentWeapon.rank + " ");
         }
 
@@ -91,19 +92,25 @@ class game extends grid {
                 for (minR; minR < maxR; minR++) {
                     (c == 0) ? minC = 0 : minC = Number(c) - 1;
                     for (minC; minC < maxC; minC++) {
-                        this.setCase(minR, minC, this.currentWeapon.rank + " ");
+                        if (this.grid[minR][minC] == undefined) {
+                            this.setCase(minR, minC, this.currentWeapon.rank + " ");
+                        }
                     }
                 }
             }
 
             // Fragment
-            if (this.currentWeapon.name == "fragment") {
+            else if (this.currentWeapon.name == "fragment") {
                 (c == 0) ? minC = 0 : minC = Number(c) - 1;
                 for (minR; minR < maxR; minR++) {
-                    this.setCase(minR, c, this.currentWeapon.rank + " ");
+                    if (this.grid[minR][c] == undefined) {
+                        this.setCase(minR, c, this.currentWeapon.rank + " ");
+                    }
                 }
                 for (minC; minC < maxC; minC++) {
-                    this.setCase(r, minC, this.currentWeapon.rank + " ");
+                    if (this.grid[r][minC] == undefined) {
+                        this.setCase(r, minC, this.currentWeapon.rank + " ");
+                    }
                 }
             }
         }
@@ -114,15 +121,11 @@ class game extends grid {
 
         for (const box of container) {
             box.addEventListener("mouseleave", (event) => {
-                console.log("leave")
-                this.animation(event, "leave");
-                console.log("end leave");
+                this.animation(event, "");
             })
 
             box.addEventListener("mouseenter", (event) => {
-                console.log("begin enter");
-                this.animation(event, "enter");
-                console.log("end enter")
+                this.animation(event, "•");
             })
         }
     }
@@ -138,15 +141,13 @@ class game extends grid {
         let boxToWrite = document.getElementById([r, c]).querySelector('button');
 
         // Shears
-        if (this.currentWeapon.name == "shears") {
+        if (this.currentWeapon.name == "shears" && this.grid[r][c] == undefined) {
             boxToWrite.innerText = value;
-            console.log("shears");
         }
 
         // Torpedo
-        else if (this.currentWeapon.name == "torpedo") {
+        else if (this.currentWeapon.name == "torpedo" && this.grid[r][c] == undefined) {
             boxToWrite.innerHTML = value;
-            console.log("torpedo");
         }
 
         else {
@@ -163,28 +164,30 @@ class game extends grid {
                 for (minR; minR < maxR; minR++) {
                     (c == 0) ? minC = 0 : minC = Number(c) - 1;
                     for (minC; minC < maxC; minC++) {
-                        console.log(minR, minC)
-                        boxToWrite = document.getElementById([minR, minC]);
-                        boxToWrite.innerHTML = value;
+                        if (this.grid[minR][minC] == undefined) {
+                            boxToWrite = document.getElementById([minR, minC]).querySelector('button');
+                            boxToWrite.innerHTML = value;
+                        }
                     }
                 }
-                console.log("map")
             }
 
             // Fragment
             else if (this.currentWeapon.name == "fragment") {
                 (c == 0) ? minC = 0 : minC = Number(c) - 1;
                 for (minR; minR < maxR; minR++) {
-                    boxToWrite = document.getElementById([minR, minC]);
-                    boxToWrite.innerHTML = value;
+                    if (this.grid[minR][c] == undefined) {
+                        boxToWrite = document.getElementById([minR, c]).querySelector('button');
+                        boxToWrite.innerHTML = value;
+                    }
                 }
                 for (minC; minC < maxC; minC++) {
-                    boxToWrite = document.getElementById([minR, minC]);
-                    boxToWrite.innerHTML = value;
+                    if (this.grid[r][minC] == undefined) {
+                        boxToWrite = document.getElementById([r, minC]).querySelector('button');
+                        boxToWrite.innerHTML = value;
+                    }
                 }
-                console.log("fragment");
             }
         }
-        console.log("end animation")
     }
 }

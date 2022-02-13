@@ -79,3 +79,7 @@ td button {
     width: 70px;
     height: 70px;
 }
+
+#enemyGrid button{
+    font-size: 30px;
+}
