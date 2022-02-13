@@ -5,12 +5,17 @@ const io = require('socket.io')(http);
 const path = require('path');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
-const {body, validationResult} = require('express-validator');
+const {
+    body,
+    validationResult
+} = require('express-validator');
 
 const jsonParse = bodyParser.json();
 // const urlencodedParse = bodyParser.urlencoded({extended: false});
 const manageUser = require('./back/server/crypt.js');
-const {connect} = require('http2');
+const {
+    connect
+} = require('http2');
 
 
 
@@ -22,7 +27,10 @@ const session = require('express-session')({
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
-    cookie: {maxAge: 2 * 60 * 60 * 1000, secure: false}
+    cookie: {
+        maxAge: 2 * 60 * 60 * 1000,
+        secure: false
+    }
 });
 
 app.use(jsonParse);
@@ -46,7 +54,10 @@ app.get('/', (req, res) => {
     res.render('index', {
         title: 'BattleSheep by ZephyrStudio',
         description: 'Welcome in our Web project !',
-        scripts: [{name: 'home', type: 'module'}]
+        scripts: [{
+            name: 'home',
+            type: 'module'
+        }]
     });
 });
 
@@ -61,9 +72,14 @@ app.get('/signup', (req, res) => {
         res.render('signup', {
             title: 'BattleSheep | Sign up, Log in',
             description: 'Sign up or log in to BattleSheep',
-            scripts: [
-                {name: 'http', type: 'text/javascript'},
-                {name: 'signup', type: 'text/javascript'}
+            scripts: [{
+                    name: 'http',
+                    type: 'text/javascript'
+                },
+                {
+                    name: 'signup',
+                    type: 'text/javascript'
+                }
             ]
         });
     } else {
@@ -77,13 +93,17 @@ app.get('/signup', (req, res) => {
 });
 
 app.post('/signup',
-         body('pseudo').isLength({min: 3}).trim().escape(),
-         body('password').isLength({min: 3}).trim(),
-         (req, res) => {
-             console.log("---SIGN UP---")
+    body('pseudo').isLength({
+        min: 3
+    }).trim().escape(),
+    body('password').isLength({
+        min: 3
+    }).trim(),
+    (req, res) => {
+        console.log("---SIGN UP---")
 
-             let pseudo = req.body.pseudo;
-             let password = req.body.password;
+        let pseudo = req.body.pseudo;
+        let password = req.body.password;
 
              const errors = validationResult(req)
              if (!errors.isEmpty()) {
@@ -97,24 +117,28 @@ app.post('/signup',
                  // manageUser.cryptPassword(password)
                  //! envoi à la BDD
 
-                 req.session.username = req.body.pseudo;
-                 req.session.save();
-                 console.log('Envoi vers le lobby');
-                 res.send('OK');
-             }
-         });
+            req.session.username = req.body.pseudo;
+            req.session.save();
+            console.log('Envoi vers le lobby');
+            res.send('OK');
+        }
+    });
 // Pas d'inquiétude sur cette fin de fonction,
 // c'est juste clang-format qui fout la merde
 // Résolu dès que clang 14 est release
 
 app.post('/login',
-         body('pseudo').isLength({min: 3}).trim().escape(),
-         body('password').isLength({min: 3}).trim(),
-         (req, res) => {
-             console.log("---LOG IN---")
+    body('pseudo').isLength({
+        min: 3
+    }).trim().escape(),
+    body('password').isLength({
+        min: 3
+    }).trim(),
+    (req, res) => {
+        console.log("---LOG IN---")
 
-             let pseudo = req.body.pseudo;
-             let password = req.body.password;
+        let pseudo = req.body.pseudo;
+        let password = req.body.password;
 
              const errors = validationResult(req)
              if (!errors.isEmpty()) {
@@ -127,12 +151,12 @@ app.post('/login',
                  console.log('MDP', password);
                  //! check avec la BDD
 
-                 req.session.username = req.body.pseudo;
-                 req.session.save();
-                 console.log('Envoi vers le lobby');
-                 res.send('OK');
-             }
-         });
+            req.session.username = req.body.pseudo;
+            req.session.save();
+            console.log('Envoi vers le lobby');
+            res.send('OK');
+        }
+    });
 
 
 
@@ -140,7 +164,10 @@ app.get('/rules', (req, res) => {
     res.render('rules', {
         title: 'BattleSheep | Rules',
         description: 'BattleSheep rules',
-        scripts: [{name: 'home', type: 'module'}]
+        scripts: [{
+            name: 'home',
+            type: 'module'
+        }]
     });
 });
 
@@ -203,7 +230,10 @@ con.connect(err => {
             return;
         }
         try {
-            const users = {username: user, password: pass};
+            const users = {
+                username: user,
+                password: pass
+            }
 
             sql = 'INSERT into users SET ?';
             con.query(sql, users, (err, result) => {
@@ -270,3 +300,5 @@ con.connect(err => {
         });
     }
 });
+
+const Database = require("./db/bdd")
