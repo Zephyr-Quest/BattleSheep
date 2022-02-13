@@ -6,8 +6,11 @@ import { Config } from './config.js';
 // Gameplay imports
 import { CustomRaycaster } from './gameplay/Raycaster.js';
 import { View } from './gameplay/View.js';
+import { Textures } from './level_design/textures.js';
 
 let scene, renderer, camera, controls, raycaster;
+
+let particle;
 
 /* ---------------------------------- Debug --------------------------------- */
 
@@ -19,7 +22,7 @@ const DEBUG_RAYCASTER = false;
 /* ---------------------------------- View ---------------------------------- */
 
 const view = new View();
-view.loadModels(init);
+view.load(init);
 
 /* -------------------------------------------------------------------------- */
 /*                           ThreeJS main functions                           */
@@ -65,7 +68,7 @@ function init() {
     scene.add(ambientLight);
 
     // Setting up the directional light
-    const directionalLight = new THREE.DirectionalLight(0xF1E6B7, 1.5);
+    const directionalLight = new THREE.DirectionalLight(Config.light.color, Config.light.intensity);
     directionalLight.position.fromArray(Config.lightPosition.toArray());
     scene.add(directionalLight);
 
@@ -118,6 +121,13 @@ function init() {
     ]
     const playerId = 1;
     view.displayPlayerGrid(grid, playerId);
+
+    const spriteMaterial = new THREE.SpriteMaterial({ map: Textures.Grass.texture, transparent: true, opacity: 0.8, color: Config.light.color });
+    particle = new THREE.Sprite(spriteMaterial);
+    particle.scale.set(1.5, 1, 1);
+    particle.scale.multiplyScalar(0.5);
+    particle.position.set(0, 2, 0);
+    scene.add(particle);
 
 
     render();

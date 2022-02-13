@@ -1,5 +1,8 @@
 import { Raycaster, Vector2, Mesh, Group } from 'three';
 
+/* -------------------------------------------------------------------------- */
+/*                        Manage the ThreeJS Raycaster                        */
+/* -------------------------------------------------------------------------- */
 export class CustomRaycaster {
 
     /**
@@ -76,7 +79,13 @@ export class CustomRaycaster {
 
                 // Turn the selected grass
                 this.view.sceneState.turningGrass = clicked;
-                console.log(this.view.sceneState.turningGrass.getGridPosition());
+                
+                const gridPosition = clicked.getGridPosition()
+                console.log(gridPosition);
+
+                setTimeout(() => {
+                    this.view.uncoverGridCase(new Vector2(gridPosition.x, gridPosition.y), gridPosition.z, true);
+                }, 1000);
             }
         }
     }
