@@ -12,12 +12,16 @@ const {
 
 const jsonParse = bodyParser.json();
 // const urlencodedParse = bodyParser.urlencoded({extended: false});
-const manageUser = require('./back/server/crypt.js');
+const manageUser = require('./back/server/manageUser');
 const {
     connect
 } = require('http2');
 
-
+const {
+    BDD
+} = require("./db/bdd")
+console.log(BDD)
+const Database = new BDD()
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
@@ -49,8 +53,13 @@ if (app.get('env') === 'production') {
 /*                         Get the different request                          */
 /* -------------------------------------------------------------------------- */
 
-
 app.get('/', (req, res) => {
+    console.log("Affichage BDD")
+    Database.getList(res => {
+        console.log(res)
+    })
+    console.log("Fin affichage")
+
     res.render('index', {
         title: 'BattleSheep by ZephyrStudio',
         description: 'Welcome in our Web project !',
@@ -105,22 +114,33 @@ app.post('/signup',
         let pseudo = req.body.pseudo;
         let password = req.body.password;
 
-             const errors = validationResult(req)
-             if (!errors.isEmpty()) {
-                 console.log('---ERROR---')
-                 console.log(errors);
-                 res.status(400).json({errors: errors.array()});
-             }
-             else {
-                 console.log('PSEUDO', pseudo);
-                 console.log('MDP', password);
-                 // manageUser.cryptPassword(password)
-                 //! envoi à la BDD
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            console.log('---ERROR---')
+            console.log(errors);
+            res.status(400).json({
+                errors: errors.array()
+            });
+        } else {
+            console.log('PSEUDO', pseudo);
+            console.log('MDP', password);
+            manageUser.cryptPassword(password, mdp => {
 
-            req.session.username = req.body.pseudo;
-            req.session.save();
-            console.log('Envoi vers le lobby');
-            res.send('OK');
+                //! hash + envoi à la BDD
+                Database.signUp(pseudo, mdp, e => {
+                    if (e == true) {
+                        req.session.username = req.body.pseudo;
+                        req.session.save();
+                        console.log('Envoi vers le lobby');
+                        Database.getList(e => {
+                            console.log(e);
+                        });
+                        res.send('OK');
+                    }
+
+                    //TODO AFFICHER DE RECOMMENCER SI FALSE
+                });
+            });
         }
     });
 // Pas d'inquiétude sur cette fin de fonction,
@@ -140,16 +160,17 @@ app.post('/login',
         let pseudo = req.body.pseudo;
         let password = req.body.password;
 
-             const errors = validationResult(req)
-             if (!errors.isEmpty()) {
-                 console.log('---ERROR---')
-                 console.log(errors);
-                 res.status(400).json({errors: errors.array()});
-             }
-             else {
-                 console.log('PSEUDO', pseudo);
-                 console.log('MDP', password);
-                 //! check avec la BDD
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            console.log('---ERROR---')
+            console.log(errors);
+            res.status(400).json({
+                errors: errors.array()
+            });
+        } else {
+            console.log('PSEUDO', pseudo);
+            console.log('MDP', password);
+            //! check avec la BDD
 
             req.session.username = req.body.pseudo;
             req.session.save();
@@ -181,7 +202,10 @@ app.get('/logout', (req, res) => {
     res.render('index', {
         title: 'BattleSheep by ZephyrStudio',
         description: 'Welcome in our Web project !',
-        scripts: [{name: 'home', type: 'module'}]
+        scripts: [{
+            name: 'home',
+            type: 'module'
+        }]
     });
 });
 
@@ -203,5 +227,3 @@ http.listen(process.env.APP_PORT, () => {
 /* -------------------------------------------------------------------------- */
 /*                                     BDD                                    */
 /* -------------------------------------------------------------------------- */
-
-const Database = require("./db/bdd")

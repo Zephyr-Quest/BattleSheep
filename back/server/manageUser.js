@@ -5,17 +5,17 @@ let manageUser = (function () {
 
 
     return {
-        cryptPassword(password) {
+        cryptPassword(password, callback) {
             bcrypt.hash(password, saltRounds, function (err, crypted) {
                 if (err) {
                     console.log(err);
                     return 0;
                 }
-                mdpHash = crypted;
                 console.log('crypted: ' + crypted);
                 console.log('rounds used from hash:', bcrypt.getRounds(crypted));
 
                 //! transmettre le mdp hash à la bdd
+                callback(crypted)
                 
                 bcrypt.compare(password, crypted, function (err, match) {
                     if (err) {
@@ -67,11 +67,5 @@ let manageUser = (function () {
         }
     }
 })();
-
-//let password = "EngLePLusBeau";
-
-//manageUser.cryptPassword(password);
-
-//manageUser.checkUser("EngLePlusBeau");
 
 module.exports = manageUser;
