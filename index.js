@@ -294,14 +294,3 @@ con.connect(err => {
 });
 
 const Database = require("./db/bdd")
-// for (let index = 0; index < 20; index++) {
-//     Database.removeUser("Tom",res=>{
-//         console.log(res)
-//     })
-// }
-Database.signIn("Tom","pass", res=>{
-    console.log(res)
-})
-// Database.getListFromUser("Tom", res => {
-//     console.log(res)
-// })

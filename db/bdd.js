@@ -10,22 +10,6 @@ const {
     con
 } = require("./BDDConnexion")
 
-
-// const session = require('express-session')({
-//     secret: "1234",
-//     resave: true,
-//     saveUninitialized: true,
-//     cookie: {
-//         maxAge: 2 * 60 * 60 * 1000,
-//         secure: false
-//     }
-// });
-
-// if (app.get('env') === "production") {
-//     app.set('trust proxy', 1);
-//     session.cookie.secure = true;
-// }
-
 /**
  * Insert user and password in table
  *
@@ -84,6 +68,22 @@ function signIn(usr, pass, callback) {
     }
 }
 
+
+/**
+ * Get All table
+ *
+ * @param   {string}  user  username
+ *
+ * @return  {Array}       usr and pass
+ */
+function getList(callback) {
+    let quer = "SELECT * from users";
+    con.query(quer, (err, result) => {
+        if (err) throw err;
+        callback(result)
+    })
+}
+
 /**
  * get user and password for a username given
  *
@@ -110,8 +110,8 @@ function getListFromUser(usr, callback) {
  * @return  {Array}       usr and pass
  */
 function getListFromId(id, callback) {
-    if(id=="") return;
-    else{
+    if (id == "") return;
+    else {
         let quer = "SELECT * from users WHERE id='" + id + "'";
         con.query(quer, (err, result) => {
             if (err) throw err;
@@ -142,10 +142,29 @@ function removeUser(username, callback) {
     }
 }
 
+/**
+ * Remove user from DB
+ *
+ * @param   {String}  username  Username to remove
+ * @param   {callback}  callback  
+ *
+ * @return  {Array}            
+ */
+function removeAllUser(callback) {
+    let que = 'DELETE from users';
+    con.query(que, (err, result) => {
+        if (err) throw err;
+        console.log("All element removed")
+        callback(result)
+    })
+}
+
 module.exports = {
     signIn,
     signUp,
+    getList,
     getListFromId,
     getListFromUser,
-    removeUser
+    removeUser,
+    removeAllUser
 }
