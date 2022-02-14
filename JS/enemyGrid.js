@@ -45,7 +45,7 @@ class enemyGrid extends grid {
         for (let i = 0; i < this.weapons.length; i++) {
             const button = document.createElement('button');
             button.id = i;
-            button.innerText = this.weapons[i].name;
+            button.innerHTML = this.weapons[i].name;
             tableWeapons.appendChild(button);
             // Listener
             button.addEventListener("click", () => {
@@ -128,7 +128,7 @@ class enemyGrid extends grid {
             })
 
             box.addEventListener("mouseenter", (event) => {
-                this.animation(event, "•");
+                this.animation(event, '<i class="fa fa-crosshairs"></i>');
             })
         }
     }
@@ -144,13 +144,17 @@ class enemyGrid extends grid {
         let boxToWrite = document.getElementById([r, c]).querySelector('button');
 
         // Shears
-        if (this.currentWeapon.name == "shears" && this.grid[r][c] == undefined) {
-            boxToWrite.innerText = value;
+        if (this.currentWeapon.name == "shears") {
+            if (this.grid[r][c] == undefined) boxToWrite.innerHTML = value;
+            else if (this.grid[r][c] == 0 && event.type == "mouseenter") boxToWrite.innerHTML = '<i class="fa fa-times" style="color:rgb(231, 12, 12 )"></i>';
+            else if (this.grid[r][c] == 0 && event.type == "mouseleave") boxToWrite.innerHTML = "";
         }
 
         // Torpedo
-        else if (this.currentWeapon.name == "torpedo" && this.grid[r][c] == undefined) {
-            boxToWrite.innerHTML = value;
+        else if (this.currentWeapon.name == "torpedo") {
+            if (this.grid[r][c] == undefined) boxToWrite.innerHTML = value;
+            else if (this.grid[r][c] == 0 && event.type == "mouseenter") boxToWrite.innerHTML = '<i class="fa fa-times" style="color:rgb(231, 12, 12 )"></i>';
+            else if (this.grid[r][c] == 0 && event.type == "mouseleave") boxToWrite.innerHTML = "";
         }
 
         else {
@@ -167,10 +171,10 @@ class enemyGrid extends grid {
                 for (minR; minR < maxR; minR++) {
                     (c == 0) ? minC = 0 : minC = Number(c) - 1;
                     for (minC; minC < maxC; minC++) {
-                        if (this.grid[minR][minC] == undefined) {
-                            boxToWrite = document.getElementById([minR, minC]).querySelector('button');
-                            boxToWrite.innerHTML = value;
-                        }
+                        boxToWrite = document.getElementById([minR, minC]).querySelector('button');
+                        if (this.grid[minR][minC] == undefined) boxToWrite.innerHTML = value;
+                        else if (this.grid[minR][minC] == 0 && event.type == "mouseenter") boxToWrite.innerHTML = '<i class="fa fa-times" style="color:rgb(231, 12, 12 )"></i>';
+                        else if (this.grid[minR][minC] == 0 && event.type == "mouseleave") boxToWrite.innerHTML = "";
                     }
                 }
             }
@@ -179,16 +183,16 @@ class enemyGrid extends grid {
             else if (this.currentWeapon.name == "fragment") {
                 (c == 0) ? minC = 0 : minC = Number(c) - 1;
                 for (minR; minR < maxR; minR++) {
-                    if (this.grid[minR][c] == undefined) {
-                        boxToWrite = document.getElementById([minR, c]).querySelector('button');
-                        boxToWrite.innerHTML = value;
-                    }
+                    boxToWrite = document.getElementById([minR, c]).querySelector('button');
+                    if (this.grid[minR][c] == undefined) boxToWrite.innerHTML = value;
+                    else if (this.grid[minR][c] == 0 && event.type == "mouseenter") boxToWrite.innerHTML = '<i class="fa fa-times" style="color:rgb(231, 12, 12 )"></i>';
+                    else if (this.grid[minR][c] == 0 && event.type == "mouseleave") boxToWrite.innerHTML = "";
                 }
                 for (minC; minC < maxC; minC++) {
-                    if (this.grid[r][minC] == undefined) {
-                        boxToWrite = document.getElementById([r, minC]).querySelector('button');
-                        boxToWrite.innerHTML = value;
-                    }
+                    boxToWrite = document.getElementById([r, minC]).querySelector('button');
+                    if (this.grid[r][minC] == undefined) boxToWrite.innerHTML = value;
+                    else if (this.grid[r][minC] == 0 && event.type == "mouseenter") boxToWrite.innerHTML = '<i class="fa fa-times" style="color:rgb(231, 12, 12 )"></i>';
+                    else if (this.grid[r][minC] == 0 && event.type == "mouseleave") boxToWrite.innerHTML = "";
                 }
             }
         }
