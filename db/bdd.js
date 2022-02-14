@@ -7,6 +7,9 @@
 /*                                     BDD                                    */
 /* -------------------------------------------------------------------------- */
 // Connexion
+
+const bcrypt = require("bcrypt");
+
 const mysql = require('mysql');
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
@@ -34,7 +37,7 @@ class BDD {
         // Insert element
         if (user == "" || pass == "") {
             return;
-        } else if(user==null || pass==null) return;
+        } else if (user == null || pass == null) return;
         else {
             const users = {
                 username: user,
@@ -70,15 +73,27 @@ class BDD {
         if (usr == "" || pass == "") {
             return;
         } else {
-            let quer = "SELECT * from users WHERE username=? AND password=?";
-            this.con.query(quer, [usr, pass], (err, result) => {
+            let quer = "SELECT * from users WHERE username=?";
+            this.con.query(quer, [usr], (err, result) => {
                 if (err) throw err;
                 if (result == "") console.log("Utilisateur introuvable ");
                 else {
                     console.log("Résultat trouvé : ")
-                    callback(result);
+                    bcrypt.compare(pass, result[0].password, function (err, match) {
+                        if (err) {
+                            console.log(err);
+                            return 0;
+                        }
+                        if (match) {
+                            console.log("Login Success :")
+                            callback(true) // Transmission BDD
+                        } else {
+                            console.log("Login wrong")
+                            callback(false)
+                        }
+                    });
                 }
-            })
+            });
         }
     }
 
