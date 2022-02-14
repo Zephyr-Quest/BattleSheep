@@ -227,7 +227,21 @@ class BDD {
                     this.con.query(query, [scoreObj,user], (err, result) => {
                         if (err) throw err;
                         console.log("Score Updated")
-                        callback(scoreObj)
+                        let Podium = {
+                            first:{
+                                name: scoreObj.firstName,
+                                score: scoreObj.firstScore,
+                            },
+                            second:{
+                                name: scoreObj.secondName,
+                                score: scoreObj.secondScore,
+                            }, 
+                            third:{
+                                name: scoreObj.thirdName,
+                                score: scoreObj.thirdScore,
+                            }
+                        };
+                        callback(Podium)
                     })
                 }
             })
