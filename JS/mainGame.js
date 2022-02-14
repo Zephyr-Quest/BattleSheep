@@ -1,3 +1,4 @@
 (function () {
-    let currentGame = new game();
+    let enemy = new enemyGrid();
+    let player = new playerGrid();
 })();

@@ -1,4 +1,4 @@
-class game extends grid {
+class enemyGrid extends grid {
     constructor() {
         super();
 
@@ -59,8 +59,11 @@ class game extends grid {
     displayOnScreen() {
         for (let row = 0; row < this.gridSize; row++) {
             for (let col = 0; col < this.gridSize; col++) {
-                const currentBtn = document.getElementById([row, col]).firstChild; 
-                currentBtn.innerHTML = (this.grid[row][col] === undefined ? "" : this.grid[row][col]);
+                const currentBtn = document.getElementById([row, col]).firstChild;
+                // currentBtn.innerHTML = (this.grid[row][col] === undefined ? "" : this.grid[row][col]);
+                currentBtn.innerHTML = "";
+                if (this.grid[row][col] === undefined ? "" : this.grid[row][col])
+                    currentBtn.parentElement.classList.add("unavailable");
             }
         }
     }
@@ -69,13 +72,13 @@ class game extends grid {
     attack(r, c) {
         // Shears
         if (this.currentWeapon.name == "shears") {
-            this.setCase(r, c, this.currentWeapon.rank + " ");
+            this.setCase(r, c, 0 + " ");
         }
 
 
         // Torpedo
         else if (this.currentWeapon.name == "torpedo") {
-            this.setCase(r, c, this.currentWeapon.rank + " ");
+            this.setCase(r, c, 0 + " ");
         }
 
         else {
@@ -93,7 +96,7 @@ class game extends grid {
                     (c == 0) ? minC = 0 : minC = Number(c) - 1;
                     for (minC; minC < maxC; minC++) {
                         if (this.grid[minR][minC] == undefined) {
-                            this.setCase(minR, minC, this.currentWeapon.rank + " ");
+                            this.setCase(minR, minC, 0 + " ");
                         }
                     }
                 }
@@ -104,12 +107,12 @@ class game extends grid {
                 (c == 0) ? minC = 0 : minC = Number(c) - 1;
                 for (minR; minR < maxR; minR++) {
                     if (this.grid[minR][c] == undefined) {
-                        this.setCase(minR, c, this.currentWeapon.rank + " ");
+                        this.setCase(minR, c, 0 + " ");
                     }
                 }
                 for (minC; minC < maxC; minC++) {
                     if (this.grid[r][minC] == undefined) {
-                        this.setCase(r, minC, this.currentWeapon.rank + " ");
+                        this.setCase(r, minC, 0 + " ");
                     }
                 }
             }

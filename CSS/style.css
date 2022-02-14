@@ -83,3 +83,7 @@ td button {
 #enemyGrid button{
     font-size: 30px;
 }
+
+.unavailable{
+    background-color: grey;
+}
