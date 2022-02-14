@@ -20,7 +20,6 @@ const {
 const {
     BDD
 } = require("./db/bdd");
-console.log(BDD);
 const Database = new BDD();
 
 if (process.env.NODE_ENV !== "production") {
