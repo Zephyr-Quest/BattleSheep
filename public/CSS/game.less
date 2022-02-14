@@ -1,0 +1,104 @@
+@charset "UTF-8";
+
+/* -------------------------------------------------------------------------- */
+/*                               Some variables                               */
+/* -------------------------------------------------------------------------- */
+
+// Colors
+@text-color: #000;
+@bg-color: #eee;
+@primary-color: #3ca50c;
+@grey: #858585;
+@header-bg-color: #eee;
+
+// Fonts
+@text-font: 'Aclonica';
+@primary-font: 'KoHo';
+@secondary-font: sans-serif;
+
+/* -------------------------------------------------------------------------- */
+/*                                   General                                  */
+/* -------------------------------------------------------------------------- */
+
+body {
+    padding: 0;
+    margin: 0;
+
+    // User can't select text anymore
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                     HUD                                    */
+/* -------------------------------------------------------------------------- */
+
+// The score and timer display
+header {
+    position: fixed;
+    padding: 0;
+    margin: 0;
+    top: 0;
+    left: 42%;
+    right: 42%;
+    display: flex;
+    justify-content: center;
+    font-family: @primary-font, @secondary-font;
+    font-weight: bold;
+    font-size: 1.5rem;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.4);
+
+    section {
+        border-bottom: 3px solid @primary-color;
+        background-color: rgba(238, 238, 238, 0.5);
+        color: #fff;
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px 0 5px 0;
+
+        &:nth-child(1) {
+            border-left: 3px solid @primary-color;
+            border-right: 1.5px solid @primary-color;
+            border-radius: 0 0 0 10px;
+            
+            img {
+                width: 30px;
+                height: auto;
+            }
+
+            .scoreboard {
+                margin-left: 10px;
+            }
+        }
+
+        &:nth-child(2) {
+            border-left: 1.5px solid @primary-color;
+            border-right: 3px solid @primary-color;
+            border-radius: 0 0 10px 0;
+            
+            span {
+                margin-left: 5px;
+                margin-right: 5px;
+            }
+
+            ion-icon {
+                margin-left: 5px;
+            }
+        }
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              Responsive design                             */
+/* -------------------------------------------------------------------------- */
+
+@media screen and (max-width: 1400px) {
+    header {
+        left: 35%;
+        right: 35%;
+    }
+}

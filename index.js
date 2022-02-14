@@ -41,6 +41,7 @@ app.use(session);
 app.use(express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+app.use('/favicon.ico', express.static(path.join(__dirname, 'public', 'img', 'favicon.ico')));
 
 if (app.get("env") === "production") {
     app.set("trust proxy", 1);
