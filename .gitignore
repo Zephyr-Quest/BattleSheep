@@ -132,3 +132,6 @@ dist
 .pnp.*
 
 pass.sql
+.vscode
+
+*.blend1

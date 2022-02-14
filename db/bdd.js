@@ -187,6 +187,66 @@ class BDD {
             callback(result)
         })
     }
+
+    refreshScore(user,against,score, callback){
+        if (user == "" || against=="" || score=="") {
+            return;
+        } else {
+            let que = 'SELECT * from users WHERE username=?';
+            this.con.query(que, [user], (err, result) => {
+                if (err) throw err;
+                if(result=="") callback(false)
+                else{
+
+                    const scoreObj = {
+                        firstScore: result[0].firstScore,
+                        firstName: result[0].firstName,
+                        secondScore: result[0].secondScore,
+                        secondName: result[0].secondName,
+                        thirdScore: result[0].thirdScore,
+                        thirdName: result[0].thirdName
+                    };
+                    if(score>result[0].firstScore){
+                        scoreObj.thirdName=scoreObj.secondName;
+                        scoreObj.thirdScore=scoreObj.secondScore;
+                        scoreObj.secondName=scoreObj.firstName;
+                        scoreObj.secondScore=scoreObj.firstScore;
+                        scoreObj.firstName=against;
+                        scoreObj.firstScore=score;
+                    } else if(score>result[0].secondScore){
+                        scoreObj.thirdName=scoreObj.secondName;
+                        scoreObj.thirdScore=scoreObj.secondScore;
+                        scoreObj.secondName=against;
+                        scoreObj.secondScore=score;
+                    } else if(score>result[0].thirdScore){
+                        scoreObj.thirdName=against;
+                        scoreObj.thirdScore=score;
+                    } 
+    
+                    let query = 'UPDATE users SET ? WHERE username=?';
+                    this.con.query(query, [scoreObj,user], (err, result) => {
+                        if (err) throw err;
+                        console.log("Score Updated")
+                        let Podium = {
+                            first:{
+                                name: scoreObj.firstName,
+                                score: scoreObj.firstScore,
+                            },
+                            second:{
+                                name: scoreObj.secondName,
+                                score: scoreObj.secondScore,
+                            }, 
+                            third:{
+                                name: scoreObj.thirdName,
+                                score: scoreObj.thirdScore,
+                            }
+                        };
+                        callback(Podium)
+                    })
+                }
+            })
+        }
+    }
 }
 
 module.exports = {
