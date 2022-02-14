@@ -1,0 +1,7 @@
+FROM node
+
+WORKDIR /app
+
+ARG PORT
+
+EXPOSE $PORT
