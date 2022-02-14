@@ -61,8 +61,10 @@ export class CustomRaycaster {
                 }
 
                 clicked = this.view.allObjects[currentParent.name];
+                if (!clicked) throw "The clicked element is not referenced.";
             } catch (error) {
-                if (this.debug) console.error('Error finding the clicked element');
+                console.error('Error finding the clicked element.');
+                if (this.debug) console.error(error);
                 return;
             }
 
