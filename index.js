@@ -198,17 +198,18 @@ app.get("/lobby", (req, res) => res.render("lobby"));
 
 app.get("/game", (req, res) => res.render("game"));
 
-app.get("/logout", (req, res) => {
+app.post("/logout", (req, res) => {
     console.log("---DECONNEXION---");
     req.session.destroy();
-    res.render("index", {
-        title: "BattleSheep by ZephyrStudio",
-        description: "Welcome in our Web project !",
-        scripts: [{
-            name: "home",
-            type: "module",
-        }],
-    });
+    res.send('OK');
+    // res.render("index", {
+    //     title: "BattleSheep by ZephyrStudio",
+    //     description: "Welcome in our Web project !",
+    //     scripts: [{
+    //         name: "home",
+    //         type: "module",
+    //     }],
+    // });
 });
 
 io.on("connection", (socket) => {
