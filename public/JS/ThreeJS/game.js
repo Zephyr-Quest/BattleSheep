@@ -7,6 +7,7 @@ import { Config } from './config.js';
 import { CustomRaycaster } from './gameplay/Raycaster.js';
 import { View } from './gameplay/View.js';
 import { Textures } from './level_design/textures.js';
+import { HUD } from './gameplay/HUD.js';
 
 let scene, renderer, camera, controls, raycaster;
 
@@ -129,6 +130,9 @@ function init() {
     particle.position.set(0, 2, 0);
     scene.add(particle);
 
+    // Start chrono
+    HUD.startChronoFrom(0, 50);
+
 
     render();
 }
@@ -166,9 +170,13 @@ function render() {
 function onKeyUp(e) {
     // console.log(e);
 
-    if (e.code === 'Space')
+    if (e.code === 'Space') {
         console.log(camera.position);
-    else if (e.key === 'f') {
+        HUD.setScore(5);
+        
+        if (HUD.getChronoStatus()) HUD.stopChrono();
+        else HUD.startChrono();
+    } else if (e.key === 'f') {
         const renderDom = renderer.domElement;
         if (renderDom.requestFullscreen) renderDom.requestFullscreen();
         else if (renderDom.webkitRequestFullscreen) renderDom.webkitRequestFullscreen();
