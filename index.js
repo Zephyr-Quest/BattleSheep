@@ -52,6 +52,9 @@ if (app.get("env") === "production") {
 /*                         Get the different request                          */
 /* -------------------------------------------------------------------------- */
 
+// Capture 404 requests
+app.use((req, res, next) => res.render("404"));
+
 app.get("/", (req, res) => {
     console.log("Affichage BDD");
     Database.getList((res) => {

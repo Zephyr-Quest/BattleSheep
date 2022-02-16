@@ -1,0 +1,88 @@
+@charset "UTF-8";
+
+/* -------------------------------------------------------------------------- */
+/*                               Some variables                               */
+/* -------------------------------------------------------------------------- */
+
+// Colors
+@text-color: #000;
+@bg-color: #eee;
+@primary-color: #3ca50c;
+@grey: #e4e4e4;
+@header-bg-color: #eee;
+
+// Fonts
+@text-font: 'Aclonica';
+@primary-font: 'KoHo';
+@secondary-font: sans-serif;
+
+/* -------------------------------------------------------------------------- */
+/*                                   General                                  */
+/* -------------------------------------------------------------------------- */
+
+body {
+    // User can't select text anymore
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+
+    background-color: @bg-color;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+
+    color: @text-color;
+    font-family: @primary-font;
+
+    margin: 0;
+    padding: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                Main content                                */
+/* -------------------------------------------------------------------------- */
+
+main {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .card {
+        text-align: center;
+        width: 40%;
+        box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        padding: 10px;
+
+        h1 {
+            color: @primary-color;
+        }
+
+        a {
+            text-transform: uppercase;
+            color: @primary-color;
+            font-weight: bold;
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              Responsive Design                             */
+/* -------------------------------------------------------------------------- */
+
+@media screen and (max-width: 1000px) {
+    main .card {
+        width: 80%;
+    }
+}
