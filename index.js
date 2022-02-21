@@ -212,7 +212,7 @@ app.get("/logout", (req, res) => {
 
 io.on("connection", (socket) => {
     console.log("Connexion d'un joueur au jeu");
-    
+
 
     socket.on("disconnect", () => {
         console.log("Déconnexion d'un joueur");
