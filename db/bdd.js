@@ -48,16 +48,16 @@ class BDD {
                 if (err) throw err;
                 if (Object.keys(result).length != 0) {
                     console.log("Need to login - Already signed up");
-                    callback(false)
+                    callback(false);
                 } else {
                     let query = 'INSERT into users SET ?';
                     this.con.query(query, [users], (err, result) => {
                         if (err) throw err;
-                        console.log("1 Element inserted ")
-                        callback(true)
-                    })
+                        console.log("1 Element inserted ");
+                        callback(true);
+                    });
                 }
-            })
+            });
         }
     }
 
@@ -78,18 +78,18 @@ class BDD {
                 if (err) throw err;
                 if (result == "") console.log("Utilisateur introuvable ");
                 else {
-                    console.log("Résultat trouvé : ")
+                    console.log("Résultat trouvé : ");
                     bcrypt.compare(pass, result[0].password, function (err, match) {
                         if (err) {
                             console.log(err);
                             return 0;
                         }
                         if (match) {
-                            console.log("Login Success :")
-                            callback(true) // Transmission BDD
+                            console.log("Login Success :");
+                            callback(true); // Transmission BDD
                         } else {
-                            console.log("Login wrong")
-                            callback(false)
+                            console.log("Login wrong");
+                            callback(false);
                         }
                     });
                 }
@@ -109,8 +109,8 @@ class BDD {
         let quer = "SELECT * from users";
         this.con.query(quer, (err, result) => {
             if (err) throw err;
-            callback(result)
-        })
+            callback(result);
+        });
     }
 
     /**
@@ -126,8 +126,8 @@ class BDD {
             let quer = "SELECT * from users WHERE username=?";
             this.con.query(quer, [usr], (err, result) => {
                 if (err) throw err;
-                callback(result)
-            })
+                callback(result);
+            });
         }
     }
 
@@ -144,8 +144,8 @@ class BDD {
             let quer = "SELECT * from users WHERE id=?";
             this.con.query(quer, [id], (err, result) => {
                 if (err) throw err;
-                callback(result)
-            })
+                callback(result);
+            });
         }
     }
 
@@ -165,9 +165,9 @@ class BDD {
             let que = 'DELETE from users WHERE username=?';
             this.con.query(que, [username], (err, result) => {
                 if (err) throw err;
-                console.log("1 element removed")
-                callback(result)
-            })
+                console.log("1 element removed");
+                callback(result);
+            });
         }
     }
 
@@ -183,9 +183,9 @@ class BDD {
         let que = 'DELETE from users';
         this.con.query(que, (err, result) => {
             if (err) throw err;
-            console.log("All element removed")
-            callback(result)
-        })
+            console.log("All element removed");
+            callback(result);
+        });
     }
 
     refreshScore(user, against, score, callback) {
@@ -195,8 +195,8 @@ class BDD {
             let que = 'SELECT * from users WHERE username=?';
             this.con.query(que, [user], (err, result) => {
                 if (err) throw err;
-                if (result == "") callback(false)
-                else {
+                if(result=="") callback(false);
+                else{
 
                     const scoreObj = {
                         firstScore: result[0].firstScore,
@@ -226,7 +226,7 @@ class BDD {
                     let query = 'UPDATE users SET ? WHERE username=?';
                     this.con.query(query, [scoreObj, user], (err, result) => {
                         if (err) throw err;
-                        console.log("Score Updated")
+                        console.log("Score Updated");
                         let Podium = {
                             first: {
                                 name: scoreObj.firstName,
@@ -241,14 +241,14 @@ class BDD {
                                 score: scoreObj.thirdScore,
                             }
                         };
-                        callback(Podium)
-                    })
+                        callback(Podium);
+                    });
                 }
-            })
+            });
         }
     }
 }
 
 module.exports = {
     BDD
-}
+};

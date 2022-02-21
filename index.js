@@ -52,6 +52,9 @@ if (app.get("env") === "production") {
 /*                         Get the different request                          */
 /* -------------------------------------------------------------------------- */
 
+// Capture 404 requests
+app.use((req, res, next) => res.render("404"));
+
 app.get("/", (req, res) => {
     console.log("Affichage BDD");
     Database.getList((res) => {
@@ -197,17 +200,18 @@ app.get("/lobby", (req, res) => res.render("lobby"));
 
 app.get("/game", (req, res) => res.render("game"));
 
-app.get("/logout", (req, res) => {
+app.post("/logout", (req, res) => {
     console.log("---DECONNEXION---");
     req.session.destroy();
-    res.render("index", {
-        title: "BattleSheep by ZephyrStudio",
-        description: "Welcome in our Web project !",
-        scripts: [{
-            name: "home",
-            type: "module",
-        }],
-    });
+    res.send('OK');
+    // res.render("index", {
+    //     title: "BattleSheep by ZephyrStudio",
+    //     description: "Welcome in our Web project !",
+    //     scripts: [{
+    //         name: "home",
+    //         type: "module",
+    //     }],
+    // });
 });
 
 io.on("connection", (socket) => {
