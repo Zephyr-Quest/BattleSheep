@@ -52,9 +52,6 @@ if (app.get("env") === "production") {
 /*                         Get the different request                          */
 /* -------------------------------------------------------------------------- */
 
-// Capture 404 requests
-app.use((req, res, next) => res.render("404"));
-
 app.get("/", (req, res) => {
     console.log("Affichage BDD");
     Database.getList((res) => {
@@ -213,6 +210,9 @@ app.post("/logout", (req, res) => {
     //     }],
     // });
 });
+
+// Capture 404 requests
+app.use((req, res) => res.render("404"));
 
 io.on("connection", (socket) => {
     console.log("Connexion d'un joueur au jeu");

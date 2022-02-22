@@ -64,6 +64,15 @@ header section:nth-child(2) span {
 header section:nth-child(2) ion-icon {
   margin-left: 5px;
 }
+footer {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 1.2rem;
+  color: #fff;
+  font-family: 'KoHo';
+  text-shadow: 3px 3px 7px #000000;
+}
 /* -------------------------------------------------------------------------- */
 /*                              Responsive design                             */
 /* -------------------------------------------------------------------------- */

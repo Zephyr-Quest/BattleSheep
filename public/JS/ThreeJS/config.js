@@ -15,6 +15,6 @@ export const Config = {
     backgroundColor: new Color(0x0099ff),
     light: {
         color: 0xF1E6B7,
-        intensity: 1.5
+        intensity: 2
     }
 };
