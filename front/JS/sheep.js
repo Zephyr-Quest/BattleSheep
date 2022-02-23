@@ -5,23 +5,23 @@ class sheep{
         this.firstPosition = position;
     }
 
-    getRotation(){
-        return this.direction;
-    }
+    // getRotation(){
+    //     return this.direction;
+    // }
 
-    setRotation(rotation){
-        this.direction = rotation;
-    }
+    // setRotation(rotation){
+    //     this.direction = rotation;
+    // }
 
-    getSize(){
-        return this.sheepSize;
-    }
+    // getSize(){
+    //     return this.sheepSize;
+    // }
 
-    getFirstPosition(){
-        return this.firstPosition;
-    }
+    // getFirstPosition(){
+    //     return this.firstPosition;
+    // }
 
-    setFirstPosition(position){
-        this.firstPosition = position;
-    }
+    // setFirstPosition(position){
+    //     this.firstPosition = position;
+    // }
 }

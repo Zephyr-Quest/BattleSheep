@@ -129,7 +129,6 @@ function is_ship_position_on_grid_valid(grid, ship) {
                 return false;
             }
         } else if (rotation == "row") {
-            console.log(grid[position.x][position.y + i])
             if (grid[position.x][position.y + i] !== undefined) {
                 return false;
             }
