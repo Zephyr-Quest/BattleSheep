@@ -54,10 +54,10 @@ class setPlayerGrid extends grid {
                 this.tabSheep[i].setFirstPosition(undefined);
             }
         })
-        
+
         validBtn.addEventListener("click", () => { })
     }
-    
+
     displayOnScreen() {
         for (let row = 0; row < this.gridSize; row++) {
             for (let col = 0; col < this.gridSize; col++) {
@@ -168,11 +168,13 @@ class setPlayerGrid extends grid {
                 const currentContainer = event.target;
                 const data = event.dataTransfer.getData("text/plain");
                 const currentBox = document.getElementsByClassName(data)[0];
-                currentContainer.appendChild(currentBox);
                 const currentSheep = this.tabSheep[currentBox.classList[1]];
-                const parent = currentBox.parentElement.id;
-                currentSheep.setFirstPosition(parent);
-                currentSheep.setRotation(this.rotation);
+                console.log(wrapPosition(this.grid, currentContainer.id[0], currentContainer.id[2], currentSheep.getSize(), this.rotation));
+                if (wrapPosition(this.grid, Number(currentContainer.id[0]), Number(currentContainer.id[2]), currentSheep.getSize(), this.rotation)) {
+                    currentContainer.appendChild(currentBox);
+                    currentSheep.setFirstPosition(currentContainer.id);
+                    currentSheep.setRotation(this.rotation);
+                }
             })
         }
     }
