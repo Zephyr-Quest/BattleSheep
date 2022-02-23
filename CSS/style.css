@@ -46,6 +46,10 @@ td button {
     margin: 10px;
 }
 
+#sheepBox{
+    border: 1px solid black;
+}
+
 .box {
     cursor: move;
     height: 70px;
@@ -71,7 +75,10 @@ td button {
 
 #weapons {
     display: flex;
-    flex-direction: column;
+    width: 30%;
+    margin: 0 auto;
+    justify-content: space-around;
+    /* flex-direction: column; */
 }
 
 #weapons button{

@@ -17,12 +17,15 @@ class playerGrid extends grid {
         this.displayOnScreen();
         this.displayGrid();
     }
-    
+
     displayOnScreen() {
         for (let row = 0; row < this.gridSize; row++) {
             for (let col = 0; col < this.gridSize; col++) {
                 const currentTd = document.getElementById(["p", row, col]);
-                currentTd.innerHTML = (this.grid[row][col] === undefined ? "" : this.grid[row][col]);
+                if (this.grid[row][col] == undefined) currentTd.innerHTML = "";
+                else if (this.grid[row][col] == 0) currentTd.classList.add("unavailable");
+                else if (this.grid[row][col] == 1) currentTd.innerHTML = "touch";
+                else if (this.grid[row][col] == 1) currentTd.innerHTML = "dead";
             }
         }
     }

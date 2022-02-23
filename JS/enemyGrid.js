@@ -146,15 +146,15 @@ class enemyGrid extends grid {
         // Shears
         if (this.currentWeapon.name == "shears") {
             if (this.grid[r][c] == undefined) boxToWrite.innerHTML = value;
-            else if (this.grid[r][c] == 0 && event.type == "mouseenter") boxToWrite.innerHTML = '<i class="fa fa-times" style="color:rgb(231, 12, 12 )"></i>';
-            else if (this.grid[r][c] == 0 && event.type == "mouseleave") boxToWrite.innerHTML = "";
+            else if (this.grid[r][c] !== undefined && event.type == "mouseenter") boxToWrite.innerHTML = '<i class="fa fa-times" style="color:rgb(231, 12, 12 )"></i>';
+            else if (this.grid[r][c] !== undefined && event.type == "mouseleave") boxToWrite.innerHTML = "";
         }
 
         // Torpedo
         else if (this.currentWeapon.name == "torpedo") {
             if (this.grid[r][c] == undefined) boxToWrite.innerHTML = value;
-            else if (this.grid[r][c] == 0 && event.type == "mouseenter") boxToWrite.innerHTML = '<i class="fa fa-times" style="color:rgb(231, 12, 12 )"></i>';
-            else if (this.grid[r][c] == 0 && event.type == "mouseleave") boxToWrite.innerHTML = "";
+            else if (this.grid[r][c] !== undefined && event.type == "mouseenter") boxToWrite.innerHTML = '<i class="fa fa-times" style="color:rgb(231, 12, 12 )"></i>';
+            else if (this.grid[r][c] !== undefined && event.type == "mouseleave") boxToWrite.innerHTML = "";
         }
 
         else {
@@ -173,8 +173,8 @@ class enemyGrid extends grid {
                     for (minC; minC < maxC; minC++) {
                         boxToWrite = document.getElementById([minR, minC]).querySelector('button');
                         if (this.grid[minR][minC] == undefined) boxToWrite.innerHTML = value;
-                        else if (this.grid[minR][minC] == 0 && event.type == "mouseenter") boxToWrite.innerHTML = '<i class="fa fa-times" style="color:rgb(231, 12, 12 )"></i>';
-                        else if (this.grid[minR][minC] == 0 && event.type == "mouseleave") boxToWrite.innerHTML = "";
+                        else if (this.grid[minR][minC] !== undefined && event.type == "mouseenter") boxToWrite.innerHTML = '<i class="fa fa-times" style="color:rgb(231, 12, 12 )"></i>';
+                        else if (this.grid[minR][minC] !== undefined && event.type == "mouseleave") boxToWrite.innerHTML = "";
                     }
                 }
             }
@@ -185,14 +185,14 @@ class enemyGrid extends grid {
                 for (minR; minR < maxR; minR++) {
                     boxToWrite = document.getElementById([minR, c]).querySelector('button');
                     if (this.grid[minR][c] == undefined) boxToWrite.innerHTML = value;
-                    else if (this.grid[minR][c] == 0 && event.type == "mouseenter") boxToWrite.innerHTML = '<i class="fa fa-times" style="color:rgb(231, 12, 12 )"></i>';
-                    else if (this.grid[minR][c] == 0 && event.type == "mouseleave") boxToWrite.innerHTML = "";
+                    else if (this.grid[minR][c] !== undefined && event.type == "mouseenter") boxToWrite.innerHTML = '<i class="fa fa-times" style="color:rgb(231, 12, 12 )"></i>';
+                    else if (this.grid[minR][c] !== undefined && event.type == "mouseleave") boxToWrite.innerHTML = "";
                 }
                 for (minC; minC < maxC; minC++) {
                     boxToWrite = document.getElementById([r, minC]).querySelector('button');
                     if (this.grid[r][minC] == undefined) boxToWrite.innerHTML = value;
-                    else if (this.grid[r][minC] == 0 && event.type == "mouseenter") boxToWrite.innerHTML = '<i class="fa fa-times" style="color:rgb(231, 12, 12 )"></i>';
-                    else if (this.grid[r][minC] == 0 && event.type == "mouseleave") boxToWrite.innerHTML = "";
+                    else if (this.grid[r][minC] !== undefined && event.type == "mouseenter") boxToWrite.innerHTML = '<i class="fa fa-times" style="color:rgb(231, 12, 12 )"></i>';
+                    else if (this.grid[r][minC] !== undefined && event.type == "mouseleave") boxToWrite.innerHTML = "";
                 }
             }
         }
