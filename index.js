@@ -201,26 +201,52 @@ app.post("/logout", (req, res) => {
     console.log("---DECONNEXION---");
     req.session.destroy();
     res.send('OK');
-    // res.render("index", {
-    //     title: "BattleSheep by ZephyrStudio",
-    //     description: "Welcome in our Web project !",
-    //     scripts: [{
-    //         name: "home",
-    //         type: "module",
-    //     }],
-    // });
 });
 
 // Capture 404 requests
 app.use((req, res) => res.render("404"));
 
+/* -------------------------------------------------------------------------- */
+/*                                    ROOMS                                   */
+/* -------------------------------------------------------------------------- */
+
+let allRooms = [];
+
 io.on("connection", (socket) => {
     console.log("Connexion d'un joueur au jeu");
 
+    socket.on("host-room", (username) => {
+        console.log("Trying to host !");
+        const roomData = [];
+        roomData.push(username);
+        allRooms.push(roomData);
+        let res = allRooms.findIndex(function(el) { return el[0] == username; });
+        console.log(username+" Hosted room : room-"+res);
+        socket.join("room-"+res);
+    })
 
-    socket.on("disconnect", () => {
-        console.log("Déconnexion d'un joueur");
+    socket.on("join-room", (hostName, username) => {
+        console.log("Trying to join !");
+        let res = allRooms.findIndex(function(el) { return el[0] == hostName; });
+        allRooms[res].push(username);
+        socket.join("room-"+res);
+        console.log(username+" Joined room : room-"+res+" hosted by "+hostName);
+        socket.in("room-"+res).emit("play");
+    })
+
+
+    socket.on("leave-room", (hostName, username) => {
+        console.log("Trying to disconnect !");
+        let res = allRooms.findIndex(function(el) { return (el[0] == hostName && el[1]==username); });
+        allRooms.splice(res,1);
+        socket.leave("room-"+res);
+        console.log(username+" "+hostName+" Left the room : room-"+res);
+        console.log(allRooms);
     });
+
+    socket.on("disconnect",()=>{
+        console.log("Déconnexion des joueurs");
+    })
 });
 
 http.listen(process.env.APP_PORT, () => {
