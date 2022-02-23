@@ -136,11 +136,9 @@ class setPlayerGrid extends grid {
             // console.log("end");
             const currentBox = event.target;
             const currentSheep = this.tabSheep[currentBox.classList[1]];
-            if (currentBox.parentElement.id != currentSheep.firstPosition) {
-                const container = document.getElementById(currentSheep.firstPosition)
-                container.append(currentBox);
-            }
-            this.rangeSheep(currentSheep.firstPosition, currentSheep.direction, currentSheep.sheepSize, currentSheep.sheepSize);
+            console.log(currentSheep)
+            if (currentSheep.firstPosition !== undefined)
+                this.rangeSheep(currentSheep.firstPosition, currentSheep.direction, currentSheep.sheepSize, currentSheep.sheepSize);
             this.displayGrid();
             currentBox.removeAttribute("moving");
             this.displayOnScreen();
@@ -152,8 +150,8 @@ class setPlayerGrid extends grid {
 
         for (const box of container) {
             box.addEventListener("dragover", (event) => {
+                // console.log("over");//
                 event.preventDefault();
-                // console.log("over");//     container.innerHTML = "";
             })
             box.addEventListener("dragleave", () => {
                 // console.log("leave");
@@ -169,10 +167,12 @@ class setPlayerGrid extends grid {
                 const data = event.dataTransfer.getData("text/plain");
                 const currentBox = document.getElementsByClassName(data)[0];
                 const currentSheep = this.tabSheep[currentBox.classList[1]];
-                if (wrapPosition(this.grid, Number(currentContainer.id[0]), Number(currentContainer.id[2]), currentSheep.sheepSize, this.rotation)) {
-                    currentContainer.appendChild(currentBox);
-                    currentSheep.firstPosition = currentContainer.id;
-                    currentSheep.direction = this.rotation;
+                if (!currentContainer.hasChildNodes()) {
+                    if (wrapPosition(this.grid, Number(currentContainer.id[0]), Number(currentContainer.id[2]), currentSheep.sheepSize, this.rotation)) {
+                        currentContainer.appendChild(currentBox);
+                        currentSheep.firstPosition = currentContainer.id;
+                        currentSheep.direction = this.rotation;
+                    }
                 }
             })
         }

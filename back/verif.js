@@ -99,7 +99,7 @@ function radar(grid, x, y) {
 
 // Wrapper for is_ship_position_on_grid_valid
 function wrapPosition(grid, x, y, size, rotation) {
-    const position = { x, y }
+    const position = { x, y };
     const ship = new sheep(size, rotation, position);
     return is_ship_position_on_grid_valid(grid, ship);
 }
