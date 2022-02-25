@@ -1,8 +1,10 @@
 export const HUD = (function () {
     // HTML elements
-    const scoreSpan = document.getElementById("score");
-    const minutesSpan = document.getElementById("minutes");
-    const secondsSpan = document.getElementById("seconds");
+    const
+        scoreSpan = document.getElementById("score"),
+        minutesSpan = document.getElementById("minutes"),
+        secondsSpan = document.getElementById("seconds"),
+        weaponsMenu = document.getElementById("weapons_menu");
 
     // Chrono
     const delay = 1000;
@@ -41,6 +43,10 @@ export const HUD = (function () {
     }
 
     return {
+        /* -------------------------------------------------------------------------- */
+        /*                               Score functions                              */
+        /* -------------------------------------------------------------------------- */
+
         /**
          * Update the score on the HUD
          * @param {Number} score The new player score
@@ -52,6 +58,10 @@ export const HUD = (function () {
             // Set the score on the HUD
             scoreSpan.innerText = score;
         },
+
+        /* -------------------------------------------------------------------------- */
+        /*                              Chrono functions                              */
+        /* -------------------------------------------------------------------------- */
 
         /**
          * Start the chrono from the given timestamp
@@ -82,6 +92,9 @@ export const HUD = (function () {
             stopChrono = true;
         },
 
+        /**
+         * Restart the chrono
+         */
         startChrono() {
             stopChrono = false;
 
@@ -96,5 +109,27 @@ export const HUD = (function () {
         getChronoValue: () => [chronoMinutes, chronoSeconds],
         getChronoMinutes: () => chronoMinutes,
         getChronoSeconds: () => chronoSeconds,
+
+        /* -------------------------------------------------------------------------- */
+        /*                              Weapons functions                             */
+        /* -------------------------------------------------------------------------- */
+
+        /**
+         * Show the weapons menu
+         */
+        showWeaponsMenu() {
+            weaponsMenu.classList.add("show-weapons");
+        },
+
+        /**
+         * Hide the weapons menu
+         */
+        hideWeaponsMenu() {
+            weaponsMenu.classList.add("hide-weapons");
+            setTimeout(() => {
+                weaponsMenu.classList.remove("show-weapons");
+                weaponsMenu.classList.remove("hide-weapons");
+            }, 500);
+        }
     };
 })();
