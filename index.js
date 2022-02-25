@@ -13,6 +13,8 @@ const {
 const jsonParse = bodyParser.json();
 // const urlencodedParse = bodyParser.urlencoded({extended: false});
 const manageUser = require("./back/server/manageUser");
+const gridVerif = require ("./back/verif")
+
 const {
     connect
 } = require("http2");
@@ -197,6 +199,34 @@ app.get("/lobby", (req, res) => res.render("lobby"));
 
 app.get("/game", (req, res) => res.render("game"));
 
+app.get("/grid", (req, res) => {
+    res.render("grid", {
+        title: "BattleSheep | grid",
+        description: "grille des moutons",
+        scripts: [{
+                name: "grid",
+                type: "class",
+            },
+            {
+                name: "setPlayerGrid",
+                type: "class",
+            },
+            {
+                name: "sheep",
+                type: "class",
+            },
+            {
+                name: "setPlayerGrid",
+                type: "class",
+            },
+            {
+                name: "main",
+                type: "text/javascript",
+            }
+        ],
+    });
+});
+
 app.post("/logout", (req, res) => {
     console.log("---DECONNEXION---");
     req.session.destroy();
@@ -215,36 +245,51 @@ let allRooms = [];
 io.on("connection", (socket) => {
     console.log("Connexion d'un joueur au jeu");
 
+    socket.on("wrapPosition", (grid, x,y,size,rotation)=>{
+        // console.log(grid, x, y, size, rotation);
+        let res = gridVerif.wrapPosition(grid,x,y,size,rotation);
+        console.log(res)
+        socket.emit("responseWrap",res);
+    })
+
+
+
     socket.on("host-room", (username) => {
         console.log("Trying to host !");
         const roomData = [];
         roomData.push(username);
         allRooms.push(roomData);
-        let res = allRooms.findIndex(function(el) { return el[0] == username; });
-        console.log(username+" Hosted room : room-"+res);
-        socket.join("room-"+res);
-    })
+        let res = allRooms.findIndex(function (el) {
+            return el[0] == username;
+        });
+        console.log(username + " Hosted room : room-" + res);
+        socket.join("room-" + res);
+    }) 
 
     socket.on("join-room", (hostName, username) => {
         console.log("Trying to join !");
-        let res = allRooms.findIndex(function(el) { return el[0] == hostName; });
+        let res = allRooms.findIndex(function (el) {
+            return el[0] == hostName;
+        });
         allRooms[res].push(username);
-        socket.join("room-"+res);
-        console.log(username+" Joined room : room-"+res+" hosted by "+hostName);
-        socket.in("room-"+res).emit("play");
+        socket.join("room-" + res);
+        console.log(username + " Joined room : room-" + res + " hosted by " + hostName);
+        socket.in("room-" + res).emit("play");
     })
 
 
     socket.on("leave-room", (hostName, username) => {
         console.log("Trying to disconnect !");
-        let res = allRooms.findIndex(function(el) { return (el[0] == hostName && el[1]==username); });
-        allRooms.splice(res,1);
-        socket.leave("room-"+res);
-        console.log(username+" "+hostName+" Left the room : room-"+res);
+        let res = allRooms.findIndex(function (el) {
+            return (el[0] == hostName && el[1] == username);
+        });
+        allRooms.splice(res, 1);
+        socket.leave("room-" + res);
+        console.log(username + " " + hostName + " Left the room : room-" + res);
         console.log(allRooms);
     });
 
-    socket.on("disconnect",()=>{
+    socket.on("disconnect", () => {
         console.log("Déconnexion des joueurs");
     })
 });

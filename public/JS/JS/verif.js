@@ -24,13 +24,6 @@
  * - Torpedo : destroy a line of 2 cases
  * - Submarine : destroy a circle of 2 cases
  */
-class sheep {
-    constructor(size, rotation, position) {
-        this.sheepSize = size;
-        this.direction = rotation;
-        this.firstPosition = position;
-    }
-}
 
 // Set a 10x10 grid filled with undefined
 function init_grid() {
@@ -106,10 +99,7 @@ function radar(grid, x, y) {
 
 // Wrapper for is_ship_position_on_grid_valid
 function wrapPosition(grid, x, y, size, rotation) {
-    const position = {
-        x,
-        y
-    }
+    const position = { x, y }
     const ship = new sheep(size, rotation, position);
     return is_ship_position_on_grid_valid(grid, ship);
 }
@@ -146,14 +136,4 @@ function is_ship_position_on_grid_valid(grid, ship) {
     }
 
     return true;
-}
-
-module.exports = {
-    init_grid,
-    update_grid,
-    is_ship_hit,
-    hit,
-    radar,
-    wrapPosition,
-    is_ship_position_on_grid_valid
 }

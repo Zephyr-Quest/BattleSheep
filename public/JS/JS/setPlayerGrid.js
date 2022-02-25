@@ -1,9 +1,15 @@
+//let socket = io()
+
 class setPlayerGrid extends grid {
     constructor() {
         super();
         this.rotation = "row";
         this.nbSheep = 10;
         this.tabSheep = [];
+
+        this.currentBoxDropped = null;
+        this.currentContainerDropped = null;
+        this.currentSheepDropped = null;
 
         // Set grid
         const playerGrid = document.getElementById("playerGrid");
@@ -55,7 +61,7 @@ class setPlayerGrid extends grid {
             }
         })
 
-        validBtn.addEventListener("click", () => { })
+        validBtn.addEventListener("click", () => {})
     }
 
     displayOnScreen() {
@@ -71,8 +77,7 @@ class setPlayerGrid extends grid {
                             const preContainer = document.getElementById([row, col - 1]);
                             divSheep.classList.add(preContainer.firstChild.classList[1]);
                             divSheep.innerText = this.tabSheep[preContainer.firstChild.classList[1]].sheepSize;
-                        }
-                        else {
+                        } else {
                             const preContainer = document.getElementById([row - 1, col]);
                             divSheep.classList.add(preContainer.firstChild.classList[1]);
                             divSheep.innerText = this.tabSheep[preContainer.firstChild.classList[1]].sheepSize;
@@ -80,13 +85,11 @@ class setPlayerGrid extends grid {
                         container.appendChild(divSheep);
                         this.setDrag(divSheep);
                     }
-                }
-                else if (container.hasChildNodes()) {
+                } else if (container.hasChildNodes()) {
                     if (!container.firstElementChild.hasAttribute("moving")) {
                         container.innerHTML = "";
                     }
-                }
-                else {
+                } else {
                     container.innerHTML = "";
                 }
             }
@@ -136,10 +139,11 @@ class setPlayerGrid extends grid {
             // console.log("end");
             const currentBox = event.target;
             const currentSheep = this.tabSheep[currentBox.classList[1]];
-            if (currentBox.parentElement.id != currentSheep.firstPosition) {
-                const container = document.getElementById(currentSheep.firstPosition)
-                container.append(currentBox);
-            }
+            // if (currentBox.parentElement.id != currentSheep.firstPosition) {
+            //     let container = document.getElementById(currentSheep.firstPosition)
+            //     container.append(currentBox);
+            // }
+            console.log(currentSheep)
             this.rangeSheep(currentSheep.firstPosition, currentSheep.direction, currentSheep.sheepSize, currentSheep.sheepSize);
             this.displayGrid();
             currentBox.removeAttribute("moving");
@@ -165,15 +169,14 @@ class setPlayerGrid extends grid {
             box.addEventListener("drop", (event) => {
                 // console.log("droped");
                 event.stopPropagation();
-                const currentContainer = event.target;
                 const data = event.dataTransfer.getData("text/plain");
-                const currentBox = document.getElementsByClassName(data)[0];
-                const currentSheep = this.tabSheep[currentBox.classList[1]];
-                if (wrapPosition(this.grid, Number(currentContainer.id[0]), Number(currentContainer.id[2]), currentSheep.sheepSize, this.rotation)) {
-                    currentContainer.appendChild(currentBox);
-                    currentSheep.firstPosition = currentContainer.id;
-                    currentSheep.direction = this.rotation;
-                }
+                this.currentContainerDropped = event.target;
+                this.currentBoxDropped = document.getElementsByClassName(data)[0];
+                this.currentSheepDropped = this.tabSheep[this.currentBoxDropped.classList[1]];
+
+                socket.emit("wrapPosition", this.grid, Number(this.currentContainerDropped.id[0]), Number(this.currentContainerDropped.id[2]), this.currentSheepDropped.sheepSize, this.rotation);
+          
+
             })
         }
     }
