@@ -19,8 +19,8 @@
     <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
+    <!-- The score and timer display -->
     <header>
-        <!-- The score and timer display -->
         <section>
             <img src="img/sheep.png" alt="Sheep" />
             <span class="scoreboard">
@@ -33,6 +33,29 @@
         </section>
     </header>
 
+    <!-- Weapons menu -->
+    <nav>
+        <div class="weapons">
+            <div class="weapon" id="weapon_shears" title="Shears">
+                <img src="img/weapons/shears.png" alt="Shears" class="icon" />
+                <img src="img/weapons/shears_colored.png" alt="Shears colored" class="icon-hover" />
+            </div>
+            <div class="weapon" id="weapon_strimmer" title="Strimmer">
+                <img src="img/weapons/strimmer.png" alt="Strimmer" class="icon" />
+                <img src="img/weapons/strimmer_colored.png" alt="Strimmer colored" class="icon-hover" />
+            </div>
+            <div class="weapon" id="weapon_epidemic" title="Epidemic">
+                <img src="img/weapons/epidemic.png" alt="Epidemic" class="icon" />
+                <img src="img/weapons/epidemic_colored.png" alt="Epidemic colored" class="icon-hover" />
+            </div>
+            <div class="weapon disabled" id="weapon_wolf" title="Wolf">
+                <img src="img/weapons/wolf.png" alt="Wolf" class="icon" />
+                <img src="img/weapons/wolf_colored.png" alt="Wolf colored" class="icon-hover" />
+            </div>
+        </div>
+    </nav>
+
+    <!-- A little footer -->
     <footer title="Made by the Zephyr Studio team !">by Zephyr Studio</footer>
 
     <!-- ThreeJS -->

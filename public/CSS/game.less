@@ -92,6 +92,51 @@ header {
     }
 }
 
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .weapons {
+        background-color: rgba(238, 238, 238, 0.5);
+        border-radius: 20px;
+        border: 3px solid @primary-color;
+        box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.4);
+        
+        .weapon {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            .icon { display: block; }
+            .icon-hover { display: none; }
+            img {
+                width: 70px;
+                height: 70px;
+            }
+        }
+
+        .disabled img {
+            opacity: 0.5;
+        }
+
+        :not(.disabled) {
+            &:hover {
+                .icon { display: none; }
+                .icon-hover { display: block; }
+            }
+        }
+    }
+}
+
 footer {
     position: fixed;
     bottom: 20px;

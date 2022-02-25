@@ -64,6 +64,49 @@ header section:nth-child(2) span {
 header section:nth-child(2) ion-icon {
   margin-left: 5px;
 }
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+nav .weapons {
+  background-color: rgba(238, 238, 238, 0.5);
+  border-radius: 20px;
+  border: 3px solid #3ca50c;
+  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.4);
+}
+nav .weapons .weapon {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+nav .weapons .weapon .icon {
+  display: block;
+}
+nav .weapons .weapon .icon-hover {
+  display: none;
+}
+nav .weapons .weapon img {
+  width: 70px;
+  height: 70px;
+}
+nav .weapons .disabled img {
+  opacity: 0.5;
+}
+nav .weapons :not(.disabled):hover .icon {
+  display: none;
+}
+nav .weapons :not(.disabled):hover .icon-hover {
+  display: block;
+}
 footer {
   position: fixed;
   bottom: 20px;
