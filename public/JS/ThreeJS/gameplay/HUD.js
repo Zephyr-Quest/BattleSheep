@@ -188,23 +188,7 @@ export const HUD = (function () {
             announcementDiv.querySelector('h2').innerText = subtitle;
 
             // Set style
-            announcementDiv.style.display = "block";
-            setTimeout(() => {
-                announcementDiv.style.opacity = 1;
-            }, 10);
-        },
-
-        /**
-         * Show an annoucement
-         * @param {string} title The annoucement title
-         * @param {string} subtitle The annoucement subtitle
-         */
-        showAnnouncement(title, subtitle) {
-            // Set content
-            announcementDiv.querySelector('h1').innerText = title;
-            announcementDiv.querySelector('h2').innerText = subtitle;
-
-            // Set style
+            announcementDiv.parentElement.style.display = "flex";
             announcementDiv.style.display = "block";
             setTimeout(() => {
                 announcementDiv.style.opacity = 1;
@@ -230,6 +214,7 @@ export const HUD = (function () {
             announcementDiv.style.opacity = 0;
             setTimeout(() => {
                 announcementDiv.style.display = "none";
+                announcementDiv.parentElement.style.display = "none";
             }, 500);
         },
 
@@ -242,6 +227,7 @@ export const HUD = (function () {
             gifDiv.querySelector('img').src = "img/gifs/" + name + ".gif";
 
             // Set style
+            gifDiv.parentElement.style.display = "flex";
             gifDiv.style.display = "block";
             setTimeout(() => {
                 gifDiv.style.opacity = 1;
@@ -266,6 +252,7 @@ export const HUD = (function () {
             gifDiv.style.opacity = 0;
             setTimeout(() => {
                 gifDiv.style.display = "none";
+                gifDiv.parentElement.style.display = "none";
             }, 500);
         }
     };

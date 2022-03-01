@@ -4,7 +4,8 @@ import { Vector2, Vector3 } from 'three';
 /*                         List all displayed elements                        */
 /* -------------------------------------------------------------------------- */
 const tmpElements = [
-    { type: 'Map' , name: 'Map0', position: new Vector3(0, 0, 0) }
+    { type: 'Map', name: 'Map0', position: new Vector3(0, 0, 0) },
+    { type: 'RedFarm', name: 'RedFarm0', position: new Vector3(-20, 0, 0), rotation: new Vector3(0, Math.PI/2, 0) },
 ];
 
 /* --------------------------------- Fences --------------------------------- */
