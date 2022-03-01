@@ -138,6 +138,7 @@ function init() {
     // Start chrono
     HUD.startChronoFrom(0, 50);
 
+    /* -------------------------------- End debug ------------------------------- */
 
     render();
 }
