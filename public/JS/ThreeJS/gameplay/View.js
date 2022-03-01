@@ -185,7 +185,7 @@ export class View {
 
         // Show a sheep if it should
         if (foundSheep) {
-            const newSheep = createSheep(pos, playerId);
+            const newSheep = createSheep(pos, playerId, true);
             this.displayElement(newSheep);
         }
     }

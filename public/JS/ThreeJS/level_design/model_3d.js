@@ -64,7 +64,7 @@ export const Model3D = {
         modelName: 'shorn_sheep.glb',
         model: null,
         scale: 1,
-        positionDelta: new Vector3(0, 0, 0),
+        positionDelta: new Vector3(0, 0.42, 0),
         rotationDelta: new Vector3(0, 0, 0)
     }
 };

@@ -65,12 +65,13 @@ function createGrass(pos, playerId) {
  * Generate a sheep level design object
  * @param {THREE.Vector2} pos The 2D position
  * @param {Number} playerId The grid id
+ * @param {boolean} isShorn If the sheep must be shorn or not
  * @returns The sheep data
  */
-function createSheep(pos, playerId) {
+function createSheep(pos, playerId, isShorn = false) {
     const sheep = {
-        type: 'Sheep',
-        name: 'Sheep' + sheepCounter,
+        type: (isShorn ? 'Shorn' : '') + 'Sheep',
+        name: (isShorn ? 'Shorn' : '') + 'Sheep' + sheepCounter,
         position: getPositionFromPlayerId(pos, playerId),
         rotation: getRandomRotationY()
     };
