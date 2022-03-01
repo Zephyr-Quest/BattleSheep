@@ -182,10 +182,7 @@ function onKeyUp(e) {
         if (HUD.getChronoStatus()) HUD.stopChrono();
         else HUD.startChrono();
 
-        HUD.showAnnouncement("test", "yooooo");
-        setTimeout(() => {
-            HUD.hideAnnouncement();
-        }, 3000);
+        HUD.showAnnouncementDuring("test", "saluuut", 3000);
     } else if (e.key === 'f') {
         const renderDom = renderer.domElement;
         if (renderDom.requestFullscreen) renderDom.requestFullscreen();

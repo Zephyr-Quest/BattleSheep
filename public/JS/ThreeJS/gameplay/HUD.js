@@ -194,6 +194,36 @@ export const HUD = (function () {
         },
 
         /**
+         * Show an annoucement
+         * @param {string} title The annoucement title
+         * @param {string} subtitle The annoucement subtitle
+         */
+        showAnnouncement(title, subtitle) {
+            // Set content
+            announcementDiv.querySelector('h1').innerText = title;
+            announcementDiv.querySelector('h2').innerText = subtitle;
+
+            // Set style
+            announcementDiv.style.display = "block";
+            setTimeout(() => {
+                announcementDiv.style.opacity = 1;
+            }, 10);
+        },
+
+        /**
+         * Show an announcement during a given time
+         * @param {string} title The announcement title
+         * @param {string} subtitle The announcement subtitle
+         * @param {number} duration The annoucement duration (ms)
+         */
+        showAnnouncementDuring(title, subtitle, duration) {
+            this.showAnnouncement(title, subtitle);
+            setTimeout(() => {
+                this.hideAnnouncement();
+            }, duration);
+        },
+
+        /**
          * Hide the annoucement
          */
         hideAnnouncement() {
