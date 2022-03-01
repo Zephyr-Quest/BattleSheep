@@ -80,8 +80,6 @@ nav .weapons {
   border-radius: 20px;
   border: 3px solid #3ca50c;
   box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.4);
-  transform: translateX(-130px);
-  opacity: 0;
 }
 nav .weapons .weapon {
   width: 100px;
@@ -90,11 +88,11 @@ nav .weapons .weapon {
   justify-content: center;
   align-items: center;
 }
+nav .weapons .weapon .icon-selected {
+  display: none;
+}
 nav .weapons .weapon .icon {
   display: block;
-}
-nav .weapons .weapon .icon-hover {
-  display: none;
 }
 nav .weapons .weapon img {
   width: 70px;
@@ -104,20 +102,7 @@ nav .weapons .disabled img {
   opacity: 0.5;
 }
 nav .weapons :not(.disabled):hover .icon {
-  display: none;
-}
-nav .weapons :not(.disabled):hover .icon-hover {
-  display: block;
-}
-nav .show-weapons {
-  transform: translateX(0);
-  opacity: 1;
-  transition: transform 0.5s, opacity 0.5s;
-}
-nav .hide-weapons {
-  transform: translateX(-130px);
-  opacity: 0;
-  transition: transform 0.5s, opacity 0.5s;
+  opacity: 0.7;
 }
 footer {
   position: fixed;

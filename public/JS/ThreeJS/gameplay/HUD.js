@@ -13,6 +13,13 @@ export const HUD = (function () {
         chronoSeconds = 0,
         stopChrono = false;
     
+    // Weapons
+    let currentWeapon = "Shears";
+    
+    // Add listeners
+    for (const weaponDiv of weaponsMenu.querySelectorAll(".weapon"))
+        weaponDiv.addEventListener("click", weaponChoosed);    
+    
     /**
      * Increment the chrono every 'delay'
      */
@@ -40,6 +47,47 @@ export const HUD = (function () {
     function updateChronoHUD() {
         minutesSpan.innerText = chronoMinutes < 10 ? "0" + chronoMinutes : chronoMinutes;
         secondsSpan.innerText = chronoSeconds < 10 ? "0" + chronoSeconds : chronoSeconds;
+    }
+
+    /**
+     * Which is called when a player click on a weapon
+     * @param {PointerEvent} e 
+     */
+    function weaponChoosed(e) {
+        let target = e.target;
+        if (target.nodeName === 'IMG')
+            target = target.parentElement;
+        const name = target.title;
+
+        // Check if the weapon is disabled
+        if (target.classList.contains("disabled"))
+            return;
+
+        // Toggle the div style
+        for (const weapon of target.parentElement.querySelectorAll(".weapon")) {
+            weapon.querySelector('.icon').style.display = 'block';
+            weapon.querySelector('.icon-selected').style.display = 'none';
+        }
+        target.querySelector('.icon').style.display = 'none';
+        target.querySelector('.icon-selected').style.display = 'block';
+
+        // Set the using weapon
+        currentWeapon = name;
+    }
+
+    /**
+     * Get a weapon div by its title
+     * @param {string} name The weapon name
+     * @returns The weapon HTML Element
+     */
+    function getWeaponDivByName(name) {
+        let weaponDiv = null;
+
+        for (const currentWeapon of weaponsMenu.querySelectorAll('.weapon'))
+            if (currentWeapon.title === name)
+                weaponDiv = currentWeapon;
+
+        return weaponDiv
     }
 
     return {
@@ -114,22 +162,13 @@ export const HUD = (function () {
         /*                              Weapons functions                             */
         /* -------------------------------------------------------------------------- */
 
-        /**
-         * Show the weapons menu
-         */
-        showWeaponsMenu() {
-            weaponsMenu.classList.add("show-weapons");
+        blockWeapon(name) {
+            const weapon = getWeaponDivByName(name);
+            if (!weapon) throw "The weapon doesn't exist.";
+
+            weapon.classList.add("disabled");
         },
 
-        /**
-         * Hide the weapons menu
-         */
-        hideWeaponsMenu() {
-            weaponsMenu.classList.add("hide-weapons");
-            setTimeout(() => {
-                weaponsMenu.classList.remove("show-weapons");
-                weaponsMenu.classList.remove("hide-weapons");
-            }, 500);
-        }
+        getCurrentWeapon: () => currentWeapon,
     };
 })();

@@ -176,11 +176,6 @@ function onKeyUp(e) {
         
         if (HUD.getChronoStatus()) HUD.stopChrono();
         else HUD.startChrono();
-
-        HUD.showWeaponsMenu();
-        setTimeout(() => {
-            HUD.hideWeaponsMenu();
-        }, 2000);
     } else if (e.key === 'f') {
         const renderDom = renderer.domElement;
         if (renderDom.requestFullscreen) renderDom.requestFullscreen();
