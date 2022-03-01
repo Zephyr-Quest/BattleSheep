@@ -12,8 +12,8 @@ const {
 
 const jsonParse = bodyParser.json();
 // const urlencodedParse = bodyParser.urlencoded({extended: false});
-const manageUser = require("./back/server/manageUser");
-const gridVerif = require ("./back/verif")
+const manageUser = require("./back/manageUser");
+// const gridVerif = require ("./back/verif")
 
 const {
     connect
