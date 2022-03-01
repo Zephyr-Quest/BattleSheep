@@ -5,7 +5,8 @@ export const HUD = (function () {
         minutesSpan = document.getElementById("minutes"),
         secondsSpan = document.getElementById("seconds"),
         weaponsMenu = document.getElementById("weapons_menu"),
-        announcementDiv = document.getElementById("announcement");
+        announcementDiv = document.getElementById("announcement"),
+        gifDiv = document.getElementById("gif_display");
 
     // Chrono
     const delay = 1000;
@@ -218,9 +219,7 @@ export const HUD = (function () {
          */
         showAnnouncementDuring(title, subtitle, duration) {
             this.showAnnouncement(title, subtitle);
-            setTimeout(() => {
-                this.hideAnnouncement();
-            }, duration);
+            setTimeout(this.hideAnnouncement, duration);
         },
 
         /**
@@ -231,6 +230,39 @@ export const HUD = (function () {
             announcementDiv.style.opacity = 0;
             setTimeout(() => {
                 announcementDiv.style.display = "none";
+            }, 500);
+        },
+
+        /**
+         * Show a gif to the screen
+         * @param {string} name The GIF name
+         */
+        showGif(name) {
+            // Set style
+            gifDiv.style.display = "block";
+            setTimeout(() => {
+                gifDiv.style.opacity = 1;
+            }, 10);
+        },
+
+        /**
+         * Show a GIF during a given time
+         * @param {string} name The GIF name
+         * @param {number} duration The GIF duration (ms)
+         */
+        showGifDuring(name, duration) {
+            this.showGif(name);
+            setTimeout(this.hideGif, duration);
+        },
+
+        /**
+         * Hide the current GIF
+         */
+        hideGif() {
+            // Set style
+            gifDiv.style.opacity = 0;
+            setTimeout(() => {
+                gifDiv.style.display = "none";
             }, 500);
         }
     };

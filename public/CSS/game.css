@@ -132,6 +132,14 @@ main .announcement h1 {
 main .announcement h2 {
   font-size: 3.5rem;
 }
+main .gif-display {
+  transition: opacity 0.5s;
+}
+main .gif-display img {
+  margin: auto;
+  height: 200px;
+  border-radius: 20px;
+}
 footer {
   position: fixed;
   bottom: 20px;

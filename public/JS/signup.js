@@ -74,10 +74,11 @@ signupForm.addEventListener('submit', e => {
     console.log(data);
 
     // Send HTTP POST request
-    http.post('/signup',
-              data,
-              () => window.location.href = 'lobby',
-              err => console.error(err));
+    http.post(
+        '/signup', data,
+        () => window.location.href = 'lobby',
+        err => console.error(err)
+    );
 });
 
 /* ------------------------------- login Form ------------------------------- */
