@@ -238,6 +238,9 @@ export const HUD = (function () {
          * @param {string} name The GIF name
          */
         showGif(name) {
+            // Set content
+            gifDiv.querySelector('img').src = "img/gifs/" + name + ".gif";
+
             // Set style
             gifDiv.style.display = "block";
             setTimeout(() => {
