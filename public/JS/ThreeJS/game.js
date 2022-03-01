@@ -61,6 +61,11 @@ function init() {
 
     // Setting up the raycaster
     raycaster = new CustomRaycaster(scene, camera, view, DEBUG_RAYCASTER);
+    raycaster.clickCallback = (pos) => {
+        setTimeout(() => {
+            view.uncoverGridCase(new THREE.Vector2(pos.x, pos.y), pos.z, true);
+        }, 1000);
+    };
 
     /* --------------------------------- Lights --------------------------------- */
 
@@ -176,6 +181,11 @@ function onKeyUp(e) {
         
         if (HUD.getChronoStatus()) HUD.stopChrono();
         else HUD.startChrono();
+
+        HUD.showAnnouncement("test", "yooooo");
+        setTimeout(() => {
+            HUD.hideAnnouncement();
+        }, 3000);
     } else if (e.key === 'f') {
         const renderDom = renderer.domElement;
         if (renderDom.requestFullscreen) renderDom.requestFullscreen();

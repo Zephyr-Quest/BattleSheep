@@ -74,6 +74,7 @@ nav {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  z-index: 1;
 }
 nav .weapons {
   background-color: rgba(238, 238, 238, 0.5);
@@ -103,6 +104,33 @@ nav .weapons .disabled img {
 }
 nav .weapons :not(.disabled):hover .icon {
   opacity: 0.7;
+}
+main {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 0;
+}
+main .announcement {
+  transition: opacity 0.5s;
+}
+main .announcement h1,
+main .announcement h2 {
+  color: #fff;
+  font-family: 'KoHo', sans-serif;
+  text-shadow: 3px 3px 7px rgba(0, 0, 0, 0.7);
+  text-align: center;
+}
+main .announcement h1 {
+  font-size: 5rem;
+}
+main .announcement h2 {
+  font-size: 3.5rem;
 }
 footer {
   position: fixed;

@@ -4,7 +4,8 @@ export const HUD = (function () {
         scoreSpan = document.getElementById("score"),
         minutesSpan = document.getElementById("minutes"),
         secondsSpan = document.getElementById("seconds"),
-        weaponsMenu = document.getElementById("weapons_menu");
+        weaponsMenu = document.getElementById("weapons_menu"),
+        announcementDiv = document.getElementById("announcement");
 
     // Chrono
     const delay = 1000;
@@ -170,5 +171,37 @@ export const HUD = (function () {
         },
 
         getCurrentWeapon: () => currentWeapon,
+
+        /* -------------------------------------------------------------------------- */
+        /*                            Announcement functions                           */
+        /* -------------------------------------------------------------------------- */
+
+        /**
+         * Show an annoucement
+         * @param {string} title The annoucement title
+         * @param {string} subtitle The annoucement subtitle
+         */
+        showAnnouncement(title, subtitle) {
+            // Set content
+            announcementDiv.querySelector('h1').innerText = title;
+            announcementDiv.querySelector('h2').innerText = subtitle;
+
+            // Set style
+            announcementDiv.style.display = "block";
+            setTimeout(() => {
+                announcementDiv.style.opacity = 1;
+            }, 10);
+        },
+
+        /**
+         * Hide the annoucement
+         */
+        hideAnnouncement() {
+            // Set style
+            announcementDiv.style.opacity = 0;
+            setTimeout(() => {
+                announcementDiv.style.display = "none";
+            }, 500);
+        }
     };
 })();
