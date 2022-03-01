@@ -5,7 +5,19 @@ import { Vector2, Vector3 } from 'three';
 /* -------------------------------------------------------------------------- */
 const tmpElements = [
     { type: 'Map', name: 'Map0', position: new Vector3(0, 0, 0) },
-    { type: 'RedFarm', name: 'RedFarm0', position: new Vector3(-20, 0, 0), rotation: new Vector3(0, Math.PI/2, 0) },
+    
+    // Side 1
+    { type: 'RedFarm', name: 'RedFarm0', position: new Vector3(-23, 0, -20), rotation: new Vector3(0, Math.PI / 2 + 0.3, 0) },
+    { type: 'Tree', name: 'Tree0', position: new Vector3(-14, 0, -30) },
+    { type: 'Bush', name: 'Bush0', position: new Vector3(15, 0, -33), rotation: new Vector3(0, Math.PI, 0) },
+    { type: 'Bush', name: 'Bush1', position: new Vector3(15, 0, -28), rotation: new Vector3(0, -0.5, 0) },
+    
+    // Side 0
+    { type: 'BlueFarm', name: 'BlueFarm0', position: new Vector3(23, 0, 20), rotation: new Vector3(0, -Math.PI / 2 + 0.3, 0) },
+    { type: 'Tree', name: 'Tree1', position: new Vector3(14, 0, 30) },
+    { type: 'Tree', name: 'Tree2', position: new Vector3(6, 0, 31), rotation: new Vector3(0, -0.5, 0) },
+    { type: 'Bush', name: 'Bush2', position: new Vector3(25, 0, 10), rotation: new Vector3(0, 1, 0) },
+
 ];
 
 /* --------------------------------- Fences --------------------------------- */

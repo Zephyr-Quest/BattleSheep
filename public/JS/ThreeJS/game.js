@@ -128,13 +128,6 @@ function init() {
     const playerId = 1;
     view.displayPlayerGrid(grid, playerId);
 
-    const spriteMaterial = new THREE.SpriteMaterial({ map: Textures.Grass.texture, transparent: true, opacity: 0.8, color: Config.light.color });
-    particle = new THREE.Sprite(spriteMaterial);
-    particle.scale.set(1.5, 1, 1);
-    particle.scale.multiplyScalar(0.5);
-    particle.position.set(0, 2, 0);
-    scene.add(particle);
-
     // Start chrono
     HUD.startChronoFrom(0, 50);
 
