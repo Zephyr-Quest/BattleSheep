@@ -34,7 +34,7 @@
     </header>
 
     <!-- Weapons menu -->
-    <nav>
+    <nav style="display: none;">
         <div class="weapons" id="weapons_menu">
             <div class="weapon" id="weapon_shears" title="Shears">
                 <img src="img/weapons/shears.png" alt="Shears" class="icon" style="display: none;" />
@@ -55,13 +55,27 @@
         </div>
     </nav>
 
-    <main style="display: none;">
+    <main style="display: flex;">
+        <!-- Announcement -->
         <div class="announcement" id="announcement" style="display: none; opacity: 0;">
             <h1>A title</h1>
             <h2>A subtitle</h2>
         </div>
+
+        <!-- GIFs -->
         <div class="gif-display" id="gif_display" style="display: none; opacity: 0;">
             <img src="img/gifs/ValMouaaaa.gif" alt="Gif" />
+        </div>
+
+        <!-- Start grid -->
+        <div class="start-grid">
+            <div id="sheepBox"></div>
+            <table id="playerGrid"></table>
+        </div>
+        <div id="buttons">
+            <button id="rotate">Rotate</button>
+            <button id="reset">Reset</button>
+            <button id="valid">Valid</button>
         </div>
     </main>
 

@@ -6,7 +6,7 @@ import { Config } from '../config.js';
 // Level design imports
 import { Model3D } from '../level_design/model_3d.js';
 import { MeshManager } from '../level_design/MeshManager.js';
-import { Elements, createSheep } from '../level_design/level_design.js';
+import { Elements, createSheep, createGrass } from '../level_design/level_design.js';
 import { Textures } from '../level_design/textures.js';
 
 /* -------------------------------------------------------------------------- */
@@ -139,23 +139,27 @@ export class View {
     displayPlayerGrid(grid, playerId) {
         for (let x = 0; x < grid.length; x++)
             for (let y = 0; y < grid.length; y++) {
+                // Get position data
                 const currentCase = grid[y][x];
                 const currentPosition = new Vector2(x, y);
                 
-                // Check if a sheep must be placed
-                if (currentCase !== 1) continue;
-
+                // Get current placed object
                 const currentObjName = this.getObjectNameOnGrid(currentPosition, playerId);
                 const currentObj = this.allObjects[currentObjName];
-
-                // Check if a sheep is already placed
-                if (currentObj.type === 'Sheep') continue;
-
-                // Replace the grass object by a sheep object
-                currentObj.removeFromScene(this.scene);
-                delete this.allObjects[currentObjName];
-                const newSheep = createSheep(currentPosition, playerId);
-                this.displayElement(newSheep);
+                
+                if (currentCase === 1 && currentObj.type !== 'Sheep') {
+                    // Replace the grass object by a sheep object
+                    currentObj.removeFromScene(this.scene);
+                    delete this.allObjects[currentObjName];
+                    const newSheep = createSheep(currentPosition, playerId);
+                    this.displayElement(newSheep);
+                } else if (currentCase === 0 && currentObj.type === 'Sheep') {
+                    // Replace the sheep by a grass
+                    currentObj.removeFromScene(this.scene);
+                    delete this.allObjects[currentObjName];
+                    const newGrass = createGrass(currentPosition, playerId);
+                    this.displayElement(newGrass);
+                }
             }
     }
 

@@ -114,6 +114,7 @@ main {
   justify-content: center;
   align-items: center;
   z-index: 0;
+  flex-direction: column;
 }
 main .announcement {
   transition: opacity 0.5s;
@@ -138,6 +139,91 @@ main .gif-display img {
   margin: auto;
   height: 200px;
   border-radius: 20px;
+}
+main .start-grid {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+main .start-grid .tab {
+  display: flex;
+  flex-direction: row;
+}
+main .start-grid table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+main .start-grid td {
+  border: 1px solid #000;
+  display: table-cell;
+  width: 70px;
+  height: 70px;
+  text-align: center;
+  padding: 0;
+}
+main .start-grid table tr:first-child td {
+  border-top-color: #000;
+}
+main .start-grid table tr:last-child td {
+  border-bottom-color: #000;
+}
+main .start-grid table tr td:first-child {
+  border-left-color: #000;
+}
+main .start-grid table tr td:last-child {
+  border-right-color: #000;
+}
+main .start-grid td button {
+  color: #000;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border-style: none;
+  background-color: transparent;
+}
+main .start-grid #sheepBox .box {
+  margin: 10px;
+}
+main .start-grid #sheepBox {
+  border: 1px solid black;
+}
+main .start-grid .box {
+  cursor: move;
+  height: 70px;
+  width: 70px;
+  text-align: center;
+  background-color: #000;
+  color: white;
+}
+main .start-grid #game {
+  display: flex;
+  width: 100%;
+  margin: 20px auto;
+  justify-content: space-around;
+}
+main .start-grid #weapons {
+  display: flex;
+  width: 30%;
+  margin: 0 auto;
+  justify-content: space-around;
+  /* flex-direction: column; */
+}
+main .start-grid #weapons button {
+  margin: 10px;
+  width: 70px;
+  height: 70px;
+}
+main .start-grid #enemyGrid button {
+  font-size: 30px;
+}
+main .start-grid .unavailable {
+  background-color: #cbc9c9;
+}
+main #buttons {
+  margin: 0 auto;
+  width: 700px;
+  display: flex;
+  justify-content: space-around;
 }
 footer {
   position: fixed;

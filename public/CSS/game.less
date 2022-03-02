@@ -154,6 +154,7 @@ main {
     justify-content: center;
     align-items: center;
     z-index: 0;
+    flex-direction: column;
 
     .announcement {
         transition: opacity @transitions-duration;
@@ -177,6 +178,109 @@ main {
             height: 200px;
             border-radius: 20px; 
         }
+    }
+
+    .start-grid {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+
+        .tab{
+            display: flex;
+            flex-direction: row;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        td {
+            border: 1px solid #000;
+            display: table-cell;
+            width: 70px;
+            height: 70px;
+            text-align: center;
+            padding: 0;
+        }
+
+        table tr:first-child td {
+            border-top-color: #000;
+        }
+
+        table tr:last-child td {
+            border-bottom-color: #000;
+        }
+
+        table tr td:first-child {
+            border-left-color: #000;
+        }
+
+        table tr td:last-child {
+            border-right-color: #000;
+        }
+
+        td button {
+            color: #000;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            border-style: none;
+            background-color: transparent;
+        }
+
+        #sheepBox .box{
+            margin: 10px;
+        }
+
+        #sheepBox{
+            border: 1px solid black;
+        }
+
+        .box {
+            cursor: move;
+            height: 70px;
+            width: 70px;
+            text-align: center;
+            background-color: #000;
+            color: white;
+        }
+
+        #game{
+            display: flex;
+            width: 100%;
+            margin: 20px auto;
+            justify-content: space-around;
+        }
+
+        #weapons {
+            display: flex;
+            width: 30%;
+            margin: 0 auto;
+            justify-content: space-around;
+            /* flex-direction: column; */
+        }
+
+        #weapons button{
+            margin: 10px;
+            width: 70px;
+            height: 70px;
+        }
+
+        #enemyGrid button{
+            font-size: 30px;
+        }
+
+        .unavailable{
+            background-color: rgb(203, 201, 201 );
+        }
+    }
+
+    #buttons{
+        margin: 0 auto;
+        width: 700px;
+        display: flex;
+        justify-content: space-around;
     }
 }
 

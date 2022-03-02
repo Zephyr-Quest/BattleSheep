@@ -25,6 +25,8 @@
  * - Submarine : destroy a circle of 2 cases
  */
 
+import { sheep } from './sheep.js';
+
 // Set a 10x10 grid filled with undefined
 function init_grid() {
     var grid = [];
@@ -37,7 +39,7 @@ function init_grid() {
     return grid;
 }
 
-grid = init_grid();
+let grid = init_grid();
 
 /**
  * Update the grid with the ship
@@ -137,3 +139,5 @@ function is_ship_position_on_grid_valid(grid, ship) {
 
     return true;
 }
+
+export { wrapPosition };

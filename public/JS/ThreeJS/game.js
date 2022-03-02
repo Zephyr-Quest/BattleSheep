@@ -6,12 +6,12 @@ import { Config } from './config.js';
 // Gameplay imports
 import { CustomRaycaster } from './gameplay/Raycaster.js';
 import { View } from './gameplay/View.js';
-import { Textures } from './level_design/textures.js';
 import { HUD } from './gameplay/HUD.js';
 
-let scene, renderer, camera, controls, raycaster;
+// Grid imports
+import { setPlayerGrid } from './grid/setPlayerGrid.js';
 
-let particle;
+let scene, renderer, camera, controls, raycaster;
 
 /* ---------------------------------- Debug --------------------------------- */
 
@@ -89,6 +89,10 @@ function init() {
     window.addEventListener("keyup", onKeyUp);
     window.addEventListener('resize', onResize, false);
 
+    /* ------------------------------- Start grid ------------------------------- */
+
+    const currentGame = new setPlayerGrid(view);
+
     /* ---------------------------------- Debug --------------------------------- */
 
     // Display FPS
@@ -103,33 +107,6 @@ function init() {
         controls = new OrbitControls(camera, renderer.domElement);
         controls.update();
     }
-
-    // Display the origin and the light position
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    const origin = new THREE.Mesh(geometry, material);
-    const lightCube = new THREE.Mesh(geometry, material);
-    lightCube.position.fromArray(directionalLight.position.toArray());
-    // scene.add(origin);
-    scene.add(lightCube);
-
-    const grid = [
-        [1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-        [0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 1, 1, 1, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    ]
-    const playerId = 1;
-    view.displayPlayerGrid(grid, playerId);
-
-    // Start chrono
-    HUD.startChronoFrom(0, 50);
 
     /* -------------------------------- End debug ------------------------------- */
 

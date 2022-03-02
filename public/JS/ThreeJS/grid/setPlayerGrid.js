@@ -1,9 +1,22 @@
-class setPlayerGrid extends grid {
-    constructor() {
+import { grid } from './grid.js';
+import { wrapPosition } from './verif.js';
+import { sheep } from './sheep.js';
+
+/* -------------------------------------------------------------------------- */
+/*                         Class to manage start grid                         */
+/* -------------------------------------------------------------------------- */
+export class setPlayerGrid extends grid {
+
+    /**
+     * The setPlayerGrid constructor
+     * @param {View} view3d The ThreeJS view
+     */
+    constructor(view3d) {
         super();
         this.rotation = "row";
         this.nbSheep = 10;
         this.tabSheep = [];
+        this.view3d = view3d;
 
         // Set grid
         const playerGrid = document.getElementById("playerGrid");
@@ -48,8 +61,8 @@ class setPlayerGrid extends grid {
         resetBtn.addEventListener("click", () => {
             this.resetGrid();
             this.displayGrid();
-            this.displayOnScreen();
             this.CreateSheepOnScreen();
+            this.displayOnScreen();
             for (let i = 0; i < this.nbSheep; i++) {
                 this.tabSheep[i].firstPosition = undefined;
             }
@@ -59,6 +72,7 @@ class setPlayerGrid extends grid {
             http.post(
                 "/validation",
                 this.grid,
+
                 () => console.log("grid ok"),
                 err => console.log(err)
             );
@@ -98,6 +112,9 @@ class setPlayerGrid extends grid {
                 }
             }
         }
+
+        const simpleGrid = this.getSimpleGrid();
+        this.view3d.displayPlayerGrid(simpleGrid, 1);
     }
 
     rangeSheep(sheepPosition, rotate, range, value) {
@@ -143,9 +160,6 @@ class setPlayerGrid extends grid {
             // console.log("end");
             const currentBox = event.target;
             const currentSheep = this.tabSheep[currentBox.classList[1]];
-            console.log(currentSheep)
-            // if (currentSheep.firstPosition !== undefined)
-            //     this.rangeSheep(currentSheep.firstPosition, currentSheep.direction, currentSheep.sheepSize, currentSheep.sheepSize);
             if (currentBox.parentElement.id != currentSheep.firstPosition) {
                 const container = document.getElementById(currentSheep.firstPosition)
                 container.append(currentBox);
@@ -190,4 +204,4 @@ class setPlayerGrid extends grid {
             })
         }
     }
-}
+};

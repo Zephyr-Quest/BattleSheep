@@ -1,4 +1,7 @@
-class grid {
+/* -------------------------------------------------------------------------- */
+/*                          Represent a general grid                          */
+/* -------------------------------------------------------------------------- */
+export class grid {
 
     constructor() {
         this.gridSize = 10;
@@ -39,4 +42,20 @@ class grid {
     setCase(row, col, value) {
         this.grid[row][col] = value;
     }
-}
+
+    /**
+     * Get a simple grid to ThreeJS
+     * @returns The final grid
+     */
+    getSimpleGrid() {
+        let result = new Array();
+
+        for (let row = 0; row < this.gridSize; row++) {
+            result[row] = new Array();
+            for (let col = 0; col < this.gridSize; col++)
+                result[row][col] = this.grid[row][col] ? 1 : 0;
+        }
+
+        return result;
+    }
+};
