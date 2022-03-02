@@ -268,7 +268,8 @@ io.on("connection", (socket) => {
             io.emit("display-score", a);
         });
         io.emit("display-rooms", allRooms);
-    });
+        io.emit("display-username", socket.handshake.session.username);
+    }); 
 
     socket.on("get-score", user => {
         Database.refreshScore(user, "", "", (a) => {
@@ -339,7 +340,7 @@ io.on("connection", (socket) => {
     socket.on("", () => {
 
     });
-    //! A utiliser dans socket du game    socket.in("room-" + res).emit("play");
+    //! A utiliser dans socket du game    socket.to("room-" + res).emit("play");
 
     socket.on("disconnect", () => {
         console.log("Déconnexion des joueurs");
