@@ -245,11 +245,11 @@ let allRooms = [];
 io.on("connection", (socket) => {
     console.log("Connexion d'un joueur au jeu");
 
-    socket.on("wrapPosition", (grid, x,y,size,rotation)=>{
+    socket.on("wrapPosition", (grid, x, y, size, rotation) => {
         // console.log(grid, x, y, size, rotation);
-        let res = gridVerif.wrapPosition(grid,x,y,size,rotation);
+        let res = gridVerif.wrapPosition(grid, x, y, size, rotation);
         console.log(res)
-        socket.emit("responseWrap",res);
+        socket.emit("responseWrap", res);
     })
 
 
@@ -264,7 +264,7 @@ io.on("connection", (socket) => {
         });
         console.log(username + " Hosted room : room-" + res);
         socket.join("room-" + res);
-    }) 
+    })
 
     socket.on("join-room", (hostName, username) => {
         console.log("Trying to join !");
