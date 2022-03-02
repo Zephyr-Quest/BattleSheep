@@ -55,7 +55,7 @@
         </div>
     </nav>
 
-    <main style="display: flex;">
+    <main style="display: flex; background-color: rgba(0, 0, 0, 0.3);">
         <!-- Announcement -->
         <div class="announcement" id="announcement" style="display: none; opacity: 0;">
             <h1>A title</h1>
@@ -71,11 +71,17 @@
         <div class="start-grid">
             <div id="sheepBox"></div>
             <table id="playerGrid"></table>
-        </div>
-        <div id="buttons">
-            <button id="rotate">Rotate</button>
-            <button id="reset">Reset</button>
-            <button id="valid">Valid</button>
+            <div id="buttons">
+                <a href="#" id="rotate" title="Rotate sheeps">
+                    <ion-icon name="refresh-circle"></ion-icon>
+                </a>
+                <a href="#" id="reset" title="Reset the grid">
+                    <ion-icon name="close-circle"></ion-icon>
+                </a>
+                <a href="#" id="valid" title="Valid the grid">
+                    <ion-icon name="checkmark-circle"></ion-icon>
+                </a>
+            </div>
         </div>
     </main>
 

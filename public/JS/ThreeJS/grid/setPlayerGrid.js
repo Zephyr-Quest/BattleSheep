@@ -79,19 +79,32 @@ export class setPlayerGrid extends grid {
                 const container = document.getElementById([row, col]);
                 if (this.grid[row][col] != undefined) {
                     if (!container.hasChildNodes()) {
+                        // Create the sheep div
                         const divSheep = document.createElement("div");
                         divSheep.setAttribute("draggable", "true");
                         divSheep.classList.add("box");
+
+                        // Create the sheep img
+                        const imgSheep = document.createElement('img');
+                        imgSheep.src = "img/sheep_head.png";
+                        imgSheep.alt = "Sheep head";
+                        divSheep.append(imgSheep);
+
+                        // Create indice
+                        const nbSpan = document.createElement("span");
+
                         if (this.grid[row][col][1] == "r") {
                             const preContainer = document.getElementById([row, col - 1]);
                             divSheep.classList.add(preContainer.firstChild.classList[1]);
-                            divSheep.innerText = this.tabSheep[preContainer.firstChild.classList[1]].sheepSize;
+                            nbSpan.innerText = this.tabSheep[preContainer.firstChild.classList[1]].sheepSize;
                         }
                         else {
                             const preContainer = document.getElementById([row - 1, col]);
                             divSheep.classList.add(preContainer.firstChild.classList[1]);
-                            divSheep.innerText = this.tabSheep[preContainer.firstChild.classList[1]].sheepSize;
+                            nbSpan.innerText = this.tabSheep[preContainer.firstChild.classList[1]].sheepSize;
                         }
+
+                        divSheep.append(nbSpan);
                         container.appendChild(divSheep);
                         this.setDrag(divSheep);
                     }
@@ -125,12 +138,24 @@ export class setPlayerGrid extends grid {
         const div = document.getElementById("sheepBox");
         for (let i = 0; i < this.nbSheep; i++) {
             if (!document.getElementById(i)) {
+                // Create the sheep div
                 const divSheep = document.createElement("div");
                 divSheep.setAttribute("draggable", "true");
                 divSheep.classList.add("box");
                 divSheep.classList.add(i);
                 divSheep.id = i;
-                divSheep.innerText = this.tabSheep[i].sheepSize;
+                
+                // Create the sheep img
+                const imgSheep = document.createElement('img');
+                imgSheep.src = "img/sheep_head.png";
+                imgSheep.alt = "Sheep head";
+                divSheep.append(imgSheep);
+
+                // Create indice
+                const nbSpan = document.createElement("span");
+                nbSpan.innerText = this.tabSheep[i].sheepSize;
+                divSheep.append(nbSpan);
+
                 div.append(divSheep);
                 this.setDrag(divSheep);
             }
@@ -140,7 +165,10 @@ export class setPlayerGrid extends grid {
     setDrag(currentBox) {
         currentBox.addEventListener("dragstart", (event) => {
             // console.log("start");
-            const currentBox = event.target;
+            let currentBox = event.target;
+            if (currentBox.nodeName === 'IMG' || currentBox.nodeName === 'span')
+                currentBox = currentBox.parentElement;
+
             const currentSheep = this.tabSheep[currentBox.classList[1]];
             event.dataTransfer.setData('text/plain', currentBox.classList[1]);
             if (currentBox.parentElement.classList[0] === "container") {
@@ -152,8 +180,12 @@ export class setPlayerGrid extends grid {
 
         currentBox.addEventListener("dragend", (event) => {
             // console.log("end");
-            const currentBox = event.target;
+            let currentBox = event.target;
+            if (currentBox.nodeName === 'IMG' || currentBox.nodeName === 'span')
+                currentBox = currentBox.parentElement;
+
             const currentSheep = this.tabSheep[currentBox.classList[1]];
+            console.log(currentBox, currentSheep);
             if (currentBox.parentElement.id != currentSheep.firstPosition) {
                 const container = document.getElementById(currentSheep.firstPosition)
                 container.append(currentBox);

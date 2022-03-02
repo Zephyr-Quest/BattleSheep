@@ -184,103 +184,96 @@ main {
         display: flex;
         justify-content: space-around;
         align-items: center;
-
-        .tab{
-            display: flex;
-            flex-direction: row;
-        }
+        width: 100%;
 
         table {
             border-collapse: collapse;
             border-spacing: 0;
+
+            td {
+                border: 3px solid #fff;
+                display: table-cell;
+                width: 70px;
+                height: 70px;
+                text-align: center;
+                padding: 0;
+
+                img {
+                    height: 68px;
+                    width: 68px;
+                }
+
+                span { display: none; }
+            }
+            
+            tr:first-child td {
+                border-top-style: none;
+            }
+
+            tr:last-child td {
+                border-bottom-style: none;
+            }
+
+            tr td:first-child {
+                border-left-style: none;
+            }
+
+            tr td:last-child {
+                border-right-style: none;
+            }
+        }        
+
+        #sheepBox {
+            background-color: rgba(238, 238, 238, 0.5);
+            border-radius: 20px;
+            border: 3px solid @primary-color;
+            box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.4);
+            padding: 10px;
+
+            .box {
+                cursor: move;
+                margin-bottom: 10px;
+
+                &:last-child { margin-bottom: 0; }
+
+                img {
+                    height: 70px;
+                    width: 70px;
+                }
+
+                span {
+                    font-family: @primary-font, @secondary-font;
+                    font-weight: bold;
+                    margin: 0;
+                    margin-top: -10px;
+                    margin-left: -20px;
+                    padding: 5px;
+                    padding-left: 11px;
+                    padding-right: 11px;
+                    background-color: #fff;
+                    border-radius: 50px;
+                    color: @primary-color;
+                }
+            }
         }
 
-        td {
-            border: 1px solid #000;
-            display: table-cell;
-            width: 70px;
-            height: 70px;
-            text-align: center;
-            padding: 0;
-        }
-
-        table tr:first-child td {
-            border-top-color: #000;
-        }
-
-        table tr:last-child td {
-            border-bottom-color: #000;
-        }
-
-        table tr td:first-child {
-            border-left-color: #000;
-        }
-
-        table tr td:last-child {
-            border-right-color: #000;
-        }
-
-        td button {
-            color: #000;
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            border-style: none;
-            background-color: transparent;
-        }
-
-        #sheepBox .box{
-            margin: 10px;
-        }
-
-        #sheepBox{
-            border: 1px solid black;
-        }
-
-        .box {
-            cursor: move;
-            height: 70px;
-            width: 70px;
-            text-align: center;
-            background-color: #000;
-            color: white;
-        }
-
-        #game{
+        #buttons{
             display: flex;
-            width: 100%;
-            margin: 20px auto;
             justify-content: space-around;
-        }
+            flex-direction: column;
 
-        #weapons {
-            display: flex;
-            width: 30%;
-            margin: 0 auto;
-            justify-content: space-around;
-            /* flex-direction: column; */
+            a {
+                display: flex;
+                color: #fff;
+                font-size: 3rem;
+                text-decoration: none;
+                margin-bottom: 50px;
+                
+                &:last-child{ margin-bottom: 0; }
+                
+                &:hover { opacity: 0.7; }
+            }
         }
-
-        #weapons button{
-            margin: 10px;
-            width: 70px;
-            height: 70px;
-        }
-
-        #enemyGrid button{
-            font-size: 30px;
-        }
-
-        .unavailable{
-            background-color: rgb(203, 201, 201 );
-        }
-    }
-
-    #buttons{
-        margin: 0 auto;
-        width: 700px;
-        display: flex;
-        justify-content: space-around;
     }
 }
 
