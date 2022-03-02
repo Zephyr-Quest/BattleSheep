@@ -80,26 +80,111 @@ function is_ship_hit(grid, ship) {
     return false;
 }
 
-// Hit with normal shot
-function hit(grid, x, y) {
-    grid[x][y] = -1;
-    return grid;
+// Attack the grid
+function attack(grid, type, x, y) {
+    if (type == "shears") {
+        return hit(grid, x, y);
+    } else if (type == "radar") {
+        return radar(grid, x, y);
+    } else if (type == "torpedo") {
+        return torpedo(grid, x, y);
+    } else if (type == "submarine") {
+        return submarine(grid, x, y);
+    }
+    return false;
 }
 
-// Hit with radar
-// Not implemented
+// Submarine
+// Destroy a circle of 2 cases
+function submarine(grid, x, y) {
+    // Check if the coordonate is on the grid
+    if (x < 0 || x > 9 || y < 0 || y > 9) {
+        return false;
+    }
+    let results = [];
+    for (let i = max(x, x - 2); i < min(x, x + 2); i++) {
+        for (let j = max(y, y - 2); j < min(y, y + 2); j++) {
+            if (grid[i][j] != undefined) {
+                results.push({
+                    x: i,
+                    y: j,
+                    hit: true
+                });
+            }
+        }
+    }
+    return results;
+}
+
+
+// Hit with normal shot
+function hit(grid, x, y) {
+    // Check if the coordonate is on the grid
+    if (x < 0 || x > 9 || y < 0 || y > 9) {
+        return false;
+    } else {
+        if (grid[x][y] != undefined) {
+            return {
+                x: x,
+                y: y,
+                hit: true
+            };
+        } else {
+            return {
+                x: x,
+                y: y,
+                hit: false
+            };
+
+        }
+    }
+}
+
+// Torpedo
+// Destroy a line of 2 cases
+function torpedo(grid, x, y) {
+
+    let result = [];
+    for (let i = max(x, x - 1); i < min(x, x + 1); i++) {
+        // Check if a ship is on the case
+        if (i >= 0 && i < 10) {
+            if (grid[i][y] != undefined) {
+                result.push({
+                    x: i,
+                    y: y,
+                    hit: false
+                });
+            };
+        }
+    }
+    return result;
+}
+
+// Return the case shown by the radar
 function radar(grid, x, y) {
-    grid[x][y] = -1;
-    grid[x + 1][y] = -1;
-    grid[x - 1][y] = -1;
-    grid[x][y + 1] = -1;
-    grid[x][y - 1] = -1;
-    return grid;
+    let result = [];
+    for (let i = x - 1; i <= x + 1; i++) {
+        for (let j = y - 1; j <= y + 1; j++) {
+            if (i >= 0 && i < 10 && j >= 0 && j < 10) {
+                if (grid[i][j] != undefined) {
+                    result.push({
+                        x: i,
+                        y: j,
+                        show: true
+                    });
+                }
+            }
+        }
+    }
+    return result;
 }
 
 // Wrapper for is_ship_position_on_grid_valid
 function wrapPosition(grid, x, y, size, rotation) {
-    const position = { x, y }
+    const position = {
+        x,
+        y
+    }
     const ship = new sheep(size, rotation, position);
     return is_ship_position_on_grid_valid(grid, ship);
 }
