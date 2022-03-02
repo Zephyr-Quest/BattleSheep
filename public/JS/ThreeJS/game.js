@@ -67,6 +67,7 @@ function init() {
             view.uncoverGridCase(new THREE.Vector2(pos.x, pos.y), pos.z, true);
         }, 1000);
     };
+    raycaster.isActive = false;
 
     /* --------------------------------- Lights --------------------------------- */
 
@@ -93,15 +94,10 @@ function init() {
     /* ------------------------------- Start grid ------------------------------- */
 
     new setPlayerGrid(view, () => {
-        for (const node of document.querySelectorAll(".start-grid, #buttons, main")) {
-            node.style.display = "none";
-        }
-        document.querySelector('nav').style.display = "flex";
-
+        HUD.hideStartGrid();
         raycaster.isActive = true;
     });
-    raycaster.isActive = false;
-
+    
     /* ---------------------------------- Debug --------------------------------- */
 
     // Display FPS
@@ -122,6 +118,8 @@ function init() {
     scene.add(sprite);
 
     /* -------------------------------- End debug ------------------------------- */
+
+    HUD.showAnnouncement("Waiting for a player", "Please wait...");
 
     render();
 }
@@ -160,16 +158,11 @@ function onKeyUp(e) {
     // console.log(e);
 
     if (e.code === 'Space') {
-        console.log(camera.position);
-        HUD.setScore(5);
-        
-        if (HUD.getChronoStatus()) HUD.stopChrono();
-        else HUD.startChrono();
-
-        // HUD.showAnnouncementDuring("test", "saluuut", 3000);
-        HUD.showGifDuring("ValMouaaaa", 3000);
+        HUD.hideAnnouncement();
+        setTimeout(HUD.showStartGrid, 1000);
     } else if (e.key === 'f') {
-        const renderDom = renderer.domElement;
+        // const renderDom = renderer.domElement;
+        const renderDom = document.querySelector("body");
         if (renderDom.requestFullscreen) renderDom.requestFullscreen();
         else if (renderDom.webkitRequestFullscreen) renderDom.webkitRequestFullscreen();
         else if (renderDom.msRequestFullscreen) renderDom.msRequestFullscreen();

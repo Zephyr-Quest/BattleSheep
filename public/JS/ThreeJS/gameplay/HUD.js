@@ -164,11 +164,29 @@ export const HUD = (function () {
         /*                              Weapons functions                             */
         /* -------------------------------------------------------------------------- */
 
+        /**
+         * Mark a weapon as blocked
+         * @param {string} name The weapon name
+         */
         blockWeapon(name) {
             const weapon = getWeaponDivByName(name);
             if (!weapon) throw "The weapon doesn't exist.";
 
             weapon.classList.add("disabled");
+        },
+
+        /**
+         * Show the weapons menu
+         */
+        showWeaponsMenu() {
+            weaponsMenu.style.display = "flex";
+        },
+
+        /**
+         * Hide the weapons menu
+         */
+        hideWeaponsMenu() {
+            weaponsMenu.style.display = "none";
         },
 
         getCurrentWeapon: () => currentWeapon,
@@ -254,6 +272,32 @@ export const HUD = (function () {
                 gifDiv.style.display = "none";
                 gifDiv.parentElement.style.display = "none";
             }, 500);
-        }
+        },
+
+        /* -------------------------------------------------------------------------- */
+        /*                                 Start grid                                 */
+        /* -------------------------------------------------------------------------- */
+
+        /**
+         * Show the start grid
+         */
+        showStartGrid() {
+            for (const node of document.querySelectorAll(".start-grid, #buttons, main")) {
+                node.style.display = "flex";
+            }
+            document.querySelector('nav').style.display = "none";
+            document.querySelector('main').style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+        },
+
+        /**
+         * Hide the start grid
+         */
+        hideStartGrid() {
+            for (const node of document.querySelectorAll(".start-grid, #buttons, main")) {
+                node.style.display = "none";
+            }
+            document.querySelector('nav').style.display = "flex";
+            document.querySelector('main').style.backgroundColor = "transparent";
+        },
     };
 })();
