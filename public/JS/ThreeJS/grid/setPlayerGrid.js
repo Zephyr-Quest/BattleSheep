@@ -10,13 +10,15 @@ export class setPlayerGrid extends grid {
     /**
      * The setPlayerGrid constructor
      * @param {View} view3d The ThreeJS view
+     * @param {funcion} callback What is run after the selection
      */
-    constructor(view3d) {
+    constructor(view3d, callback) {
         super();
         this.rotation = "row";
         this.nbSheep = 10;
         this.tabSheep = [];
         this.view3d = view3d;
+        this.endCallback = callback;
 
         // Set grid
         const playerGrid = document.getElementById("playerGrid");
@@ -68,15 +70,7 @@ export class setPlayerGrid extends grid {
             }
         })
 
-        validBtn.addEventListener("click", () => {
-            http.post(
-                "/validation",
-                this.grid,
-
-                () => console.log("grid ok"),
-                err => console.log(err)
-            );
-        })
+        validBtn.addEventListener("click", this.endCallback);
     }
 
     displayOnScreen() {
@@ -114,7 +108,7 @@ export class setPlayerGrid extends grid {
         }
 
         const simpleGrid = this.getSimpleGrid();
-        this.view3d.displayPlayerGrid(simpleGrid, 1);
+        this.view3d.displayPlayerGrid(simpleGrid, 0);
     }
 
     rangeSheep(sheepPosition, rotate, range, value) {

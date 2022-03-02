@@ -21,6 +21,7 @@ export class CustomRaycaster {
         this.camera = camera;
         this.view = view;
         this.debug = debug;
+        this.isActive = true;
 
         this.clickCallback = null;
     }
@@ -37,6 +38,8 @@ export class CustomRaycaster {
      * @param {ClickEvent} event The click event
      */
     onClick(event) {
+        if (!this.isActive) return;
+
         // Convert coordinates
         this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;

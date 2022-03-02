@@ -10,6 +10,7 @@ import { HUD } from './gameplay/HUD.js';
 
 // Grid imports
 import { setPlayerGrid } from './grid/setPlayerGrid.js';
+import { Textures } from './level_design/textures.js';
 
 let scene, renderer, camera, controls, raycaster;
 
@@ -91,7 +92,15 @@ function init() {
 
     /* ------------------------------- Start grid ------------------------------- */
 
-    const currentGame = new setPlayerGrid(view);
+    new setPlayerGrid(view, () => {
+        for (const node of document.querySelectorAll(".start-grid, #buttons, main")) {
+            node.style.display = "none";
+        }
+        document.querySelector('nav').style.display = "flex";
+
+        raycaster.isActive = true;
+    });
+    raycaster.isActive = false;
 
     /* ---------------------------------- Debug --------------------------------- */
 
@@ -107,6 +116,10 @@ function init() {
         controls = new OrbitControls(camera, renderer.domElement);
         controls.update();
     }
+
+    const material = new THREE.SpriteMaterial({ map: Textures.Cross.texture });
+    const sprite = new THREE.Sprite(material);
+    scene.add(sprite);
 
     /* -------------------------------- End debug ------------------------------- */
 
