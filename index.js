@@ -5,6 +5,8 @@ const io = require("socket.io")(http);
 const path = require("path");
 const mysql = require("mysql");
 const bodyParser = require("body-parser");
+const sharedsession = require('express-socket.io-session');
+
 const {
     body,
     validationResult
@@ -22,6 +24,12 @@ const {
 const {
     BDD
 } = require("./db/bdd");
+const {
+    all
+} = require("express/lib/application");
+const {
+    hostname
+} = require("os");
 const Database = new BDD();
 
 if (process.env.NODE_ENV !== "production") {
@@ -50,16 +58,21 @@ if (app.get("env") === "production") {
     session.cookie.secure = true;
 }
 
+io.use(sharedsession(session, {
+    // Session automatiquement sauvegardée en cas de modification
+    autoSave: true
+}));
+
 /* -------------------------------------------------------------------------- */
 /*                         Get the different request                          */
 /* -------------------------------------------------------------------------- */
 
 app.get("/", (req, res) => {
-    console.log("Affichage BDD");
-    Database.getList((res) => {
-        console.log(res);
-    });
-    console.log("Fin affichage");
+    // console.log("Affichage BDD");
+    // Database.getList((res) => {
+    //     console.log(res);
+    // });
+    // console.log("Fin affichage");
 
     res.render("index", {
         title: "BattleSheep by ZephyrStudio",
@@ -129,9 +142,9 @@ app.post("/signup", body("pseudo").isLength({
                         req.session.username = req.body.pseudo;
                         req.session.save();
                         console.log("Envoi vers le lobby");
-                        Database.getList((e) => {
-                            console.log(e);
-                        });
+                        // Database.getList((e) => {
+                        //     console.log(e);
+                        // });
                         res.send('OK');
                     }
                     // TODO AFFICHER DE RECOMMENCER SI FALSE
@@ -170,9 +183,9 @@ app.post("/login", body("pseudo").isLength({
                         req.session.username = req.body.pseudo;
                         req.session.save();
                         console.log("Envoi vers le lobby");
-                        Database.getList((e) => {
-                            console.log(e);
-                        });
+                        // Database.getList((e) => {
+                        //     console.log(e);
+                        // });
                         res.send('OK');
                     }
 
@@ -244,17 +257,33 @@ let allRooms = [];
 
 io.on("connection", (socket) => {
     console.log("Connexion d'un joueur au jeu");
+    console.log(socket.handshake.session.idRoom);
 
-    socket.on("wrapPosition", (grid, x, y, size, rotation) => {
-        // console.log(grid, x, y, size, rotation);
-        let res = gridVerif.wrapPosition(grid, x, y, size, rotation);
-        console.log(res)
-        socket.emit("responseWrap", res);
+    socket.on('login', () => {
+        let srvSockets = io.sockets.sockets;
+        srvSockets.forEach(user => {
+            console.log(user.handshake.session.username);
+        });
+        Database.refreshScore(socket.handshake.session.username, "", "", (a) => {
+            io.emit("display-score", a);
+        });
+        io.emit("display-rooms", allRooms);
+        io.emit("display-username", socket.handshake.session.username);
+    });
+
+    socket.on("get-score", user => {
+        Database.refreshScore(user, "", "", (a) => {
+            return a.first.score;
+        });
     })
 
+    socket.on("get-allRooms", () => {
+        io.emit()
+    })
 
-
-    socket.on("host-room", (username) => {
+    /* ---------------------------------- Rooms ---------------------------------- */
+    socket.on("host-room", () => {
+        let username = socket.handshake.session.username;
         console.log("Trying to host !");
         const roomData = [];
         roomData.push(username);
@@ -264,19 +293,31 @@ io.on("connection", (socket) => {
         });
         console.log(username + " Hosted room : room-" + res);
         socket.join("room-" + res);
-    })
+        socket.handshake.session.idRoom = "room-" + res;
 
-    socket.on("join-room", (hostName, username) => {
-        console.log("Trying to join !");
-        let res = allRooms.findIndex(function (el) {
-            return el[0] == hostName;
-        });
-        allRooms[res].push(username);
-        socket.join("room-" + res);
-        console.log(username + " Joined room : room-" + res + " hosted by " + hostName);
-        socket.in("room-" + res).emit("play");
-    })
+        let podium;
+        // Database.refreshScore(socket.handshake.session.username, "", "", (a) => {
+        //     podium = a;
+        // });
+        console.log(allRooms)
+        io.emit("display-rooms", allRooms);
+    });
 
+    socket.on("join-room", (hostName) => {
+        let username = socket.handshake.session.username;
+        if (hostName != username) {
+            console.log("Trying to join !");
+            let res = allRooms.findIndex(function (el) {
+                return el[0] == hostName;
+            });
+            allRooms[res].push(username);
+            socket.join("room-" + res);
+            console.log(username + " Joined room : room-" + res + " hosted by " + hostName);
+            socket.handshake.session.idRoom = "room-" + res;
+
+            io.emit("hide-card", hostName);
+        }
+    });
 
     socket.on("leave-room", (hostName, username) => {
         console.log("Trying to disconnect !");
@@ -289,9 +330,21 @@ io.on("connection", (socket) => {
         console.log(allRooms);
     });
 
+    socket.on("wrapPosition", (grid, x, y, size, rotation) => {
+        let res = gridVerif.wrapPosition(grid, x, y, size, rotation);
+        console.log(res)
+        socket.emit("responseWrap", res);
+    });
+
+    /* ---------------------------------- Game ---------------------------------- */
+    socket.on("", () => {
+
+    });
+    //! A utiliser dans socket du game    socket.to("room-" + res).emit("play");
+
     socket.on("disconnect", () => {
         console.log("Déconnexion des joueurs");
-    })
+    });
 });
 
 http.listen(process.env.APP_PORT, () => {
