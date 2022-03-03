@@ -269,7 +269,7 @@ io.on("connection", (socket) => {
         });
         io.emit("display-rooms", allRooms);
         io.emit("display-username", socket.handshake.session.username);
-    }); 
+    });
 
     socket.on("get-score", user => {
         Database.refreshScore(user, "", "", (a) => {
@@ -316,7 +316,7 @@ io.on("connection", (socket) => {
             socket.handshake.session.idRoom = "room-" + res;
 
             io.emit("hide-card", hostName);
-        } 
+        }
     });
 
     socket.on("leave-room", (hostName, username) => {
