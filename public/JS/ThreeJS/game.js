@@ -95,7 +95,7 @@ function init() {
 
     new setPlayerGrid(view, () => {
         HUD.hideStartGrid();
-        raycaster.isActive = true;
+        HUD.showAnnouncement("The other player is setting up his grid", "Please wait...")
     });
     
     /* ---------------------------------- Debug --------------------------------- */
