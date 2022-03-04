@@ -255,58 +255,55 @@ app.use((req, res) => res.render("404"));
 
 let allRooms = [];
 
+//TODO comparer les id de session au lieu des pseudos
+
 io.on("connection", (socket) => {
-    console.log("Connexion d'un joueur au jeu");
-    console.log(socket.handshake.session.idRoom);
+    if(socket.handshake.session.idRoom == null){
+        console.log("Connexion de "+socket.handshake.session.username + " au Lobby");
+    }
+    else{
+        console.log("Connexion de "+socket.handshake.session.username + " à la " + socket.handshake.session.idRoom);
+    }
 
     socket.on('login', () => {
         let srvSockets = io.sockets.sockets;
+        console.log("Personnes connectées :")
         srvSockets.forEach(user => {
-            console.log(user.handshake.session.username);
+            console.log("- "+user.handshake.session.username);
         });
         Database.refreshScore(socket.handshake.session.username, "", "", (a) => {
             io.emit("display-score", a);
         });
         io.emit("display-rooms", allRooms);
-        io.emit("display-username", socket.handshake.session.username);
+        socket.emit("display-username", socket.handshake.session.username);
     });
 
     socket.on("get-score", user => {
         Database.refreshScore(user, "", "", (a) => {
-            return a.first.score;
+            io.emit("display-room-score", user, a.first.score);
         });
-    })
-
-    socket.on("get-allRooms", () => {
-        io.emit()
     })
 
     /* ---------------------------------- Rooms ---------------------------------- */
     socket.on("host-room", () => {
         let username = socket.handshake.session.username;
-        console.log("Trying to host !");
         const roomData = [];
         roomData.push(username);
         allRooms.push(roomData);
         let res = allRooms.findIndex(function (el) {
             return el[0] == username;
         });
-        console.log(username + " Hosted room : room-" + res);
+        console.log(username + " is hosting room-" + res);
         socket.join("room-" + res);
         socket.handshake.session.idRoom = "room-" + res;
 
-        let podium;
-        // Database.refreshScore(socket.handshake.session.username, "", "", (a) => {
-        //     podium = a;
-        // });
-        console.log(allRooms)
+        console.log("All rooms : "+allRooms)
         io.emit("display-rooms", allRooms);
     });
 
     socket.on("join-room", (hostName) => {
         let username = socket.handshake.session.username;
         if (hostName != username) {
-            console.log("Trying to join !");
             let res = allRooms.findIndex(function (el) {
                 return el[0] == hostName;
             });
@@ -327,25 +324,27 @@ io.on("connection", (socket) => {
         allRooms.splice(res, 1);
         socket.leave("room-" + res);
         console.log(username + " " + hostName + " Left the room : room-" + res);
-        console.log(allRooms);
-    });
-
-    socket.on("wrapPosition", (grid, x, y, size, rotation) => {
-        let res = gridVerif.wrapPosition(grid, x, y, size, rotation);
-        console.log(res)
-        socket.emit("responseWrap", res);
+        console.log("All rooms : "+allRooms)
     });
 
     /* ---------------------------------- Game ---------------------------------- */
     socket.on("", () => {
+        //! A utiliser dans socket du game    socket.to("room-" + res).emit("play");
 
     });
-    //! A utiliser dans socket du game    socket.to("room-" + res).emit("play");
 
     socket.on("disconnect", () => {
-        console.log("Déconnexion des joueurs");
+        console.log("Déconnexion de " + socket.handshake.session.username);
     });
 });
+
+function getScoreRoom(user) {
+    let bla = Database.refreshScore(user, "", "", function (a) {
+        return a.first.score;
+    });
+    return bla
+}
+
 
 http.listen(process.env.APP_PORT, () => {
     console.log("Serveur lancé sur le port", process.env.APP_PORT);

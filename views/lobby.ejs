@@ -27,7 +27,7 @@
     <ion-icon name="log-out" class="log-out" id="log_out"></ion-icon>
 
     <main>
-        <h1>Welcome <i><span id="username">UserPseudo</span></i></h1>
+        <h1>Welcome <i><span id="username"></span></i></h1>
 
         <!-- Scoreboard -->
         <section class="scoreboard" id="scoreboard">
@@ -36,21 +36,21 @@
             </h2>
 
             <!-- High scores list -->
-            <div class="card" id="card1">
+            <div class="card" id="card1" style="display:none">
                 <h3 class="green">#1</h3>
                 <ul>
                     <li>Against : <strong><span id="firstName">OtherPseudo</span></strong></li>
                     <li>Score : <strong class="green"><span id="firstScore">1000</span></strong></li>
                 </ul>
             </div>
-            <div class="card" id="card2">
+            <div class="card" id="card2" style="display:none">
                 <h3 class="green">#2</h3>
                 <ul>
                     <li>Against : <strong><span id="secondName">OtherPseudo</span></strong></li>
                     <li>Score : <strong class="green"><span id="secondScore">500</span></strong></li>
                 </ul>
             </div>
-            <div class="card" id="card3">
+            <div class="card" id="card3" style="display:none">
                 <h3 class="green">#3</h3>
                 <ul>
                     <li>Against : <strong><span id="thirdName">OtherPseudo</span></strong></li>
@@ -73,28 +73,6 @@
                 <h3>Host my own game</h3>
             </div>
             <section id="games-display"></section>
-            <!-- All of available games -->
-            <!-- <div class="card" title="Click to join the OtherPseudo's game">
-                <ion-icon name="log-in"></ion-icon>
-                <ul>
-                    <li>Host : <strong class="green">OtherPseudo</strong></li>
-                    <li>High score : <strong>1500</strong></li>
-                </ul>
-            </div>
-            <div class="card" title="Click to join the OtherPseudo's game">
-                <ion-icon name="log-in"></ion-icon>
-                <ul>
-                    <li>Host : <strong class="green">OtherPseudo</strong></li>
-                    <li>High score : <strong>1500</strong></li>
-                </ul>
-            </div>
-            <div class="card" title="Click to join the OtherPseudo's game">
-                <ion-icon name="log-in"></ion-icon>
-                <ul>
-                    <li>Host : <strong class="green">OtherPseudo</strong></li>
-                    <li>High score : <strong>1500</strong></li>
-                </ul>
-            </div> -->
         </nav>
     </main>
 
