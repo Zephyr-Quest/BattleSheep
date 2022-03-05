@@ -67,7 +67,10 @@ app.get("/", (req, res) => {
         scripts: [{
             name: "home",
             type: "module",
-        }, ],
+        }, {
+            name: "threejs_check",
+            type: "module",
+        }],
     });
 });
 
@@ -191,6 +194,9 @@ app.get("/rules", (req, res) => {
         scripts: [{
             name: "home",
             type: "module",
+        }, {
+            name: "threejs_check",
+            type: "module",
         }],
     });
 });
@@ -232,6 +238,8 @@ app.post("/logout", (req, res) => {
     req.session.destroy();
     res.send('OK');
 });
+
+app.get("/not_available", (req, res) => res.render("not_available"));
 
 // Capture 404 requests
 app.use((req, res) => res.render("404"));
