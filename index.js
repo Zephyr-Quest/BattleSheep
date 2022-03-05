@@ -220,7 +220,12 @@ app.get("/lobby", (req, res) => {
         return;
     }
 
-    res.render("lobby");
+    Database.refreshScore(req.session.username, "", "", (scoreboard) => {
+        res.render("lobby", {
+            username: req.session.username,
+            scoreboard
+        });
+    });
 });
 
 app.get("/game", (req, res) => {
@@ -230,34 +235,6 @@ app.get("/game", (req, res) => {
     }
 
     res.render("game");
-});
-
-app.get("/grid", (req, res) => {
-    res.render("grid", {
-        title: "BattleSheep | grid",
-        description: "grille des moutons",
-        scripts: [{
-                name: "grid",
-                type: "class",
-            },
-            {
-                name: "setPlayerGrid",
-                type: "class",
-            },
-            {
-                name: "sheep",
-                type: "class",
-            },
-            {
-                name: "setPlayerGrid",
-                type: "class",
-            },
-            {
-                name: "main",
-                type: "text/javascript",
-            }
-        ],
-    });
 });
 
 app.post("/logout", (req, res) => {
@@ -292,12 +269,6 @@ io.on("connection", (socket) => {
         io.emit("display-rooms", allRooms);
         io.emit("display-username", socket.handshake.session.username);
     });
-
-    socket.on("get-score", user => {
-        Database.refreshScore(user, "", "", (a) => {
-            return a.first.score;
-        });
-    })
 
     socket.on("get-allRooms", () => {
         io.emit()
