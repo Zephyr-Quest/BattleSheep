@@ -14,6 +14,7 @@ const http = (function() {
                 body: JSON.stringify(data),
                 headers: {'Content-Type': 'application/json'},
             };
+            
             customFecth(url, options, resolve, reject);
         } 
     }

@@ -21,6 +21,9 @@ export class CustomRaycaster {
         this.camera = camera;
         this.view = view;
         this.debug = debug;
+        this.isActive = true;
+
+        this.clickCallback = null;
     }
 
     /**
@@ -35,6 +38,8 @@ export class CustomRaycaster {
      * @param {ClickEvent} event The click event
      */
     onClick(event) {
+        if (!this.isActive) return;
+
         // Convert coordinates
         this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -77,17 +82,14 @@ export class CustomRaycaster {
             }
 
             if (clicked.type === 'Grass') {
-                clicked.upGrass()
+                clicked.upGrass();
 
                 // Turn the selected grass
                 this.view.sceneState.turningGrass = clicked;
                 
-                const gridPosition = clicked.getGridPosition()
-                console.log(gridPosition);
+                const gridPosition = clicked.getGridPosition();
 
-                setTimeout(() => {
-                    this.view.uncoverGridCase(new Vector2(gridPosition.x, gridPosition.y), gridPosition.z, true);
-                }, 1000);
+                if (this.clickCallback) this.clickCallback(gridPosition);
             }
         }
     }

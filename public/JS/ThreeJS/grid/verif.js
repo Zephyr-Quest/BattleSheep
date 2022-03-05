@@ -25,6 +25,8 @@
  * - Submarine : destroy a circle of 2 cases
  */
 
+import { sheep } from './sheep.js';
+
 // Set a 10x10 grid filled with undefined
 function init_grid() {
     var grid = [];
@@ -37,7 +39,7 @@ function init_grid() {
     return grid;
 }
 
-grid = init_grid();
+let grid = init_grid();
 
 /**
  * Update the grid with the ship
@@ -87,6 +89,7 @@ function hit(grid, x, y) {
 }
 
 // Hit with radar
+// Not implemented
 function radar(grid, x, y) {
     grid[x][y] = -1;
     grid[x + 1][y] = -1;
@@ -96,34 +99,39 @@ function radar(grid, x, y) {
     return grid;
 }
 
+// Wrapper for is_ship_position_on_grid_valid
+function wrapPosition(grid, x, y, size, rotation) {
+    const position = { x, y }
+    const ship = new sheep(size, rotation, position);
+    return is_ship_position_on_grid_valid(grid, ship);
+}
 
 /**
  * Check if the position of the ship is valid and update the grid
  */
 function is_ship_position_on_grid_valid(grid, ship) {
-    rotation = ship.direction;
-    position = ship.first_position;
-    size = ship.size;
-
+    let rotation = ship.direction;
+    let position = ship.firstPosition;
+    let size = ship.sheepSize;
     // Check if the ship is on the grid
-    if (rotation == "row") {
-        if (position[0] + size > 10) {
+    if (rotation == "col") {
+        if (position.x + size > 10) {
             return false;
         }
-    } else if (rotation == "col") {
-        if (position[1] + size > 10) {
+    } else if (rotation == "row") {
+        if (position.y + size > 10) {
             return false;
         }
     }
 
     // Check if the ship is not on another ship
-    for (var i = 0; i < size; i++) {
-        if (rotation == "row") {
-            if (grid[position[0] + i][position[1]] != undefined) {
+    for (let i = 0; i < size; i++) {
+        if (rotation == "col") {
+            if (grid[position.x + i][position.y] !== undefined) {
                 return false;
             }
-        } else if (rotation == "col") {
-            if (grid[position[0]][position[1] + i] != undefined) {
+        } else if (rotation == "row") {
+            if (grid[position.x][position.y + i] !== undefined) {
                 return false;
             }
         }
@@ -131,3 +139,5 @@ function is_ship_position_on_grid_valid(grid, ship) {
 
     return true;
 }
+
+export { wrapPosition };

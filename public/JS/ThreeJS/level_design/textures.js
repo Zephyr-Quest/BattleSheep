@@ -2,8 +2,12 @@
 /*                            List of all textures                            */
 /* -------------------------------------------------------------------------- */
 export const Textures = {
-    Grass: {
-        fileName: "grass.png",
+    Target: {
+        fileName: "target.png",
+        texture: null
+    },
+    Cross: {
+        fileName: "cross.png",
         texture: null
     }
 }

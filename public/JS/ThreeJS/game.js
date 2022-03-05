@@ -6,12 +6,13 @@ import { Config } from './config.js';
 // Gameplay imports
 import { CustomRaycaster } from './gameplay/Raycaster.js';
 import { View } from './gameplay/View.js';
-import { Textures } from './level_design/textures.js';
 import { HUD } from './gameplay/HUD.js';
 
-let scene, renderer, camera, controls, raycaster;
+// Grid imports
+import { setPlayerGrid } from './grid/setPlayerGrid.js';
+import { Textures } from './level_design/textures.js';
 
-let particle;
+let scene, renderer, camera, controls, raycaster;
 
 /* ---------------------------------- Debug --------------------------------- */
 
@@ -61,6 +62,12 @@ function init() {
 
     // Setting up the raycaster
     raycaster = new CustomRaycaster(scene, camera, view, DEBUG_RAYCASTER);
+    raycaster.clickCallback = (pos) => {
+        setTimeout(() => {
+            view.uncoverGridCase(new THREE.Vector2(pos.x, pos.y), pos.z, true);
+        }, 1000);
+    };
+    raycaster.isActive = false;
 
     /* --------------------------------- Lights --------------------------------- */
 
@@ -84,6 +91,13 @@ function init() {
     window.addEventListener("keyup", onKeyUp);
     window.addEventListener('resize', onResize, false);
 
+    /* ------------------------------- Start grid ------------------------------- */
+
+    new setPlayerGrid(view, () => {
+        HUD.hideStartGrid();
+        raycaster.isActive = true;
+    });
+    
     /* ---------------------------------- Debug --------------------------------- */
 
     // Display FPS
@@ -99,40 +113,13 @@ function init() {
         controls.update();
     }
 
-    // Display the origin and the light position
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    const origin = new THREE.Mesh(geometry, material);
-    const lightCube = new THREE.Mesh(geometry, material);
-    lightCube.position.fromArray(directionalLight.position.toArray());
-    // scene.add(origin);
-    scene.add(lightCube);
+    const material = new THREE.SpriteMaterial({ map: Textures.Cross.texture });
+    const sprite = new THREE.Sprite(material);
+    scene.add(sprite);
 
-    const grid = [
-        [1, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-        [0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 1, 1, 1, 1, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    ]
-    const playerId = 1;
-    view.displayPlayerGrid(grid, playerId);
+    /* -------------------------------- End debug ------------------------------- */
 
-    const spriteMaterial = new THREE.SpriteMaterial({ map: Textures.Grass.texture, transparent: true, opacity: 0.8, color: Config.light.color });
-    particle = new THREE.Sprite(spriteMaterial);
-    particle.scale.set(1.5, 1, 1);
-    particle.scale.multiplyScalar(0.5);
-    particle.position.set(0, 2, 0);
-    scene.add(particle);
-
-    // Start chrono
-    HUD.startChronoFrom(0, 50);
-
+    HUD.showAnnouncement("Waiting for a player", "Please wait...");
 
     render();
 }
@@ -171,18 +158,11 @@ function onKeyUp(e) {
     // console.log(e);
 
     if (e.code === 'Space') {
-        console.log(camera.position);
-        HUD.setScore(5);
-        
-        if (HUD.getChronoStatus()) HUD.stopChrono();
-        else HUD.startChrono();
-
-        HUD.showWeaponsMenu();
-        setTimeout(() => {
-            HUD.hideWeaponsMenu();
-        }, 2000);
+        HUD.hideAnnouncement();
+        setTimeout(HUD.showStartGrid, 1000);
     } else if (e.key === 'f') {
-        const renderDom = renderer.domElement;
+        // const renderDom = renderer.domElement;
+        const renderDom = document.querySelector("body");
         if (renderDom.requestFullscreen) renderDom.requestFullscreen();
         else if (renderDom.webkitRequestFullscreen) renderDom.webkitRequestFullscreen();
         else if (renderDom.msRequestFullscreen) renderDom.msRequestFullscreen();
