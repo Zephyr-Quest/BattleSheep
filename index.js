@@ -214,9 +214,23 @@ app.get("/rules", (req, res) => {
     });
 });
 
-app.get("/lobby", (req, res) => res.render("lobby"));
+app.get("/lobby", (req, res) => {
+    if (!req.session.username) {
+        res.redirect("/");
+        return;
+    }
 
-app.get("/game", (req, res) => res.render("game"));
+    res.render("lobby");
+});
+
+app.get("/game", (req, res) => {
+    if (!req.session.username) {
+        res.redirect("/");
+        return;
+    }
+
+    res.render("game");
+});
 
 app.get("/grid", (req, res) => {
     res.render("grid", {
