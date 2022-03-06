@@ -37,6 +37,48 @@ body {
 /*                                     HUD                                    */
 /* -------------------------------------------------------------------------- */
 
+.splash-screen {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+    background-color: #000;
+    transition: opacity 2s;
+    
+    div {
+        color: #eee;
+        font-family: @primary-font, @secondary-font;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        transition: opacity 2s;
+    }
+
+    .zephyr-studio-game {
+        img {
+            height: 200px;
+            width: auto;
+        }
+
+        h1 {
+            font-size: 4rem;
+        }
+    }
+
+    .battlesheep-logo {
+        img {
+            height: 200px;
+            width: auto;
+        }
+    }
+}
+
 // The score and timer display
 header {
     position: fixed;
@@ -295,5 +337,47 @@ footer {
     header {
         left: 35%;
         right: 35%;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .splash-screen {
+        .zephyr-studio-game {
+            h1 {
+                font-size: 3rem;
+            }
+        }
+
+        .battlesheep-logo {
+            img {
+                height: 100px;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .splash-screen {
+        .zephyr-studio-game {
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 350px) {
+    .splash-screen {
+        .zephyr-studio-game {
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        .battlesheep-logo {
+            img {
+                height: 75px;
+            }
+        }
     }
 }
