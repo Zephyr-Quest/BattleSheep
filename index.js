@@ -68,12 +68,6 @@ io.use(sharedsession(session, {
 /* -------------------------------------------------------------------------- */
 
 app.get("/", (req, res) => {
-    // console.log("Affichage BDD");
-    // Database.getList((res) => {
-    //     console.log(res);
-    // });
-    // console.log("Fin affichage");
-
     res.render("index", {
         title: "BattleSheep by ZephyrStudio",
         description: "Welcome in our Web project !",
@@ -88,8 +82,7 @@ app.get("/signup", (req, res) => {
     // Here : check if the user is already connected
     // If he's not, send him the signup page
     // else, redirect him to the scoreboard page
-    let sessionData = req.session;
-    if (!sessionData.username) {
+    if (!req.session.username) {
         console.log("Utilisateur non connecté, envoi vers formulaire de connexion");
         res.render("signup", {
             title: "BattleSheep | Sign up, Log in",
@@ -208,10 +201,22 @@ app.get("/rules", (req, res) => {
     });
 });
 
-app.get("/lobby", (req, res) => res.render("lobby"));
+app.get("/lobby", (req, res) => {
+    if(!req.session.username){
+        res.redirect("")
+    }
+    else{
+        res.render("lobby");
+    }
+});
 
-app.get("/game", (req, res) => res.render("game"));
-
+app.get("/game", (req, res) => {
+    if(!req.session.username){
+        res.redirect("/") 
+    }
+    else{
+        res.render("game");
+    }});
 app.get("/grid", (req, res) => {
     res.render("grid", {
         title: "BattleSheep | grid",
@@ -329,7 +334,7 @@ io.on("connection", (socket) => {
 
     /* ---------------------------------- Game ---------------------------------- */
     socket.on("", () => {
-        //! A utiliser dans socket du game    socket.to("room-" + res).emit("play");
+        //! A utiliser dans socket du game    socket.to(...session.idRoom).emit("play");
 
     });
 
@@ -338,14 +343,12 @@ io.on("connection", (socket) => {
     });
 });
 
-function getScoreRoom(user) {
-    let bla = Database.refreshScore(user, "", "", function (a) {
-        return a.first.score;
-    });
-    return bla
-}
-
 
 http.listen(process.env.APP_PORT, () => {
     console.log("Serveur lancé sur le port", process.env.APP_PORT);
 });
+
+const res = await axios.get('http://localhost:8080/game');
+// Axios follows the redirect and sends a GET `/to` request, so the
+// response will contain the string "Hello, World!"
+res.data;
