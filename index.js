@@ -102,11 +102,8 @@ app.get("/signup", (req, res) => {
         });
     } else {
         console.log("Utilisateur connecté, envoi vers le lobby");
-        res.render("lobby", {
-            title: "BattleSheep | Lobby",
-            description: "Lobby page, to join or host a game",
-            // scripts: [{name: '', type: ''}]
-        });
+        res.redirect("/lobby");
+        return;
     }
 });
 
@@ -117,7 +114,7 @@ app.post("/signup", body("pseudo").isLength({
         min: 3
     }).trim(),
     (req, res) => {
-        console.log("---SIGN UP---");
+        console.log("--- SIGN UP ---");
 
         let pseudo = req.body.pseudo;
         let password = req.body.password;
@@ -130,21 +127,21 @@ app.post("/signup", body("pseudo").isLength({
                 errors: errors.array(),
             });
         } else {
-            console.log("PSEUDO", pseudo);
-            console.log("MDP", password);
+            // console.log("PSEUDO", pseudo);
+            // console.log("MDP", password);
             manageUser.signUp(password, (mdp) => {
                 Database.signUp(pseudo, mdp, (e) => {
                     if (e == true) {
                         req.session.username = req.body.pseudo;
                         req.session.save();
-                        console.log("Envoi vers le lobby");
+                        // console.log("Envoi vers le lobby");
                         // Database.getList((e) => {
                         //     console.log(e);
                         // });
                         res.send('OK');
                     }
                     // TODO AFFICHER DE RECOMMENCER SI FALSE
-                }); 
+                });
             });
         }
     }
@@ -158,27 +155,27 @@ app.post("/login", body("pseudo").isLength({
     })
     .trim(),
     (req, res) => {
-        console.log("---LOG IN---");
+        console.log("--- LOG IN ---");
 
         let pseudo = req.body.pseudo;
         let password = req.body.password;
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            console.log("---ERROR---");
+            console.log("--- ERROR ---");
             console.log(errors);
             res.status(400).json({
                 errors: errors.array(),
             });
         } else {
-            console.log("PSEUDO", pseudo);
-            console.log("MDP", password);
+            // console.log("PSEUDO", pseudo);
+            // console.log("MDP", password);
             manageUser.signIn(password, (mdp) => {
                 Database.signIn(pseudo, mdp, (e) => {
                     if (e == true) {
                         req.session.username = req.body.pseudo;
                         req.session.save();
-                        console.log("Envoi vers le lobby");
+                        // console.log("Envoi vers le lobby");
                         // Database.getList((e) => {
                         //     console.log(e);
                         // });
@@ -231,10 +228,14 @@ app.get("/game", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-    console.log("---DECONNEXION---");
+    console.log("--- DECONNEXION ---");
     req.session.destroy();
     res.send('OK');
 });
+
+app.post("", (req, res) => {
+
+})
 
 app.get("/not_available", (req, res) => res.render("not_available"));
 
@@ -245,23 +246,24 @@ app.use((req, res) => res.render("404"));
 /*                                    ROOMS                                   */
 /* -------------------------------------------------------------------------- */
 
-let allRooms = [];
 
 //TODO comparer les id de session au lieu des pseudos
 
+let allRooms = [];
 io.on("connection", (socket) => {
-    if(socket.handshake.session.idRoom == null){
-        console.log("Connexion de "+socket.handshake.session.username + " au Lobby");
-    }
-    else{
-        console.log("Connexion de "+socket.handshake.session.username + " à la " + socket.handshake.session.idRoom);
+    if (socket.handshake.session.idRoom == null) {
+        console.log("--- LOBBY ---");
+        console.log("Connexion de " + socket.handshake.session.username + " au Lobby");
+    } else {
+        console.log("--- GAME ---")
+        console.log("Connexion de " + socket.handshake.session.username + " à la " + socket.handshake.session.idRoom);
     }
 
     socket.on('login', () => {
         let srvSockets = io.sockets.sockets;
         console.log("Personnes connectées :")
         srvSockets.forEach(user => {
-            console.log("- "+user.handshake.session.username);
+            console.log("- " + user.handshake.session.username);
         });
         Database.refreshScore(socket.handshake.session.username, "", "", (a) => {
             io.emit("display-score", a);
@@ -289,7 +291,7 @@ io.on("connection", (socket) => {
         socket.join("room-" + res);
         socket.handshake.session.idRoom = "room-" + res;
 
-        console.log("All rooms : "+allRooms)
+        console.log("All rooms : " + allRooms)
         io.emit("display-rooms", allRooms);
     });
 
@@ -305,6 +307,7 @@ io.on("connection", (socket) => {
             socket.handshake.session.idRoom = "room-" + res;
 
             io.emit("hide-card", hostName);
+            io.to(socket.handshake.session.idRoom).emit("timeToPlay")
         }
     });
 
@@ -316,14 +319,18 @@ io.on("connection", (socket) => {
         allRooms.splice(res, 1);
         socket.leave("room-" + res);
         console.log(username + " " + hostName + " Left the room : room-" + res);
-        console.log("All rooms : "+allRooms)
+        console.log("All rooms : " + allRooms)
     });
 
     /* ---------------------------------- Game ---------------------------------- */
-    socket.on("", () => {
+    socket.on("checkGrid", (grid, idPlayer) => {
+        let idRoom = socket.handshake.session.idRoom;
+
+        socket.to(idRoom).emit("resultGrid", bool)
         //! A utiliser dans socket du game    socket.to(...session.idRoom).emit("play");
 
     });
+
 
     socket.on("disconnect", () => {
         console.log("Déconnexion de " + socket.handshake.session.username);
