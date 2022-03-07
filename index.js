@@ -144,7 +144,7 @@ app.post("/signup", body("pseudo").isLength({
                         res.send('OK');
                     }
                     // TODO AFFICHER DE RECOMMENCER SI FALSE
-                });
+                }); 
             });
         }
     }
@@ -334,8 +334,3 @@ io.on("connection", (socket) => {
 http.listen(process.env.APP_PORT, () => {
     console.log("Serveur lancé sur le port", process.env.APP_PORT);
 });
-
-const res = await axios.get('http://localhost:8080/game');
-// Axios follows the redirect and sends a GET `/to` request, so the
-// response will contain the string "Hello, World!"
-res.data;
