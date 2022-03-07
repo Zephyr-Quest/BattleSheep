@@ -306,10 +306,13 @@ io.on("connection", (socket) => {
             console.log(username + " Joined room : room-" + res + " hosted by " + hostName);
             socket.handshake.session.idRoom = "room-" + res;
 
+            let Room = socket.handshake.session.idRoom;
+
+            console.log(io.socket)
             io.emit("hide-card", hostName);
-            io.to(socket.handshake.session.idRoom).emit("timeToPlay")
+            setTimeout(() => io.sockets.in("room-" + res).emit("timeToPlay"), 1000)
         }
-    });
+    }); 
 
     socket.on("leave-room", (hostName, username) => {
         console.log("Trying to disconnect !");

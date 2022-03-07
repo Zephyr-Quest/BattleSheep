@@ -185,7 +185,6 @@ export class setPlayerGrid extends grid {
                 currentBox = currentBox.parentElement;
 
             const currentSheep = this.tabSheep[currentBox.classList[1]];
-            console.log(currentBox, currentSheep);
             if (currentBox.parentElement.id != currentSheep.firstPosition) {
                 const container = document.getElementById(currentSheep.firstPosition)
                 container.append(currentBox);
