@@ -27,7 +27,7 @@
     <ion-icon name="log-out" class="log-out" id="log_out"></ion-icon>
 
     <main>
-        <h1>Welcome <i><span id="username"></span></i></h1>
+        <h1>Welcome <i><span id="username"><%= username %></span></i></h1>
 
         <!-- Scoreboard -->
         <section class="scoreboard" id="scoreboard">
@@ -35,28 +35,41 @@
                 <ion-icon name="ribbon"></ion-icon>Your 3 best scores :
             </h2>
 
-            <!-- High scores list -->
-            <div class="card" id="card1" style="display:none">
+            <!-- -------------------------- High scores list --------------------------- -->
+
+            <!-- First one -->
+            <% if (scoreboard.first.name && scoreboard.first.score !== undefined) { %>
+            <div class="card" id="card1">
                 <h3 class="green">#1</h3>
                 <ul>
-                    <li>Against : <strong><span id="firstName">OtherPseudo</span></strong></li>
-                    <li>Score : <strong class="green"><span id="firstScore">1000</span></strong></li>
+                    <li>Against : <strong><span id="firstName"><%= scoreboard.first.name %></span></strong></li>
+                    <li>Score : <strong class="green"><span id="firstScore"><%= scoreboard.first.score %></span></strong></li>
                 </ul>
             </div>
-            <div class="card" id="card2" style="display:none">
+            <% } %>
+
+            <!-- Second one -->
+            <% if (scoreboard.second.name && scoreboard.second.score !== undefined) { %>
+            <div class="card" id="card2">
                 <h3 class="green">#2</h3>
                 <ul>
-                    <li>Against : <strong><span id="secondName">OtherPseudo</span></strong></li>
-                    <li>Score : <strong class="green"><span id="secondScore">500</span></strong></li>
+                    <li>Against : <strong><span id="secondName"><%= scoreboard.second.name %></span></strong></li>
+                    <li>Score : <strong class="green"><span id="secondScore"><%= scoreboard.second.score %></span></strong></li>
                 </ul>
             </div>
-            <div class="card" id="card3" style="display:none">
+            <% } %>
+
+            <!-- Third one -->
+            <% if (scoreboard.third.name && scoreboard.third.score !== undefined) { %>
+            <div class="card" id="card3">
                 <h3 class="green">#3</h3>
                 <ul>
-                    <li>Against : <strong><span id="thirdName">OtherPseudo</span></strong></li>
-                    <li>Score : <strong class="green"><span id="thirdScore">250</span></strong></li>
+                    <li>Against : <strong><span id="thirdName"><%= scoreboard.third.name %></span></strong></li>
+                    <li>Score : <strong class="green"><span id="thirdScore"><%= scoreboard.third.score %></span></strong></li>
                 </ul>
             </div>
+            <% } %>
+            
         </section>
 
         <hr />

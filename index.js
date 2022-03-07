@@ -74,7 +74,10 @@ app.get("/", (req, res) => {
         scripts: [{
             name: "home",
             type: "module",
-        }, ],
+        }, {
+            name: "threejs_check",
+            type: "module",
+        }],
     });
 });
 
@@ -197,52 +200,34 @@ app.get("/rules", (req, res) => {
         scripts: [{
             name: "home",
             type: "module",
+        }, {
+            name: "threejs_check",
+            type: "module",
         }],
     });
 });
 
 app.get("/lobby", (req, res) => {
-    if(!req.session.username){
-        res.redirect("")
+    if (!req.session.username) {
+        res.redirect("/");
+        return;
     }
-    else{
-        res.render("lobby");
-    }
+
+    Database.refreshScore(req.session.username, "", "", (scoreboard) => {
+        res.render("lobby", {
+            username: req.session.username,
+            scoreboard
+        });
+    });
 });
 
 app.get("/game", (req, res) => {
-    if(!req.session.username){
-        res.redirect("/") 
+    if (!req.session.username) {
+        res.redirect("/");
+        return;
     }
-    else{
-        res.render("game");
-    }});
-app.get("/grid", (req, res) => {
-    res.render("grid", {
-        title: "BattleSheep | grid",
-        description: "grille des moutons",
-        scripts: [{
-                name: "grid",
-                type: "class",
-            },
-            {
-                name: "setPlayerGrid",
-                type: "class",
-            },
-            {
-                name: "sheep",
-                type: "class",
-            },
-            {
-                name: "setPlayerGrid",
-                type: "class",
-            },
-            {
-                name: "main",
-                type: "text/javascript",
-            }
-        ],
-    });
+
+    res.render("game");
 });
 
 app.post("/logout", (req, res) => {
@@ -250,6 +235,8 @@ app.post("/logout", (req, res) => {
     req.session.destroy();
     res.send('OK');
 });
+
+app.get("/not_available", (req, res) => res.render("not_available"));
 
 // Capture 404 requests
 app.use((req, res) => res.render("404"));

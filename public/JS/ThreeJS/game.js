@@ -12,7 +12,7 @@ import { HUD } from './gameplay/HUD.js';
 import { setPlayerGrid } from './grid/setPlayerGrid.js';
 import { Textures } from './level_design/textures.js';
 
-let scene, renderer, camera, controls, raycaster;
+let scene, renderer, camera, controls, raycaster, view;
 
 /* ---------------------------------- Debug --------------------------------- */
 
@@ -23,8 +23,29 @@ const DEBUG_RAYCASTER = false;
 
 /* ---------------------------------- View ---------------------------------- */
 
-const view = new View();
-view.load(init);
+/**
+ * Init the view and load models and textures
+ */
+function init() {
+    view = new View();
+    view.load(initAfterLoading);
+}
+
+/**
+ * Get the current game view
+ * @returns The game view
+ */
+const getView = () => view;
+
+/* -------------------------------- Raycaster ------------------------------- */
+
+/**
+ * Change the raycaster state
+ * @param {boolean} state If the raycaster must be active or not
+ */
+function setRaycasterState(state) {
+    raycaster.isActive = state;
+}
 
 /* -------------------------------------------------------------------------- */
 /*                           ThreeJS main functions                           */
@@ -33,7 +54,7 @@ view.load(init);
 /**
  * Init function
  */
-function init() {
+function initAfterLoading() {
     /* --------------------------- Scene and renderer --------------------------- */
 
     // Setting up the scene
@@ -88,14 +109,13 @@ function init() {
     /* --------------------------------- Events --------------------------------- */
     
     raycaster.initEvent();
-    window.addEventListener("keyup", onKeyUp);
     window.addEventListener('resize', onResize, false);
 
     /* ------------------------------- Start grid ------------------------------- */
 
     new setPlayerGrid(view, () => {
         HUD.hideStartGrid();
-        raycaster.isActive = true;
+        HUD.showAnnouncement("The other player is setting up his grid", "Please wait...")
     });
     
     /* ---------------------------------- Debug --------------------------------- */
@@ -151,57 +171,14 @@ function render() {
 }
 
 /**
- * Callback of keyup event
- * @param {KeyboardEvent} e The keyup event object
+ * Set the camera position from a THREE.Vector3
+ * @param {THREE.Vector3} pos The camera position
  */
-function onKeyUp(e) {
-    // console.log(e);
-
-    if (e.code === 'Space') {
-        HUD.hideAnnouncement();
-        setTimeout(HUD.showStartGrid, 1000);
-    } else if (e.key === 'f') {
-        // const renderDom = renderer.domElement;
-        const renderDom = document.querySelector("body");
-        if (renderDom.requestFullscreen) renderDom.requestFullscreen();
-        else if (renderDom.webkitRequestFullscreen) renderDom.webkitRequestFullscreen();
-        else if (renderDom.msRequestFullscreen) renderDom.msRequestFullscreen();
-    } else if (e.key === 'u') {
-        directionalLight.position.add(new THREE.Vector3(5, 0, 0));
-        lightCube.position.add(new THREE.Vector3(5, 0, 0));
-        console.log(directionalLight.position);
-    } else if (e.key === 'i') {
-        directionalLight.position.add(new THREE.Vector3(0, 5, 0));
-        lightCube.position.add(new THREE.Vector3(0, 5, 0));
-        console.log(directionalLight.position);
-    } else if (e.key === 'o') {
-        directionalLight.position.add(new THREE.Vector3(0, 0, 5));
-        lightCube.position.add(new THREE.Vector3(0, 0, 5));
-        console.log(directionalLight.position);
-    } else if (e.key === 'j') {
-        directionalLight.position.add(new THREE.Vector3(-5, 0, 0));
-        lightCube.position.add(new THREE.Vector3(-5, 0, 0));
-        console.log(directionalLight.position);
-    } else if (e.key === 'k') {
-        directionalLight.position.add(new THREE.Vector3(0, -5, 0));
-        lightCube.position.add(new THREE.Vector3(0, -5, 0));
-        console.log(directionalLight.position);
-    } else if (e.key === 'l') {
-        directionalLight.position.add(new THREE.Vector3(0, 0, -5));
-        lightCube.position.add(new THREE.Vector3(0, 0, -5));
-        console.log(directionalLight.position);
-    } else {
-        // Check camera controls
-        for (const keyCode in Config.cameraPositions) {
-            if (!Config.cameraPositions.hasOwnProperty(keyCode) || e.key !== keyCode)
-                continue;
-
-            // Switch the camera position
-            const pos = Config.cameraPositions[keyCode];
-            camera.position.fromArray(pos.toArray());
-        }
-    }
+function setCameraFromVector(pos) {
+    camera.position.fromArray(pos.toArray());
 }
+
+
 
 /**
  * Update the 3D scene when the user resize the page
@@ -211,3 +188,5 @@ function onResize() {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
+
+export default { init, getView, setRaycasterState, setCameraFromVector };

@@ -299,5 +299,6 @@ export const HUD = (function () {
             document.querySelector('nav').style.display = "flex";
             document.querySelector('main').style.backgroundColor = "transparent";
         },
+
     };
 })();
