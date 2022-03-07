@@ -1,10 +1,12 @@
+/* -------------------------------------------------------------------------- */
+/*                              SignUp and SignIn                             */
+/* -------------------------------------------------------------------------- */
 let manageUser = (function () {
     const bcrypt = require("bcrypt");
     const saltRounds = 10; // ~10 hashes/sec
 
 
     return {
-
         /**
          * Encrypt password and add the user to the DB
          * 
@@ -17,8 +19,8 @@ let manageUser = (function () {
                     console.log(err);
                     return 0;
                 }
-                console.log("crypted: " + crypted);
-                //console.log("rounds used from hash:", bcrypt.getRounds(crypted));
+                // console.log("crypted: " + crypted);
+                // console.log("rounds used from hash:", bcrypt.getRounds(crypted));
 
                 bcrypt.compare(password, crypted, function (err, match) {
                     if (err) {
@@ -26,7 +28,7 @@ let manageUser = (function () {
                         return 0;
                     }
                     if (match) {
-                        console.log("Hash success")
+                        // console.log("Hash success")
                         callback(crypted) // Transmission BDD
                     } else {
                         console.log("An error while comparing the password and the hash has occured")

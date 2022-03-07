@@ -7,10 +7,7 @@ socket.emit("login", "");
 socket.on("display-rooms", (allRooms) => {
     let htmlScore = "";
     allRooms.forEach(element => {
-        console.log("element")
-        console.log(element)
-        let score = "blabla";
-        htmlScore += '<div class="card" title="Click to join the' + element[0] + '\'game"><ion-icon name="log-in"></ion-icon><ul><li>Host : <strong class="green">' + element[0] + '</strong></li><li>High score : <strong>' + score + '</strong></li></ul></div>'
+        htmlScore += '<div class="card" title="Click to join ' + element[0] + '\'s game"><ion-icon name="log-in"></ion-icon><ul><li class="name">Host : <strong class="green">' + element[0] + '</strong></li><li class="score">High score : <strong>' + "blabla" + '</strong></li></ul></div>'
     });
     document.getElementById("games-display").innerHTML = htmlScore;
 
@@ -22,8 +19,21 @@ socket.on("display-rooms", (allRooms) => {
             window.location.href = "/game"
         })
     }
+    allRooms.forEach(element => {
+        socket.emit("get-score", element, element[0])
+    });
 })
 
+socket.on("display-room-score", (user, score) => {
+    let nameLI = document.querySelectorAll("#games-display .card li.name")
+    let scoreLI = document.querySelectorAll("#games-display .card li.score")
+   
+    for (let i = 0; i < nameLI.length; i++) {
+        if(nameLI[i].innerText == "Host : "+user){
+            scoreLI[i].innerHTML = "High score : <strong>"+score+"</strong>"
+        }  
+    }
+});
 /* -------------------------- Button to host a game ------------------------- */
 
 document.getElementById("new_game").addEventListener("click", () => {

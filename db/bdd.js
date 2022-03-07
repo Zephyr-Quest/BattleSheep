@@ -1,15 +1,9 @@
-// Pour utiliser les fonctionc dans un autre fichier :
-// const Database =require("./BDD")
-// et tu auras plus qu'à faire un Database.signIn() ou autre
-// (attention à adapter le chemin)
-
 /* -------------------------------------------------------------------------- */
 /*                                     BDD                                    */
 /* -------------------------------------------------------------------------- */
-// Connexion
-
 const bcrypt = require("bcrypt");
 
+// Connexion
 const mysql = require('mysql');
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
@@ -53,7 +47,7 @@ class BDD {
                     let query = 'INSERT into users SET ?';
                     this.con.query(query, [users], (err, result) => {
                         if (err) throw err;
-                        console.log("1 Element inserted ");
+                        console.log("1 element inserted ");
                         callback(true);
                     });
                 }
@@ -78,14 +72,14 @@ class BDD {
                 if (err) throw err;
                 if (result == "") console.log("Utilisateur introuvable ");
                 else {
-                    console.log("Résultat trouvé : ");
+                    // console.log("Résultat trouvé : ");
                     bcrypt.compare(pass, result[0].password, function (err, match) {
                         if (err) {
                             console.log(err);
                             return 0;
                         }
                         if (match) {
-                            console.log("Login Success :");
+                            console.log("Login Success");
                             callback(true); // Transmission BDD
                         } else {
                             console.log("Login wrong");

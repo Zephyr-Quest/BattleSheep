@@ -11,7 +11,7 @@ window.addEventListener("load", () => {
         Game.init();
         SocketManager.init(Game.getView());
     });
-    SocketManager.connect();
+    // SocketManager.connect();
 
     /* --------------------------------- Events --------------------------------- */
 

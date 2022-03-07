@@ -68,12 +68,6 @@ io.use(sharedsession(session, {
 /* -------------------------------------------------------------------------- */
 
 app.get("/", (req, res) => {
-    // console.log("Affichage BDD");
-    // Database.getList((res) => {
-    //     console.log(res);
-    // });
-    // console.log("Fin affichage");
-
     res.render("index", {
         title: "BattleSheep by ZephyrStudio",
         description: "Welcome in our Web project !",
@@ -91,8 +85,7 @@ app.get("/signup", (req, res) => {
     // Here : check if the user is already connected
     // If he's not, send him the signup page
     // else, redirect him to the scoreboard page
-    let sessionData = req.session;
-    if (!sessionData.username) {
+    if (!req.session.username) {
         console.log("Utilisateur non connecté, envoi vers formulaire de connexion");
         res.render("signup", {
             title: "BattleSheep | Sign up, Log in",
@@ -109,11 +102,8 @@ app.get("/signup", (req, res) => {
         });
     } else {
         console.log("Utilisateur connecté, envoi vers le lobby");
-        res.render("lobby", {
-            title: "BattleSheep | Lobby",
-            description: "Lobby page, to join or host a game",
-            // scripts: [{name: '', type: ''}]
-        });
+        res.redirect("/lobby");
+        return;
     }
 });
 
@@ -124,7 +114,7 @@ app.post("/signup", body("pseudo").isLength({
         min: 3
     }).trim(),
     (req, res) => {
-        console.log("---SIGN UP---");
+        console.log("--- SIGN UP ---");
 
         let pseudo = req.body.pseudo;
         let password = req.body.password;
@@ -137,14 +127,14 @@ app.post("/signup", body("pseudo").isLength({
                 errors: errors.array(),
             });
         } else {
-            console.log("PSEUDO", pseudo);
-            console.log("MDP", password);
+            // console.log("PSEUDO", pseudo);
+            // console.log("MDP", password);
             manageUser.signUp(password, (mdp) => {
                 Database.signUp(pseudo, mdp, (e) => {
                     if (e == true) {
                         req.session.username = req.body.pseudo;
                         req.session.save();
-                        console.log("Envoi vers le lobby");
+                        // console.log("Envoi vers le lobby");
                         // Database.getList((e) => {
                         //     console.log(e);
                         // });
@@ -165,27 +155,27 @@ app.post("/login", body("pseudo").isLength({
     })
     .trim(),
     (req, res) => {
-        console.log("---LOG IN---");
+        console.log("--- LOG IN ---");
 
         let pseudo = req.body.pseudo;
         let password = req.body.password;
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            console.log("---ERROR---");
+            console.log("--- ERROR ---");
             console.log(errors);
             res.status(400).json({
                 errors: errors.array(),
             });
         } else {
-            console.log("PSEUDO", pseudo);
-            console.log("MDP", password);
+            // console.log("PSEUDO", pseudo);
+            // console.log("MDP", password);
             manageUser.signIn(password, (mdp) => {
                 Database.signIn(pseudo, mdp, (e) => {
                     if (e == true) {
                         req.session.username = req.body.pseudo;
                         req.session.save();
-                        console.log("Envoi vers le lobby");
+                        // console.log("Envoi vers le lobby");
                         // Database.getList((e) => {
                         //     console.log(e);
                         // });
@@ -238,10 +228,14 @@ app.get("/game", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-    console.log("---DECONNEXION---");
+    console.log("--- DECONNEXION ---");
     req.session.destroy();
     res.send('OK');
 });
+
+app.post("", (req, res) => {
+
+})
 
 app.get("/not_available", (req, res) => res.render("not_available"));
 
@@ -251,6 +245,9 @@ app.use((req, res) => res.render("404"));
 /* -------------------------------------------------------------------------- */
 /*                                    ROOMS                                   */
 /* -------------------------------------------------------------------------- */
+
+
+//TODO comparer les id de session au lieu des pseudos
 
 let allRooms = [];
 io.on("connection", (socket) => {
@@ -309,11 +306,13 @@ io.on("connection", (socket) => {
             console.log(username + " Joined room : room-" + res + " hosted by " + hostName);
             socket.handshake.session.idRoom = "room-" + res;
 
+            let Room = socket.handshake.session.idRoom;
+
+            console.log(io.socket)
             io.emit("hide-card", hostName);
-            console.log(socket.handshake.session.idRoom);
-            io.to(socket.handshake.session.idRoom).emit("timeToPlay");
+            setTimeout(() => io.sockets.in("room-" + res).emit("timeToPlay"), 1000)
         }
-    });
+    }); 
 
     socket.on("leave-room", (hostName, username) => {
         console.log("Trying to disconnect !");
@@ -340,6 +339,7 @@ io.on("connection", (socket) => {
         console.log("Déconnexion de " + socket.handshake.session.username);
     });
 });
+
 
 http.listen(process.env.APP_PORT, () => {
     console.log("Serveur lancé sur le port", process.env.APP_PORT);
