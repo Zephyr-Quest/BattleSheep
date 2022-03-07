@@ -2,13 +2,16 @@ import Game from "./ThreeJS/game.js";
 import SplashScreen from "./utils/SplashScreen.js";
 import { Config } from "./ThreeJS/config.js";
 import { HUD } from "./ThreeJS/gameplay/HUD.js";
+import SocketManager from './utils/SocketManager.js';
 
 window.addEventListener("load", () => {
     SplashScreen.start(() => {
         // The splash screen is done
         SplashScreen.hideScreen();
         Game.init();
+        SocketManager.init(Game.getView());
     });
+    SocketManager.connect();
 
     /* --------------------------------- Events --------------------------------- */
 
@@ -22,8 +25,6 @@ window.addEventListener("load", () => {
 function onKeyUp(e) {
     if (e.code === 'Space') {
         // Debug
-        HUD.hideAnnouncement();
-        setTimeout(HUD.showStartGrid, 1000);
     } else if (e.key === 'f') {
         const toFullscreen = document.querySelector("body");
         if (toFullscreen.requestFullscreen)
