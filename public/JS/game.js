@@ -70,7 +70,7 @@ function onKeyUp(e) {
     if (e.code === 'Space') {
         // Debug
         HUD.hideAnnouncement();
-        setTimeout(HUD.showStartGrid, 500);
+        setTimeout(HUD.showStartGrid, 1000);
     } else if (e.key === 'f') {
         const toFullscreen = document.querySelector("body");
         if (toFullscreen.requestFullscreen)
