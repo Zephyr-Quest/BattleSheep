@@ -65,7 +65,8 @@ function initAfterLoading() {
     // Setting up the renderer
     renderer = new THREE.WebGLRenderer({
         antialias: true,
-        alpha: true
+        alpha: true,
+        physicallyCorrectLights: true
     });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -88,7 +89,7 @@ function initAfterLoading() {
             view.uncoverGridCase(new THREE.Vector2(pos.x, pos.y), pos.z, true);
         }, 1000);
     };
-    raycaster.isActive = false;
+    // raycaster.isActive = false;
 
     /* --------------------------------- Lights --------------------------------- */
 
@@ -115,7 +116,8 @@ function initAfterLoading() {
 
     new setPlayerGrid(view, () => {
         HUD.hideStartGrid();
-        HUD.showAnnouncement("The other player is setting up his grid", "Please wait...")
+        // HUD.showAnnouncement("The other player is setting up his grid", "Please wait...")
+        raycaster.isActive = true;
     });
     
     /* ---------------------------------- Debug --------------------------------- */
