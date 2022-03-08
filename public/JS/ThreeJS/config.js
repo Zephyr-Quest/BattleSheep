@@ -16,5 +16,13 @@ export const Config = {
     light: {
         color: 0xF1E6B7,
         intensity: 2
+    },
+    capillotractom: {
+        scale: 10,
+        startPositions: [
+            new Vector3(17, 4, 9),
+            new Vector3(-17, 4, -9)
+        ],
+        speed: 0.2
     }
 };

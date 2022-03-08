@@ -250,13 +250,24 @@ app.use((req, res) => res.render("404"));
 //TODO comparer les id de session au lieu des pseudos
 
 let allRooms = [];
+
 io.on("connection", (socket) => {
-    if (socket.handshake.session.idRoom == null) {
+    let idRoom = socket.handshake.session.idRoom
+    if (idRoom == null) {
         console.log("--- LOBBY ---");
         console.log("Connexion de " + socket.handshake.session.username + " au Lobby");
     } else {
         console.log("--- GAME ---")
-        console.log("Connexion de " + socket.handshake.session.username + " à la " + socket.handshake.session.idRoom);
+        console.log("Connexion de " + socket.handshake.session.username + " à la room " + idRoom);
+        socket.join(idRoom)
+
+        io.to(idRoom).emit("timeToPlay")
+
+        const clients = io.sockets.adapter.rooms.get(idRoom);
+        for (const clientId of clients) {
+            const clientSocket = io.sockets.sockets.get(clientId);
+            console.log("- " + clientSocket.handshake.session.username);
+        }
     }
 
     socket.on('login', () => {
@@ -288,11 +299,11 @@ io.on("connection", (socket) => {
             return el[0] == username;
         });
         console.log(username + " is hosting room-" + res);
-        socket.join("room-" + res);
-        socket.handshake.session.idRoom = "room-" + res;
+        socket.handshake.session.idRoom = res;
 
         console.log("All rooms : " + allRooms)
         io.emit("display-rooms", allRooms);
+        socket.disconnect();
     });
 
     socket.on("join-room", (hostName) => {
@@ -302,17 +313,14 @@ io.on("connection", (socket) => {
                 return el[0] == hostName;
             });
             allRooms[res].push(username);
-            socket.join("room-" + res);
+            socket.handshake.session.idRoom = res;
+
             console.log(username + " Joined room : room-" + res + " hosted by " + hostName);
-            socket.handshake.session.idRoom = "room-" + res;
-
-            let Room = socket.handshake.session.idRoom;
-
             io.emit("hide-card", hostName);
-            console.log("ici", io.sockets.in("room-" + res).emit("timeToPlay"))
-            setTimeout(() => io.sockets.in("room-" + res).emit("timeToPlay"), 1000);
+            socket.disconnect();
+            //setTimeout(() => io.to("room").emit("timeToPlay"), 1000)
         }
-    }); 
+    });
 
     socket.on("leave-room", (hostName, username) => {
         console.log("Trying to disconnect !");
@@ -320,7 +328,10 @@ io.on("connection", (socket) => {
             return (el[0] == hostName && el[1] == username);
         });
         allRooms.splice(res, 1);
-        socket.leave("room-" + res);
+        socket.leave(socket.handshake.session.idRoom);
+        socket.handshake.session.idRoom = null;
+
+
         console.log(username + " " + hostName + " Left the room : room-" + res);
         console.log("All rooms : " + allRooms)
     });
@@ -330,13 +341,46 @@ io.on("connection", (socket) => {
         let idRoom = socket.handshake.session.idRoom;
 
         socket.to(idRoom).emit("resultGrid", bool)
-        //! A utiliser dans socket du game    socket.to(...session.idRoom).emit("play");
-
     });
 
 
-    socket.on("disconnect", () => {
-        console.log("Déconnexion de " + socket.handshake.session.username);
+    socket.on("disconnect", (reason) => {
+        console.log("Disconnection of " + socket.handshake.session.username + " reason : " + reason)
+        let idRoom = socket.handshake.session.idRoom;
+
+
+        console.log("All Rooms : " + allRooms)
+        console.log("Room ID : " + allRooms[idRoom])
+
+        if (reason == "transport close") {
+
+            if (idRoom != null && allRooms[idRoom].length <= 2) {
+
+                socket.to(idRoom).emit("disconnection")
+
+
+                socket.leave(idRoom);
+                socket.handshake.session.idRoom = null
+
+                if (allRooms[idRoom].length == 1) {
+                    allRooms.splice(idRoom, 1);
+                }
+                else{ 
+                    allRooms[idRoom].pop()
+
+                }
+
+
+            } else {
+                console.log("Déconnexion de " + socket.handshake.session.username + " du lobby");
+            }
+            // for (const clientId of clients) {
+            //     const clientSocket = io.sockets.sockets.get(clientId);
+            //     clientSocket.leave(idRoom);
+            //     clientSocket.handshake.session.idRoom = null
+            //     console.log("Déconnexion de " + clientSocket.handshake.session.username + " du jeu")
+            // }
+        }
     });
 });
 

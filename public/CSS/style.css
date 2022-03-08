@@ -90,7 +90,7 @@ header nav table td {
   font-family: 'KoHo', sans-serif;
   letter-spacing: 0.2rem;
 }
-header nav table td .nav_link:hover a {
+header nav table td .nav_link:hover {
   color: #3ca50c;
 }
 header a {

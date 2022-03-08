@@ -9,5 +9,9 @@ export const Textures = {
     Cross: {
         fileName: "cross.png",
         texture: null
+    },
+    Capillotractom: {
+        fileName: "capillotractom.png",
+        texture: null
     }
 }

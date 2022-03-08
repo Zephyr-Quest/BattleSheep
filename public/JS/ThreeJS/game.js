@@ -73,7 +73,8 @@ function initAfterLoading(callback) {
     // Setting up the renderer
     renderer = new THREE.WebGLRenderer({
         antialias: true,
-        alpha: true
+        alpha: true,
+        physicallyCorrectLights: true
     });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -91,11 +92,6 @@ function initAfterLoading(callback) {
 
     // Setting up the raycaster
     raycaster = new CustomRaycaster(scene, camera, view, DEBUG_RAYCASTER);
-    // raycaster.clickCallback = (pos) => {
-    //     setTimeout(() => {
-    //         view.uncoverGridCase(new THREE.Vector2(pos.x, pos.y), pos.z, true);
-    //     }, 1000);
-    // };
     raycaster.isActive = false;
 
     /* --------------------------------- Lights --------------------------------- */
@@ -169,6 +165,12 @@ function render() {
     if (view.sceneState.turningGrass !== null) {
         view.sceneState.turningGrass.rotY += 0.01;
         view.sceneState.turningGrass.updateScene();
+    }
+
+    if (view.sceneState.isCapillotractomAnimate) {
+        for (let i = 0; i < view.capillotractoms.length; i++) {
+            view.capillotractoms[i].position.x += (i === 0 ? -Config.capillotractom.speed : Config.capillotractom.speed);
+        }
     }
 
     // Rendering the 3D scene

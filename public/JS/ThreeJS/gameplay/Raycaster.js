@@ -1,4 +1,4 @@
-import { Raycaster, Vector2, Mesh, Group } from 'three';
+import { Raycaster, Vector2, Mesh, Group, Sprite } from 'three';
 
 /* -------------------------------------------------------------------------- */
 /*                        Manage the ThreeJS Raycaster                        */
@@ -57,6 +57,8 @@ export class CustomRaycaster {
             let clicked;
             try {
                 let searching = true, currentParent = currentIntersect.object;
+                if (currentIntersect.object instanceof Sprite)
+                    return;
 
                 // Search a referenced mesh
                 while (searching) {

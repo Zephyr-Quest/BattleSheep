@@ -3,7 +3,6 @@ let socket = io()
 socket.emit("login", "");
 
 /* ---------------------- Display the differents rooms ---------------------- */
-
 socket.on("display-rooms", (allRooms) => {
     let htmlScore = "";
     allRooms.forEach(element => {
@@ -15,10 +14,10 @@ socket.on("display-rooms", (allRooms) => {
     for (const card of document.querySelectorAll("#games-display .card")) {
         card.addEventListener("click", () => {
             let host = card.getElementsByClassName("green")[0].innerText;
-            socket.emit("join-room", host)
-            window.location.href = "/game"
+            socket.emit("join-room", host);
+            window.location.href = "/game";
         })
-    }
+    } 
     allRooms.forEach(element => {
         socket.emit("get-score", element, element[0])
     });
@@ -27,11 +26,11 @@ socket.on("display-rooms", (allRooms) => {
 socket.on("display-room-score", (user, score) => {
     let nameLI = document.querySelectorAll("#games-display .card li.name")
     let scoreLI = document.querySelectorAll("#games-display .card li.score")
-   
+
     for (let i = 0; i < nameLI.length; i++) {
-        if(nameLI[i].innerText == "Host : "+user){
-            scoreLI[i].innerHTML = "High score : <strong>"+score+"</strong>"
-        }  
+        if (nameLI[i].innerText == "Host : " + user) {
+            scoreLI[i].innerHTML = "High score : <strong>" + score + "</strong>"
+        }
     }
 });
 /* -------------------------- Button to host a game ------------------------- */
@@ -39,8 +38,8 @@ socket.on("display-room-score", (user, score) => {
 document.getElementById("new_game").addEventListener("click", () => {
     console.log("Clicked to host !")
     socket.emit("host-room", "");
-    window.location.href = "/game"
-});
+    window.location.href = "/game";
+}); 
 
 /* ----------------------------- Hide full room ----------------------------- */
 
