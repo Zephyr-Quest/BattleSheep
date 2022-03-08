@@ -178,10 +178,6 @@ export class View {
 
         const grassName = this.getObjectNameOnGrid(pos, playerId);
         const grass = this.allObjects[grassName];
-        if (grass.type !== 'Grass') {
-            console.error("Trying to remove an object, but it's not a grass object.");
-            return;
-        }
         
         // Remove the grass
         grass.removeFromScene(this.scene);

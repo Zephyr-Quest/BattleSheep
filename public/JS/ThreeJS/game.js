@@ -26,9 +26,9 @@ const DEBUG_RAYCASTER = false;
 /**
  * Init the view and load models and textures
  */
-function init() {
+function init(callback) {
     view = new View();
-    view.load(initAfterLoading);
+    view.load(() => initAfterLoading(callback));
 }
 
 /**
@@ -47,6 +47,14 @@ function setRaycasterState(state) {
     raycaster.isActive = state;
 }
 
+/**
+ * Set the raycaster event
+ * @param   {function}  func  The raycaster event
+ */
+function setRaycasterEvent(func) {
+    raycaster.clickCallback = func;
+}
+
 /* -------------------------------------------------------------------------- */
 /*                           ThreeJS main functions                           */
 /* -------------------------------------------------------------------------- */
@@ -54,7 +62,7 @@ function setRaycasterState(state) {
 /**
  * Init function
  */
-function initAfterLoading() {
+function initAfterLoading(callback) {
     /* --------------------------- Scene and renderer --------------------------- */
 
     // Setting up the scene
@@ -83,11 +91,11 @@ function initAfterLoading() {
 
     // Setting up the raycaster
     raycaster = new CustomRaycaster(scene, camera, view, DEBUG_RAYCASTER);
-    raycaster.clickCallback = (pos) => {
-        setTimeout(() => {
-            view.uncoverGridCase(new THREE.Vector2(pos.x, pos.y), pos.z, true);
-        }, 1000);
-    };
+    // raycaster.clickCallback = (pos) => {
+    //     setTimeout(() => {
+    //         view.uncoverGridCase(new THREE.Vector2(pos.x, pos.y), pos.z, true);
+    //     }, 1000);
+    // };
     raycaster.isActive = false;
 
     /* --------------------------------- Lights --------------------------------- */
@@ -115,7 +123,8 @@ function initAfterLoading() {
 
     new setPlayerGrid(view, () => {
         HUD.hideStartGrid();
-        HUD.showAnnouncement("The other player is setting up his grid", "Please wait...")
+        // HUD.showAnnouncement("The other player is setting up his grid", "Please wait...")
+        raycaster.isActive = true;
     });
     
     /* ---------------------------------- Debug --------------------------------- */
@@ -140,6 +149,8 @@ function initAfterLoading() {
     /* -------------------------------- End debug ------------------------------- */
 
     HUD.showAnnouncement("Waiting for a player", "Please wait...");
+
+    callback();
 
     render();
 }
@@ -178,8 +189,6 @@ function setCameraFromVector(pos) {
     camera.position.fromArray(pos.toArray());
 }
 
-
-
 /**
  * Update the 3D scene when the user resize the page
  */
@@ -189,4 +198,4 @@ function onResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-export default { init, getView, setRaycasterState, setCameraFromVector };
+export default { init, getView, setRaycasterState, setRaycasterEvent, setCameraFromVector };

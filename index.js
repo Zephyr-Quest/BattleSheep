@@ -219,10 +219,10 @@ app.get("/lobby", (req, res) => {
 });
 
 app.get("/game", (req, res) => {
-    if (!req.session.username) {
-        res.redirect("/");
-        return;
-    }
+    // if (!req.session.username) {
+    //     res.redirect("/");
+    //     return;
+    // }
 
     res.render("game");
 });
@@ -308,9 +308,9 @@ io.on("connection", (socket) => {
 
             let Room = socket.handshake.session.idRoom;
 
-            console.log(io.socket)
             io.emit("hide-card", hostName);
-            setTimeout(() => io.sockets.in("room-" + res).emit("timeToPlay"), 1000)
+            console.log("ici", io.sockets.in("room-" + res).emit("timeToPlay"))
+            setTimeout(() => io.sockets.in("room-" + res).emit("timeToPlay"), 1000);
         }
     }); 
 
