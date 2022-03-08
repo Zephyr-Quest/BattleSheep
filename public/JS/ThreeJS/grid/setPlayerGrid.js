@@ -225,7 +225,6 @@ export class setPlayerGrid extends grid {
                         currentSheep.direction = this.rotation;
                     }
                 }
-                // socket.emit("wrapPosition", this.grid, Number(this.currentContainer.id[0]), Number(this.currentContainer.id[2]), this.currentSheep.sheepSize, this.rotation);
             })
         }
     }
