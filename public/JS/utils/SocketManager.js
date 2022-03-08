@@ -1,6 +1,7 @@
 import { HUD } from '../ThreeJS/gameplay/HUD.js';
 
-let socket = io();
+let socket = io()
+
 let currentPlayerId, view3D;
 
 // socket.emit("checkGrid", grid, idPlayer);
@@ -30,6 +31,10 @@ socket.on("timeToPlay", () => {
     console.log("play");
     HUD.hideAnnouncement();
     setTimeout(HUD.showStartGrid, 1000);
+})
+
+socket.on("disconnection", ()=>{
+    window.location.href = "/lobby";
 })
 
 // const socketEvents = {
