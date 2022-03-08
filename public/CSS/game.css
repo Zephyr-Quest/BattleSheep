@@ -298,3 +298,15 @@ footer {
     height: 75px;
   }
 }
+@media screen and (max-height: 900px) {
+  main .start-grid #sheepBox .box img {
+    width: 50px;
+    height: 50px;
+  }
+}
+@media screen and (max-height: 700px) {
+  main .start-grid #sheepBox .box img {
+    width: 40px;
+    height: 40px;
+  }
+}

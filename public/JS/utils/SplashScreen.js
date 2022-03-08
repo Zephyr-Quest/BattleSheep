@@ -6,7 +6,7 @@ const steps = splashScreenDiv.querySelectorAll("div");
 /* --------------------------------- Params --------------------------------- */
 
 const TRANSITION_DURATION = 2000;
-const STEP_DURATION = 1000;
+const STEP_DURATION = 100;
 
 /* ---------------------------- Private functions --------------------------- */
 
