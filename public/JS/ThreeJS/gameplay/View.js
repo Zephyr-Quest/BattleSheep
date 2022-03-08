@@ -1,4 +1,4 @@
-import { Vector2, LoadingManager, TextureLoader, NearestFilter } from 'three';
+import { Vector2, LoadingManager, TextureLoader, NearestFilter, SpriteMaterial, Sprite } from 'three';
 import { GLTFLoader } from 'https://unpkg.com/three@0.137.0/examples/jsm/loaders/GLTFLoader.js';
 
 import { Config } from '../config.js';
@@ -21,9 +21,11 @@ export class View {
         this.scene = undefined;
 
         this.sceneState = {
-            turningGrass: null
+            turningGrass: null,
+            isCapillotractomAnimate: false
         };
         this.allObjects = {};
+        this.capillotractoms = [];
 
         // Init load managers
         this.loadManager = new LoadingManager();
@@ -50,6 +52,12 @@ export class View {
         }
 
         this.loadManager.onLoad = () => this.loadModels(callback);
+
+        // Create the Capillotractom
+        const capillotractomMaterial = new SpriteMaterial({ map: Textures.Capillotractom.texture });
+        const capillotractom1 = new Sprite(capillotractomMaterial);
+        capillotractom1.scale.multiplyScalar(Config.capillotractom.scale);
+        this.capillotractoms.push(capillotractom1, capillotractom1.clone());
     }
 
     /**
@@ -192,5 +200,32 @@ export class View {
             const newSheep = createSheep(pos, playerId, true);
             this.displayElement(newSheep);
         }
+    }
+
+    /**
+     * Show Capillotractoms go through the map
+     */
+    showCapillotractoms() {
+        for (let i = 0; i < this.capillotractoms.length; i++) {
+            // Update the capillotractom position
+            this.capillotractoms[i].position.fromArray(Config.capillotractom.startPositions[i].toArray());
+            
+            // Add it to the scene
+            this.scene.add(this.capillotractoms[i]);
+        }
+
+        // Animate
+        this.sceneState.isCapillotractomAnimate = true;
+        
+        setTimeout(() => {
+            // Stop animation
+            this.sceneState.isCapillotractomAnimate = false;
+
+            setTimeout(() => {
+                // Remove them from scene
+                for (const cpt of this.capillotractoms)
+                    this.scene.remove(cpt);
+            }, 1000);
+        }, 3500);
     }
 };

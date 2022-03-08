@@ -162,6 +162,12 @@ function render() {
         view.sceneState.turningGrass.updateScene();
     }
 
+    if (view.sceneState.isCapillotractomAnimate) {
+        for (let i = 0; i < view.capillotractoms.length; i++) {
+            view.capillotractoms[i].position.x += (i === 0 ? -Config.capillotractom.speed : Config.capillotractom.speed);
+        }
+    }
+
     // Rendering the 3D scene
     renderer.render(scene, camera);
 
