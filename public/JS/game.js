@@ -12,6 +12,7 @@ window.addEventListener("load", () => {
     // });
     Game.init(() => {
         HUD.hideAnnouncement();
+        setTimeout(HUD.showStartGrid, 500);
     });
 
     /* --------------------------------- Events --------------------------------- */
@@ -60,7 +61,6 @@ function updateWorld(startGrid, playerId, currentPlayer, listPos, listWeaponUsed
 function onKeyUp(e) {
     if (e.code === 'Space') {
         // Debug
-        HUD.showEndAnnouncement("fbre gerbgze bfze afnejkzg ngzejk aFN", "GNRE IGER ifz jnrie  fzen krgje jqbre");
     } else if (e.key === 'f') {
         const toFullscreen = document.querySelector("body");
         if (toFullscreen.requestFullscreen)

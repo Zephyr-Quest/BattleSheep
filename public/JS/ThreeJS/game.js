@@ -138,10 +138,6 @@ function initAfterLoading(callback) {
         controls.update();
     }
 
-    const material = new THREE.SpriteMaterial({ map: Textures.Cross.texture });
-    const sprite = new THREE.Sprite(material);
-    scene.add(sprite);
-
     /* -------------------------------- End debug ------------------------------- */
 
     HUD.showAnnouncement("Waiting for a player", "Please wait...");
