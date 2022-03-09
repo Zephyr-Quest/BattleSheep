@@ -298,10 +298,10 @@ io.on("connection", (socket) => {
         let username = socket.handshake.session.username;
         const roomData = [];
         roomData.push(username);
-        allRooms.push(roomData);
-        let res = allRooms.findIndex(function (el) {
-            return el[0] == username;
-        });
+        allRooms.push(roomData); 
+
+        let res = allRooms.findIndex(e => e[0] == username)
+
         console.log(username + " is hosting room-" + res);
         socket.handshake.session.idRoom = res;
 
@@ -311,17 +311,19 @@ io.on("connection", (socket) => {
     });
 
     socket.on("join-room", (hostName) => {
-        let username = socket.handshake.session.username;
-        if (hostName != username) {
-            let res = allRooms.findIndex(function (el) {
-                return el[0] == hostName;
-            });
-            allRooms[res].push(username);
-            socket.handshake.session.idRoom = res;
+        let res = allRooms.findIndex(e => e[0] == hostName)
 
-            console.log(username + " Joined room : room-" + res + " hosted by " + hostName);
-            io.emit("hide-card", hostName);
-            socket.disconnect();
+        if (allRooms[res] && allRooms[res].length < 2) {
+
+            let username = socket.handshake.session.username;
+            if (hostName != username) {
+                allRooms[res].push(username);
+                socket.handshake.session.idRoom = res;
+
+                console.log(username + " Joined room : room-" + res + " hosted by " + hostName);
+                io.emit("hide-card", hostName);
+                socket.disconnect();
+            }
         }
     });
 
@@ -365,15 +367,15 @@ io.on("connection", (socket) => {
 
             socket.leave(idRoom);
 
-            if (allRooms[idRoom].length == 2) {
+            if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
                 allRooms[idRoom].pop()
-            } else{
+            } else {
                 allRooms.splice(idRoom, 1);
 
             }
             console.log("All Rooms : " + allRooms)
             console.table("Room ID : " + allRooms[idRoom])
-    
+
 
             // } else {
             //     console.log("Déconnexion de " + socket.handshake.session.username + " du lobby");

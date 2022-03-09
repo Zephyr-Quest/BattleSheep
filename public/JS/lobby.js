@@ -6,20 +6,26 @@ socket.emit("login", "");
 socket.on("display-rooms", (allRooms) => {
     let htmlScore = "";
     allRooms.forEach(element => {
-        htmlScore += '<div class="card" title="Click to join ' + element[0] + '\'s game"><ion-icon name="log-in"></ion-icon><ul><li class="name">Host : <strong class="green">' + element[0] + '</strong></li><li class="score">High score : <strong>' + "blabla" + '</strong></li></ul></div>'
+        console.log(element);
+        if (element.length < 2)
+            htmlScore += '<div class="card" title="Click to join ' + element[0] + '\'s game"><ion-icon name="log-in"></ion-icon><ul><li class="name">Host : <strong class="green">' + element[0] + '</strong></li><li class="score">High score : <strong>' + "blabla" + '</strong></li></ul></div>'
     });
     document.getElementById("games-display").innerHTML = htmlScore;
-
-
+        
+    
     for (const card of document.querySelectorAll("#games-display .card")) {
         card.addEventListener("click", () => {
             let host = card.getElementsByClassName("green")[0].innerText;
-            socket.emit("join-room", host);
-            window.location.href = "/game";
+            let res = allRooms.findIndex(e => e[0] == host)
+            
+            if (allRooms[res] && allRooms[res].length < 2) {
+                socket.emit("join-room", host);
+                window.location.href = "/game";
+            }
         })
-    } 
+    }
     allRooms.forEach(element => {
-        socket.emit("get-score", element, element[0])
+        element.forEach(e => socket.emit("get-score", e));
     });
 })
 
@@ -39,11 +45,12 @@ document.getElementById("new_game").addEventListener("click", () => {
     console.log("Clicked to host !")
     socket.emit("host-room", "");
     window.location.href = "/game";
-}); 
+});
 
 /* ----------------------------- Hide full room ----------------------------- */
 
 socket.on("hide-card", host => {
+    console.log(host)
     for (const card of document.querySelectorAll("#games-display .card")) {
         let usr = card.getElementsByClassName("green")[0].innerText;
         if (usr == host) {
