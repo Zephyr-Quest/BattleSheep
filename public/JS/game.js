@@ -6,13 +6,12 @@ import SocketManager from './utils/SocketManager.js';
 import { Vector2 } from 'three';
 
 window.addEventListener("load", () => {
-    SplashScreen.start(() => {
-        // The splash screen is done
-        SplashScreen.hideScreen();
-        Game.init(() => {
-            HUD.hideAnnouncement();
-            HUD.showWeaponsMenu();
-        });
+    // SplashScreen.start(() => {
+    //     // The splash screen is done
+    //     SplashScreen.hideScreen();
+    // });
+    Game.init(() => {
+        HUD.hideAnnouncement();
     });
 
     /* --------------------------------- Events --------------------------------- */
@@ -61,9 +60,7 @@ function updateWorld(startGrid, playerId, currentPlayer, listPos, listWeaponUsed
 function onKeyUp(e) {
     if (e.code === 'Space') {
         // Debug
-        // HUD.hideAnnouncement();
-        // setTimeout(HUD.showStartGrid, 1000);
-        HUD.setCurrentWeapon("Wolf");
+        HUD.showEndAnnouncement("fbre gerbgze bfze afnejkzg ngzejk aFN", "GNRE IGER ifz jnrie  fzen krgje jqbre");
     } else if (e.key === 'f') {
         const toFullscreen = document.querySelector("body");
         if (toFullscreen.requestFullscreen)

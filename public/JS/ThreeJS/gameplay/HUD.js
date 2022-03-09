@@ -6,6 +6,7 @@ export const HUD = (function () {
         secondsSpan = document.getElementById("seconds"),
         weaponsMenu = document.getElementById("weapons_menu"),
         announcementDiv = document.getElementById("announcement"),
+        endAnnouncementDiv = document.getElementById("endAnnouncement"),
         gifDiv = document.getElementById("gif_display");
 
     // Chrono
@@ -90,6 +91,25 @@ export const HUD = (function () {
                 weaponDiv = currentWeapon;
 
         return weaponDiv
+    }
+
+    /**
+     * Show an announcement div
+     * @param {HTMLElement} div The div to show
+     * @param {string} title The title to print
+     * @param {string} subtitle The subtitle to print
+     */
+    function showAnnouncementDiv(div, title, subtitle) {
+        // Set content
+        div.querySelector('h1').innerText = title;
+        div.querySelector('h2').innerText = subtitle;
+
+        // Set style
+        div.parentElement.style.display = "flex";
+        div.style.display = "block";
+        setTimeout(() => {
+            div.style.opacity = 1;
+        }, 10);
     }
 
     return {
@@ -230,16 +250,16 @@ export const HUD = (function () {
          * @param {string} subtitle The annoucement subtitle
          */
         showAnnouncement(title, subtitle) {
-            // Set content
-            announcementDiv.querySelector('h1').innerText = title;
-            announcementDiv.querySelector('h2').innerText = subtitle;
+            showAnnouncementDiv(announcementDiv, title, subtitle);
+        },
 
-            // Set style
-            announcementDiv.parentElement.style.display = "flex";
-            announcementDiv.style.display = "block";
-            setTimeout(() => {
-                announcementDiv.style.opacity = 1;
-            }, 10);
+        /**
+         * Show an end annoucement
+         * @param {string} title The annoucement title
+         * @param {string} subtitle The annoucement subtitle
+         */
+        showEndAnnouncement(title, subtitle) {
+            showAnnouncementDiv(endAnnouncementDiv, title, subtitle);
         },
 
         /**
