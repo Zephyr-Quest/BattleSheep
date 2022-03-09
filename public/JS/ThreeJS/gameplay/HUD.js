@@ -66,7 +66,7 @@ export const HUD = (function () {
             return;
 
         // Toggle the div style
-        for (const weapon of target.parentElement.querySelectorAll(".weapon")) {
+        for (const weapon of weaponsMenu.querySelectorAll(".weapon")) {
             weapon.querySelector('.icon').style.display = 'block';
             weapon.querySelector('.icon-selected').style.display = 'none';
         }
@@ -179,17 +179,46 @@ export const HUD = (function () {
          * Show the weapons menu
          */
         showWeaponsMenu() {
-            weaponsMenu.style.display = "flex";
+            weaponsMenu.parentElement.style.display = "flex";
         },
 
         /**
          * Hide the weapons menu
          */
         hideWeaponsMenu() {
-            weaponsMenu.style.display = "none";
+            weaponsMenu.parentElement.style.display = "none";
         },
 
         getCurrentWeapon: () => currentWeapon,
+
+        /**
+         * Set the current weapon by updating the HUD
+         * @param {String} weaponName The weapon name
+         */
+        setCurrentWeapon(weaponName) {
+            // Get the weapon div
+            let target = null;
+            for (const currentWP of weaponsMenu.querySelectorAll(".weapon")) {
+                if (currentWP.title === weaponName) 
+                    target = currentWP;
+            }
+            if (!target) return;
+
+            // Check if the weapon is disabled
+            if (target.classList.contains("disabled"))
+                return;
+
+            // Toggle the div style
+            for (const weapon of weaponsMenu.querySelectorAll(".weapon")) {
+                weapon.querySelector('.icon').style.display = 'block';
+                weapon.querySelector('.icon-selected').style.display = 'none';
+            }
+            target.querySelector('.icon').style.display = 'none';
+            target.querySelector('.icon-selected').style.display = 'block';
+
+            // Set the using weapon
+            currentWeapon = weaponName;
+        },
 
         /* -------------------------------------------------------------------------- */
         /*                            Announcement functions                           */
