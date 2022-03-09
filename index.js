@@ -249,12 +249,15 @@ app.use((req, res) => res.render("404"));
 
 //TODO comparer les id de session au lieu des pseudos
 
-let allRooms = [];
+let allRooms = [],
+    disconnectedUsers = [];
 
 io.on("connection", (socket) => {
     console.log(socket.handshake.session.idRoom)
 
-    if (socket.handshake.session.idRoom == undefined) {
+
+
+    if (socket.handshake.session.idRoom === undefined) {
         console.log("--- LOBBY ---");
         console.log("Connexion de " + socket.handshake.session.username + " au Lobby");
     } else {
@@ -263,9 +266,10 @@ io.on("connection", (socket) => {
         console.log("Connexion de " + socket.handshake.session.username + " à la room " + idRoom);
         socket.join(idRoom)
 
-        if (allRooms[idRoom].length == 2) {
+        if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
             io.to(idRoom).emit("timeToPlay")
         }
+        // io.to(idRoom).emit("disconnection")
 
         /* const clients = io.sockets.adapter.rooms.get(idRoom);
         for (const clientId of clients) {
@@ -273,6 +277,15 @@ io.on("connection", (socket) => {
             console.log("- " + clientSocket.handshake.session.username);
         } */
     }
+    if (disconnectedUsers.includes(socket.handshake.session.username)) {
+
+        const idRoom = socket.handshake.session.idRoom;
+        io.to(idRoom).emit("disconnection");
+        socket.leave(idRoom);
+        socket.handshake.session.idRoom = undefined;
+        disconnectedUsers.splice(disconnectedUsers.indexOf(socket.handshake.session.username), 1);
+    }
+
 
     socket.on('login', () => {
         /* let srvSockets = io.sockets.sockets;
@@ -280,11 +293,11 @@ io.on("connection", (socket) => {
         srvSockets.forEach(user => {
             console.log("- " + user.handshake.session.username);
         }); */
-        Database.refreshScore(socket.handshake.session.username, "", "", (a) => {
+        Database.refreshScore(socket.handshake.session.username, "", "", (a) => { 
             io.emit("display-score", a);
         });
         io.emit("display-rooms", allRooms);
-        socket.emit("display-username", socket.handshake.session.username);
+        socket.emit("display-username", socket.handshake.session.username); 
     });
 
     socket.on("get-score", user => {
@@ -298,7 +311,7 @@ io.on("connection", (socket) => {
         let username = socket.handshake.session.username;
         const roomData = [];
         roomData.push(username);
-        allRooms.push(roomData); 
+        allRooms.push(roomData);
 
         let res = allRooms.findIndex(e => e[0] == username)
 
@@ -358,14 +371,16 @@ io.on("connection", (socket) => {
         console.table("Room ID : " + allRooms[idRoom])
 
         if (reason == "transport close") {
-            socket.handshake.session.idRoom = undefined;
+            disconnectedUsers.push(socket.handshake.session.username);
+            // socket.handshake.session.idRoom = -1;
+            console.log(disconnectedUsers);
 
             // if (idRoom != null && allRooms[idRoom].length <= 2) {
 
-            socket.to(idRoom).emit("disconnection")
+            // io.to(idRoom).emit("disconnection")
 
 
-            socket.leave(idRoom);
+            // socket.leave(idRoom);
 
             if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
                 allRooms[idRoom].pop()
@@ -374,7 +389,8 @@ io.on("connection", (socket) => {
 
             }
             console.log("All Rooms : " + allRooms)
-            console.table("Room ID : " + allRooms[idRoom])
+            console.table("Personnes dans la room : " + allRooms[idRoom])
+            console.log("Socket ID : " + socket.handshake.session.idRoom);
 
 
             // } else {
