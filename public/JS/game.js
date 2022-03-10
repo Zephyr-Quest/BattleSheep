@@ -12,7 +12,6 @@ window.addEventListener("load", () => {
     // });
     Game.init(() => {
         HUD.hideAnnouncement();
-        setTimeout(HUD.showStartGrid, 500);
     });
 
     /* --------------------------------- Events --------------------------------- */
