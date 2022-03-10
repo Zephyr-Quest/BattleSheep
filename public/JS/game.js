@@ -4,24 +4,16 @@ import { Config } from "./ThreeJS/config.js";
 import { HUD } from "./ThreeJS/gameplay/HUD.js";
 import SocketManager from './utils/SocketManager.js';
 import { Vector2 } from 'three';
-import { View } from "./ThreeJS/gameplay/View.js";
 
 window.addEventListener("load", () => {
-    SplashScreen.start(() => {
-        // The splash screen is done
-        SplashScreen.hideScreen();
-        Game.init(() => {
-            SocketManager.init(Game.getView());
-            // Game.setRaycasterEvent(() => {
-            //     const tmp = [
-            //         { x: 0, y: 0, playerId: 0, isSheep: false },
-            //         { x: 1, y: 0, playerId: 0, isSheep: true }
-            //     ];
-            //     updateWorld(tmp, "Wolf", 5, 3, 10, true);
-            // })
-        });
+    // SplashScreen.start(() => {
+    //     // The splash screen is done
+    //     SplashScreen.hideScreen();
+    // });
+    Game.init(() => {
+        HUD.hideAnnouncement();
+        setTimeout(HUD.showStartGrid, 500);
     });
-    // SocketManager.connect();
 
     /* --------------------------------- Events --------------------------------- */
 
@@ -69,8 +61,6 @@ function updateWorld(startGrid, playerId, currentPlayer, listPos, listWeaponUsed
 function onKeyUp(e) {
     if (e.code === 'Space') {
         // Debug
-        HUD.hideAnnouncement();
-        setTimeout(HUD.showStartGrid, 1000);
     } else if (e.key === 'f') {
         const toFullscreen = document.querySelector("body");
         if (toFullscreen.requestFullscreen)

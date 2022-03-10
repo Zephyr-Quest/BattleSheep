@@ -165,6 +165,32 @@ main .announcement h1 {
 main .announcement h2 {
   font-size: 3.5rem;
 }
+main .announcement a {
+  width: 100px;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 2rem;
+  text-decoration: none;
+  color: #fff;
+  background-color: #3ca50c;
+  padding: 5px 20px 5px 20px;
+  border-radius: 10px;
+  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.4);
+  text-shadow: none;
+  border: 3px solid #3ca50c;
+}
+main .announcement a ion-icon {
+  display: block;
+}
+main .announcement a:hover {
+  background-color: transparent;
+  text-shadow: 3px 3px 7px rgba(0, 0, 0, 0.4);
+  border-color: #fff;
+  transition: background-color 0.3s, text-shadow 0.3s, border-color 0.3s;
+}
 main .gif-display {
   transition: opacity 0.5s;
 }

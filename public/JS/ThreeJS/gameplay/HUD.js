@@ -6,6 +6,7 @@ export const HUD = (function () {
         secondsSpan = document.getElementById("seconds"),
         weaponsMenu = document.getElementById("weapons_menu"),
         announcementDiv = document.getElementById("announcement"),
+        endAnnouncementDiv = document.getElementById("endAnnouncement"),
         gifDiv = document.getElementById("gif_display");
 
     // Chrono
@@ -66,7 +67,7 @@ export const HUD = (function () {
             return;
 
         // Toggle the div style
-        for (const weapon of target.parentElement.querySelectorAll(".weapon")) {
+        for (const weapon of weaponsMenu.querySelectorAll(".weapon")) {
             weapon.querySelector('.icon').style.display = 'block';
             weapon.querySelector('.icon-selected').style.display = 'none';
         }
@@ -90,6 +91,25 @@ export const HUD = (function () {
                 weaponDiv = currentWeapon;
 
         return weaponDiv
+    }
+
+    /**
+     * Show an announcement div
+     * @param {HTMLElement} div The div to show
+     * @param {string} title The title to print
+     * @param {string} subtitle The subtitle to print
+     */
+    function showAnnouncementDiv(div, title, subtitle) {
+        // Set content
+        div.querySelector('h1').innerText = title;
+        div.querySelector('h2').innerText = subtitle;
+
+        // Set style
+        div.parentElement.style.display = "flex";
+        div.style.display = "block";
+        setTimeout(() => {
+            div.style.opacity = 1;
+        }, 10);
     }
 
     return {
@@ -179,17 +199,46 @@ export const HUD = (function () {
          * Show the weapons menu
          */
         showWeaponsMenu() {
-            weaponsMenu.style.display = "flex";
+            weaponsMenu.parentElement.style.display = "flex";
         },
 
         /**
          * Hide the weapons menu
          */
         hideWeaponsMenu() {
-            weaponsMenu.style.display = "none";
+            weaponsMenu.parentElement.style.display = "none";
         },
 
         getCurrentWeapon: () => currentWeapon,
+
+        /**
+         * Set the current weapon by updating the HUD
+         * @param {String} weaponName The weapon name
+         */
+        setCurrentWeapon(weaponName) {
+            // Get the weapon div
+            let target = null;
+            for (const currentWP of weaponsMenu.querySelectorAll(".weapon")) {
+                if (currentWP.title === weaponName) 
+                    target = currentWP;
+            }
+            if (!target) return;
+
+            // Check if the weapon is disabled
+            if (target.classList.contains("disabled"))
+                return;
+
+            // Toggle the div style
+            for (const weapon of weaponsMenu.querySelectorAll(".weapon")) {
+                weapon.querySelector('.icon').style.display = 'block';
+                weapon.querySelector('.icon-selected').style.display = 'none';
+            }
+            target.querySelector('.icon').style.display = 'none';
+            target.querySelector('.icon-selected').style.display = 'block';
+
+            // Set the using weapon
+            currentWeapon = weaponName;
+        },
 
         /* -------------------------------------------------------------------------- */
         /*                            Announcement functions                           */
@@ -201,16 +250,16 @@ export const HUD = (function () {
          * @param {string} subtitle The annoucement subtitle
          */
         showAnnouncement(title, subtitle) {
-            // Set content
-            announcementDiv.querySelector('h1').innerText = title;
-            announcementDiv.querySelector('h2').innerText = subtitle;
+            showAnnouncementDiv(announcementDiv, title, subtitle);
+        },
 
-            // Set style
-            announcementDiv.parentElement.style.display = "flex";
-            announcementDiv.style.display = "block";
-            setTimeout(() => {
-                announcementDiv.style.opacity = 1;
-            }, 10);
+        /**
+         * Show an end annoucement
+         * @param {string} title The annoucement title
+         * @param {string} subtitle The annoucement subtitle
+         */
+        showEndAnnouncement(title, subtitle) {
+            showAnnouncementDiv(endAnnouncementDiv, title, subtitle);
         },
 
         /**

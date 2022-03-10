@@ -210,6 +210,33 @@ main {
 
         h1 { font-size: 5rem; }
         h2 { font-size: 3.5rem; }
+
+        a {
+            width: 100px;
+            margin: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 2rem;
+            text-decoration: none;
+            color: #fff;
+            background-color: @primary-color;
+            padding: 5px 20px 5px 20px;
+            border-radius: 10px;
+            box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.4);
+            text-shadow: none;
+            border: 3px solid @primary-color;
+
+            ion-icon { display: block; }
+
+            &:hover {
+                background-color: transparent;
+                text-shadow: 3px 3px 7px rgba(0, 0, 0, 0.4);
+                border-color: #fff;
+                transition: background-color 0.3s, text-shadow 0.3s, border-color 0.3s;
+            }
+        }
     }
 
     .gif-display {
