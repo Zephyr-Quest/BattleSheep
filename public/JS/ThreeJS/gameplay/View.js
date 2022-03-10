@@ -175,9 +175,9 @@ export class View {
      * Uncover a grid case
      * @param {THREE.Vector2} pos The position of the case to uncover
      * @param {Number} playerId The player id
-     * @param {boolean} foundSheep If the player will found a sheep or not
+     * @param {Number} type 0 -> Nothing, 1 -> A basic sheep, 2 -> A shorn sheep
      */
-    uncoverGridCase(pos, playerId, foundSheep = false) {
+    uncoverGridCase(pos, playerId, type = 0) {
         // Down the previous selected grass
         if (this.sceneState.turningGrass !== null) {
             this.sceneState.turningGrass.downGrass();
@@ -192,8 +192,8 @@ export class View {
         delete this.allObjects[grassName];
 
         // Show a sheep if it should
-        if (foundSheep) {
-            const newSheep = createSheep(pos, playerId, true);
+        if (type > 0) {
+            const newSheep = createSheep(pos, playerId, type === 2);
             this.displayElement(newSheep);
         }
     }
