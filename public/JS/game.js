@@ -6,13 +6,21 @@ import SocketManager from './utils/SocketManager.js';
 import { Vector2 } from 'three';
 
 window.addEventListener("load", () => {
-    // SplashScreen.start(() => {
-    //     // The splash screen is done
-    //     SplashScreen.hideScreen();
-    // });
-    Game.init(() => {
-        HUD.hideAnnouncement();
-        setTimeout(HUD.showStartGrid, 500);
+    SplashScreen.start(() => {
+        // The splash screen is done
+        SplashScreen.hideScreen();
+        // Game.init();
+        // SocketManager.init(Game.getView());
+        Game.init(() => {
+            SocketManager.init(Game.getView());
+            // Game.setRaycasterEvent(() => {
+            //     const tmp = [
+            //         { x: 0, y: 0, playerId: 0, isSheep: false },
+            //         { x: 1, y: 0, playerId: 0, isSheep: true }
+            //     ];
+            //     updateWorld(tmp, "Wolf", 5, 3, 10, true);
+            // })
+        });
     });
 
     /* --------------------------------- Events --------------------------------- */

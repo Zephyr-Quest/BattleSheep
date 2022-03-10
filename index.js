@@ -267,7 +267,7 @@ io.on("connection", (socket) => {
         socket.join(idRoom)
 
         if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
-            io.to(idRoom).emit("timeToPlay")
+            io.to(idRoom).emit("timeToPlay");
         }
         // io.to(idRoom).emit("disconnection")
 

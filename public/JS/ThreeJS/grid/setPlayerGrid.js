@@ -11,7 +11,6 @@ export class setPlayerGrid extends grid {
     /**
      * The setPlayerGrid constructor
      * @param {View} view3d The ThreeJS view
-     * @param {funcion} callback What is run after the selection
      */
     constructor(view3d) {
         super();
