@@ -91,13 +91,13 @@ app.get("/signup", (req, res) => {
             title: "BattleSheep | Sign up, Log in",
             description: "Sign up or log in to BattleSheep",
             scripts: [{
-                    name: "http",
-                    type: "text/javascript",
-                },
-                {
-                    name: "signup",
-                    type: "text/javascript",
-                },
+                name: "http",
+                type: "text/javascript",
+            },
+            {
+                name: "signup",
+                type: "text/javascript",
+            },
             ],
         });
     } else {
@@ -108,8 +108,8 @@ app.get("/signup", (req, res) => {
 });
 
 app.post("/signup", body("pseudo").isLength({
-        min: 3
-    }).trim().escape(),
+    min: 3
+}).trim().escape(),
     body("password").isLength({
         min: 3
     }).trim(),
@@ -148,12 +148,12 @@ app.post("/signup", body("pseudo").isLength({
 );
 
 app.post("/login", body("pseudo").isLength({
-        min: 3,
-    }).trim().escape(),
+    min: 3,
+}).trim().escape(),
     body("password").isLength({
         min: 3,
     })
-    .trim(),
+        .trim(),
     (req, res) => {
         console.log("--- LOG IN ---");
 
@@ -261,13 +261,13 @@ io.on("connection", (socket) => {
         console.log("Connexion de " + socket.handshake.session.username + " à la room " + idRoom);
         socket.join(idRoom)
 
-        io.to(idRoom).emit("timeToPlay")
-
         const clients = io.sockets.adapter.rooms.get(idRoom);
         for (const clientId of clients) {
             const clientSocket = io.sockets.sockets.get(clientId);
             console.log("- " + clientSocket.handshake.session.username);
         }
+        if (clients.size === 2)
+            io.to(idRoom).emit("timeToPlay");
     }
 
     socket.on('login', () => {
@@ -318,7 +318,6 @@ io.on("connection", (socket) => {
             console.log(username + " Joined room : room-" + res + " hosted by " + hostName);
             io.emit("hide-card", hostName);
             socket.disconnect();
-            //setTimeout(() => io.to("room").emit("timeToPlay"), 1000)
         }
     });
 
@@ -337,10 +336,23 @@ io.on("connection", (socket) => {
     });
 
     /* ---------------------------------- Game ---------------------------------- */
-    socket.on("checkGrid", (grid, idPlayer) => {
+    socket.on("checkGrid", (grid) => {
         let idRoom = socket.handshake.session.idRoom;
+        let username = socket.handshake.session.username;
+        let result = false;
 
-        socket.to(idRoom).emit("resultGrid", bool)
+        let nbSheep = 0;
+
+        for (let x = 0; x < 10; x++)
+            for (let y = 0; y < 10; y++)
+                if (grid[x][y] != undefined) 
+                    nbSheep++;
+
+
+        if (nbSheep === 20) result = true;
+        else result = false;
+        
+        io.to(socket.id).emit("resultGrid", result);
     });
 
 
@@ -365,7 +377,7 @@ io.on("connection", (socket) => {
                 if (allRooms[idRoom].length == 1) {
                     allRooms.splice(idRoom, 1);
                 }
-                else{ 
+                else {
                     allRooms[idRoom].pop()
 
                 }

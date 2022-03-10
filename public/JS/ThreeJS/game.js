@@ -117,12 +117,12 @@ function initAfterLoading(callback) {
 
     /* ------------------------------- Start grid ------------------------------- */
 
-    new setPlayerGrid(view, () => {
-        HUD.hideStartGrid();
-        // HUD.showAnnouncement("The other player is setting up his grid", "Please wait...")
-        raycaster.isActive = true;
-    });
-    
+    // new setPlayerGrid(view, () => {
+    //     HUD.hideStartGrid();
+    //     HUD.showAnnouncement("The other player is setting up his grid", "Please wait...")
+    //     raycaster.isActive = true;
+    // });
+    new setPlayerGrid(view);
     /* ---------------------------------- Debug --------------------------------- */
 
     // Display FPS
@@ -143,7 +143,7 @@ function initAfterLoading(callback) {
     scene.add(sprite);
 
     /* -------------------------------- End debug ------------------------------- */
-
+    
     HUD.showAnnouncement("Waiting for a player", "Please wait...");
 
     callback();

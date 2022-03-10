@@ -1,6 +1,7 @@
 import { grid } from './grid.js';
 import { wrapPosition } from './verif.js';
 import { sheep } from './sheep.js';
+import SocketManager from '../../utils/SocketManager.js';
 
 /* -------------------------------------------------------------------------- */
 /*                         Class to manage start grid                         */
@@ -12,13 +13,12 @@ export class setPlayerGrid extends grid {
      * @param {View} view3d The ThreeJS view
      * @param {funcion} callback What is run after the selection
      */
-    constructor(view3d, callback) {
+    constructor(view3d) {
         super();
         this.rotation = "row";
         this.nbSheep = 10;
         this.tabSheep = [];
         this.view3d = view3d;
-        this.endCallback = callback;
 
         // Set grid
         const playerGrid = document.getElementById("playerGrid");
@@ -70,7 +70,10 @@ export class setPlayerGrid extends grid {
             }
         })
 
-        validBtn.addEventListener("click", this.endCallback);
+        // validBtn.addEventListener("click", this.endCallback);
+        document.getElementById("valid").addEventListener("click", () => {
+            SocketManager.checkGrid(this.grid)
+        });
     }
 
     displayOnScreen() {

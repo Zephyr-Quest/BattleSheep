@@ -27,6 +27,20 @@
 
 import { sheep } from './sheep.js';
 
+
+// Check if a grid is valid
+function check_grid(grid) {
+    let count = 0; // Count the number of ship
+    for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 10; j++) {
+            if (grid[i][j] == 1) {
+                count++;
+            }
+        }
+    }
+   return count === 20;
+}
+
 // Set a 10x10 grid filled with undefined
 function init_grid() {
     var grid = [];
@@ -39,27 +53,29 @@ function init_grid() {
     return grid;
 }
 
-let grid = init_grid();
-
 /**
- * Update the grid with the ship
+ * Check if the ship is on the grid
+ * @param {Array} grid
+ * @param {Object} ship
+ * @returns {Boolean} if
  */
 function update_grid(grid, ship) {
     let i = ship.position.x;
     let j = ship.position.y;
     let size = ship.size;
+    let result = [];
     let direction = ship.direction;
     let ship_grid = ship.grid;
     for (let k = 0; k < size; k++) {
         if (direction == "row") {
-            grid[i][j] = ship_grid[k];
+            results[i][j] = ship_grid[k];
             j++;
         } else {
-            grid[i][j] = ship_grid[k];
+            results[i][j] = ship_grid[k];
             i++;
         }
     }
-    return grid;
+    return (grid, results);
 }
 
 /**
@@ -106,16 +122,14 @@ function submarine(grid, x, y) {
     let results = [];
     for (let i = max(x, x - 2); i < min(x, x + 2); i++) {
         for (let j = max(y, y - 2); j < min(y, y + 2); j++) {
-            if (grid[i][j] != undefined) {
                 results.push({
                     x: i,
                     y: j,
-                    hit: true
+                    hit: grid[i][j] != undefined
                 });
-            }
         }
     }
-    return results;
+    return (grid, results);
 }
 
 
