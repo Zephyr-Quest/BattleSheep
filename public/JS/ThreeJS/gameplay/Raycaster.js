@@ -1,5 +1,6 @@
 import { Raycaster, Vector2, Vector3, Mesh, Group, Sprite } from 'three';
 import { createTarget } from '../level_design/level_design.js';
+import { HUD } from './HUD.js';
 
 const TARGET_Y = 2;
 
@@ -10,6 +11,40 @@ const TARGET_Y = 2;
  * @returns If they're equals or not
  */
 const isVector3Equals = (v1, v2) => v1 && v2 && v1.x === v2.x && v1.y === v2.y && v1.z === v2.z;
+
+/**
+ * Check if a position vector is correct or not
+ * @param {THREE.Vector2} pos The vector to check
+ * @returns If the position is correct or not
+ */
+const isPosValid = pos => pos && pos.x >= 0 && pos.y >= 0 && pos.x < 10 && pos.y < 10;
+
+const weaponsTargets = {
+    Shears: [
+        new Vector2(0, 0)
+    ],
+    Strimmer: [
+        new Vector2(1, -1),
+        new Vector2(1, 0),
+        new Vector2(1, 1),
+        new Vector2(0, -1),
+        new Vector2(0, 0),
+        new Vector2(0, 1),
+        new Vector2(-1, -1),
+        new Vector2(-1, 0),
+        new Vector2(-1, 1),
+    ],
+    Wolf: [
+        new Vector2(0, 0)
+    ],
+    Epidemic: [
+        new Vector2(1, 0),
+        new Vector2(0, 0),
+        new Vector2(-1, 0),
+        new Vector2(0, -1),
+        new Vector2(0, 1),
+    ]
+};
 
 /* -------------------------------------------------------------------------- */
 /*                        Manage the ThreeJS Raycaster                        */
@@ -146,10 +181,8 @@ export class CustomRaycaster {
                     else searching = false;
                 }
 
-                if (currentParent.name === "Floor0")
-                    hovered = currentParent;
-                else
-                    hovered = this.view.allObjects[currentParent.name];
+                if (currentParent.name === "Floor0") hovered = currentParent;
+                else hovered = this.view.allObjects[currentParent.name];
                 
                 // Unknown object
                 if (!hovered) throw "The hovered element is not referenced.";
@@ -170,7 +203,8 @@ export class CustomRaycaster {
             let pos3dLower = new Vector3(pos3d.x, pos3d.y - TARGET_Y, pos3d.z);
             const pos2d = new Vector2(pos3d.x, pos3d.y), playerId = pos3d.z;
             
-            if (hovered.type === 'Grass' && !isVector3Equals(pos3d, this.targetedGrass)) {
+            if ((hovered.type === 'Grass' && !isVector3Equals(pos3d, this.targetedGrass))
+             || (hovered.type === 'Target' && !isVector3Equals(pos3dLower, this.targetedGrass))) {
                 this.targetedGrass = pos3d;
 
                 if (this.crossAndTarget.length > 0) {
@@ -182,10 +216,18 @@ export class CustomRaycaster {
                     }
                 }
 
-                // Create the target
-                const target = createTarget(pos2d, TARGET_Y, playerId);
-                this.view.displayElement(target);
-                this.crossAndTarget.push(this.view.allObjects[target.name]);
+                // Generate all cross and targets
+                const weapon = HUD.getCurrentWeapon();
+                weaponsTargets[weapon].forEach(pos => {
+                    // Get the new target pos
+                    const targetPos = new Vector2(pos2d.x + pos.x, pos2d.y + pos.y);
+                    if (!isPosValid(targetPos)) return;
+
+                    // Create the target
+                    const target = createTarget(targetPos, TARGET_Y, playerId);
+                    this.view.displayElement(target);
+                    this.crossAndTarget.push(this.view.allObjects[target.name]);
+                });
             } else if (hovered.type === 'Map' && this.targetedGrass !== null) {
                 this.targetedGrass = null;
 

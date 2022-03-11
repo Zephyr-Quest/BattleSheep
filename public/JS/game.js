@@ -12,6 +12,7 @@ window.addEventListener("load", () => {
     // });
     Game.init(() => {
         HUD.hideAnnouncement();
+        HUD.showWeaponsMenu();
         Game.setRaycasterState(true);
     });
 
