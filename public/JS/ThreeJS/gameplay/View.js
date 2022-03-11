@@ -127,7 +127,9 @@ export class View {
             const obj = this.allObjects[objName];
 
             // Check the object type
-            if (obj.type !== 'Grass' && obj.type !== 'Sheep')
+            // Skip objects which aren't on the grid
+            const interested = ['Grass', 'Sheep', 'ShornSheep'];
+            if (!interested.includes(obj.type))
                 continue;
 
             // Check the object position
