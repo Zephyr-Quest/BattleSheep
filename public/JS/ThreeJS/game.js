@@ -55,6 +55,14 @@ function setRaycasterEvent(func) {
     raycaster.clickCallback = func;
 }
 
+/**
+ * Set the player id to the raycaster
+ * @param {Number} playerId The player id
+ */
+function setPlayerId(playerId) {
+    raycaster.playerId = playerId;
+}
+
 /* -------------------------------------------------------------------------- */
 /*                           ThreeJS main functions                           */
 /* -------------------------------------------------------------------------- */
@@ -204,4 +212,11 @@ function onResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-export default { init, getView, setRaycasterState, setRaycasterEvent, setCameraFromVector };
+export default {
+    init,
+    getView,
+    setRaycasterState,
+    setRaycasterEvent,
+    setCameraFromVector,
+    setPlayerId
+};

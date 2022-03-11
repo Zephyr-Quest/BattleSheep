@@ -13,6 +13,10 @@ window.addEventListener("load", () => {
     Game.init(() => {
         HUD.hideAnnouncement();
         HUD.showWeaponsMenu();
+        HUD.blockWeapon("Strimmer")
+        Game.setPlayerId(0);
+        Game.getView().uncoverGridCase(new Vector2(5, 5), 0, 1);
+        Game.getView().uncoverGridCase(new Vector2(5, 5), 1, 2);
         Game.setRaycasterState(true);
     });
 

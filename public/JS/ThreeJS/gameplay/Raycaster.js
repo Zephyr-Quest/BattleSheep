@@ -1,5 +1,5 @@
 import { Raycaster, Vector2, Vector3, Mesh, Group, Sprite } from 'three';
-import { createTarget } from '../level_design/level_design.js';
+import { createTarget, createCross } from '../level_design/level_design.js';
 import { HUD } from './HUD.js';
 
 const TARGET_Y = 2;
@@ -73,6 +73,7 @@ export class CustomRaycaster {
 
         this.targetedGrass = null;
         this.crossAndTarget = [];
+        this.currentPlayerId = null;
     }
 
     /**
@@ -119,7 +120,8 @@ export class CustomRaycaster {
                 }
 
                 clicked = this.view.allObjects[currentParent.name];
-                if (!clicked) throw "The clicked element is not referenced.";
+                if (!clicked && currentParent.name !== "Floor0")
+                    throw "The clicked element is not referenced.";
             } catch (error) {
                 console.error('Error finding the clicked element.');
                 if (this.debug) console.error(error);
@@ -196,15 +198,26 @@ export class CustomRaycaster {
 
             // Check the mesh type
             const interested = ["Map", "Grass", "Sheep", "ShornSheep", "Cross", "Target"];
+            const hoverableOnGround = ["Grass", "Sheep", "ShornSheep"];
+            const hoverableOnAir = ["Target", "Cross"];
             if (!interested.includes(hovered.type)) return;
+
+            if (hovered.type === 'Map' && this.targetedGrass !== null) {
+                this.resetTargetAndCross();
+                return;
+            }
             
             // Get the mesh position
             const pos3d = hovered.getGridPosition();
-            let pos3dLower = new Vector3(pos3d.x, pos3d.y - TARGET_Y, pos3d.z);
             const pos2d = new Vector2(pos3d.x, pos3d.y), playerId = pos3d.z;
+
+            // A player can't target his own grid
+            if (this.playerId === playerId) {
+                this.resetTargetAndCross();
+                return;
+            }
             
-            if ((hovered.type === 'Grass' && !isVector3Equals(pos3d, this.targetedGrass))
-             || (hovered.type === 'Target' && !isVector3Equals(pos3dLower, this.targetedGrass))) {
+            if ((hoverableOnGround.includes(hovered.type) || hoverableOnAir.includes(hovered.type)) && !isVector3Equals(pos3d, this.targetedGrass)) {
                 this.targetedGrass = pos3d;
 
                 if (this.crossAndTarget.length > 0) {
@@ -223,21 +236,28 @@ export class CustomRaycaster {
                     const targetPos = new Vector2(pos2d.x + pos.x, pos2d.y + pos.y);
                     if (!isPosValid(targetPos)) return;
 
+                    // Get the targeted object in the case
+                    const targetedId = this.view.getObjectNameOnGrid(targetPos, playerId);
+                    const targeted = this.view.allObjects[targetedId];
+
                     // Create the target
-                    const target = createTarget(targetPos, TARGET_Y, playerId);
+                    const target = targeted.type === 'ShornSheep' ?
+                        createCross(targetPos, TARGET_Y, playerId) : createTarget(targetPos, TARGET_Y, playerId);
                     this.view.displayElement(target);
                     this.crossAndTarget.push(this.view.allObjects[target.name]);
                 });
-            } else if (hovered.type === 'Map' && this.targetedGrass !== null) {
-                this.targetedGrass = null;
-
-                // Remove cross and targets
-                while (this.crossAndTarget.length > 0) {
-                    this.crossAndTarget[0].removeFromScene(this.scene);
-                    delete this.view.allObjects[this.crossAndTarget[0].name];
-                    this.crossAndTarget.splice(0, 1);
-                }
             }
+        }
+    }
+
+    resetTargetAndCross() {
+        this.targetedGrass = null;
+
+        // Remove cross and targets
+        while (this.crossAndTarget.length > 0) {
+            this.crossAndTarget[0].removeFromScene(this.scene);
+            delete this.view.allObjects[this.crossAndTarget[0].name];
+            this.crossAndTarget.splice(0, 1);
         }
     }
 };
