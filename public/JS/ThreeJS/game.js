@@ -110,6 +110,14 @@ function initAfterLoading(callback) {
     // Display all element
     view.displayAllElements();
     
+    // Create the floor
+    const floorGeometry = new THREE.BoxGeometry(25, 0.05, 52);
+    const floorMaterial = new THREE.MeshBasicMaterial({ color: 0x1b6d19 });
+    const floorCube = new THREE.Mesh(floorGeometry, floorMaterial);
+    floorCube.position.set(1, -0.5, 0);
+    floorCube.name = "Floor0";
+    scene.add(floorCube);
+    
     /* --------------------------------- Events --------------------------------- */
     
     raycaster.initEvent();

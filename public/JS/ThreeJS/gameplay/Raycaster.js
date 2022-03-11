@@ -146,7 +146,12 @@ export class CustomRaycaster {
                     else searching = false;
                 }
 
-                hovered = this.view.allObjects[currentParent.name];
+                if (currentParent.name === "Floor0")
+                    hovered = currentParent;
+                else
+                    hovered = this.view.allObjects[currentParent.name];
+                
+                // Unknown object
                 if (!hovered) throw "The hovered element is not referenced.";
             } catch (error) {
                 console.error('Error finding the hovered element.');
@@ -154,26 +159,32 @@ export class CustomRaycaster {
                 return;
             }
 
+            if (hovered instanceof Mesh) return;
+
             // Check the mesh type
             const interested = ["Map", "Grass", "Sheep", "ShornSheep", "Cross", "Target"];
             if (!interested.includes(hovered.type)) return;
             
-            if (this.debug) console.log(hovered.type);
-
             // Get the mesh position
             const pos3d = hovered.getGridPosition();
-            console.log(hovered.getPositionVector(), pos3d);
             let pos3dLower = new Vector3(pos3d.x, pos3d.y - TARGET_Y, pos3d.z);
             const pos2d = new Vector2(pos3d.x, pos3d.y), playerId = pos3d.z;
-            console.log(pos3d, this.targetedGrass, isVector3Equals(pos3d, this.targetedGrass));
             
             if (hovered.type === 'Grass' && !isVector3Equals(pos3d, this.targetedGrass)) {
                 this.targetedGrass = pos3d;
 
+                if (this.crossAndTarget.length > 0) {
+                    // Remove cross and targets
+                    while (this.crossAndTarget.length > 0) {
+                        this.crossAndTarget[0].removeFromScene(this.scene);
+                        delete this.view.allObjects[this.crossAndTarget[0].name];
+                        this.crossAndTarget.splice(0, 1);
+                    }
+                }
+
                 // Create the target
                 const target = createTarget(pos2d, TARGET_Y, playerId);
                 this.view.displayElement(target);
-                console.log(this.view.allObjects[target.name]);
                 this.crossAndTarget.push(this.view.allObjects[target.name]);
             } else if (hovered.type === 'Map' && this.targetedGrass !== null) {
                 this.targetedGrass = null;
