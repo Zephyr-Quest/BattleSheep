@@ -12,6 +12,7 @@ window.addEventListener("load", () => {
     // });
     Game.init(() => {
         HUD.hideAnnouncement();
+        Game.setRaycasterState(true);
     });
 
     /* --------------------------------- Events --------------------------------- */

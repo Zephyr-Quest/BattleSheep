@@ -33,8 +33,8 @@ for (let i = 0; i < fenceLocations.length; i++)
 /* ---------------------------------- Grid ---------------------------------- */
 
 // Init counter
-let grassCounter, sheepCounter;
-grassCounter = sheepCounter = 0;
+let grassCounter, sheepCounter, targetCounter;
+grassCounter = sheepCounter = targetCounter = 0;
 
 // Add all grass
 for (let playerId = 0; playerId < 2; playerId++)
@@ -59,6 +59,29 @@ function createGrass(pos, playerId) {
     };
     grassCounter++;
     return grass;
+}
+
+/**
+ * Generate a target level design object
+ * @param {THREE.Vector2} pos The 2D position
+ * @param {Number} y The y position
+ * @param {Number} playerId The grid id
+ * @returns The target data
+ */
+function createTarget(pos, y, playerId) {
+    // Set position
+    let position = getPositionFromPlayerId(pos, playerId);
+    position.y += y;
+
+    // Create the target object
+    const target = {
+        type: 'Target',
+        name: 'Target' + targetCounter,
+        position
+    };
+    targetCounter++;
+    
+    return target;
 }
 
 /**
@@ -105,5 +128,6 @@ function getPositionFromPlayerId(pos, playerId) {
 export {
     tmpElements as Elements,
     createGrass,
-    createSheep
+    createSheep,
+    createTarget
 };

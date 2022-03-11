@@ -19,7 +19,7 @@ let scene, renderer, camera, controls, raycaster, view;
 let stats;
 const DEBUG_STATS = true;
 const USE_ORBIT_CONTROLS = true;
-const DEBUG_RAYCASTER = false;
+const DEBUG_RAYCASTER = true;
 
 /* ---------------------------------- View ---------------------------------- */
 
