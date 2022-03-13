@@ -224,6 +224,6 @@ export class View {
                 for (const cpt of this.capillotractoms)
                     this.scene.remove(cpt);
             }, 1000);
-        }, 3500);
+        }, 2500);
     }
 };

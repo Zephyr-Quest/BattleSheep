@@ -4,6 +4,7 @@ import { Config } from "./ThreeJS/config.js";
 import { HUD } from "./ThreeJS/gameplay/HUD.js";
 import SocketManager from './utils/SocketManager.js';
 import { Vector2 } from 'three';
+import SoundDesign from "./utils/SoundDesign.js";
 
 window.addEventListener("load", () => {
     SplashScreen.start(() => {
@@ -69,6 +70,7 @@ function updateWorld(startGrid, playerId, currentPlayer, listPos, listWeaponUsed
 function onKeyUp(e) {
     if (e.code === 'Space') {
         // Debug
+        SoundDesign.playRandomSheep();
     } else if (e.key === 'f') {
         const toFullscreen = document.querySelector("body");
         if (toFullscreen.requestFullscreen)

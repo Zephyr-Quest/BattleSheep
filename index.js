@@ -219,10 +219,10 @@ app.get("/lobby", (req, res) => {
 });
 
 app.get("/game", (req, res) => {
-    if (!req.session.username) {
-        res.redirect("/");
-        return;
-    }
+    // if (!req.session.username) {
+    //     res.redirect("/");
+    //     return;
+    // }
 
     res.render("game");
 });
