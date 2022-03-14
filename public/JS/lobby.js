@@ -8,7 +8,7 @@ socket.on("display-rooms", (allRooms) => {
     allRooms.forEach(element => {
         console.log(element);
         if (element.length < 2)
-            htmlScore += '<div class="card" title="Click to join ' + element[0] + '\'s game"><ion-icon name="log-in"></ion-icon><ul><li class="name">Host : <strong class="green">' + element[0] + '</strong></li><li class="score">High score : <strong>' + "blabla" + '</strong></li></ul></div>'
+            htmlScore += '<div class="card" title="Click to join ' + element[0].name + '\'s game"><ion-icon name="log-in"></ion-icon><ul><li class="name">Host : <strong class="green">' + element[0].name + '</strong></li><li class="score">High score : <strong>' + "blabla" + '</strong></li></ul></div>'
     });
     document.getElementById("games-display").innerHTML = htmlScore;
         
@@ -16,7 +16,7 @@ socket.on("display-rooms", (allRooms) => {
     for (const card of document.querySelectorAll("#games-display .card")) {
         card.addEventListener("click", () => {
             let host = card.getElementsByClassName("green")[0].innerText;
-            let res = allRooms.findIndex(e => e[0] == host)
+            let res = allRooms.findIndex(e => e[0].name == host)
             
             if (allRooms[res] && allRooms[res].length < 2) {
                 socket.emit("join-room", host);
@@ -25,7 +25,7 @@ socket.on("display-rooms", (allRooms) => {
         })
     }
     allRooms.forEach(element => {
-        element.forEach(e => socket.emit("get-score", e));
+        element.forEach(e => socket.emit("get-score", e.name));
     });
 })
 

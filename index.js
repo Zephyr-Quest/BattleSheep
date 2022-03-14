@@ -91,13 +91,13 @@ app.get("/signup", (req, res) => {
             title: "BattleSheep | Sign up, Log in",
             description: "Sign up or log in to BattleSheep",
             scripts: [{
-                name: "http",
-                type: "text/javascript",
-            },
-            {
-                name: "signup",
-                type: "text/javascript",
-            },
+                    name: "http",
+                    type: "text/javascript",
+                },
+                {
+                    name: "signup",
+                    type: "text/javascript",
+                },
             ],
         });
     } else {
@@ -108,8 +108,8 @@ app.get("/signup", (req, res) => {
 });
 
 app.post("/signup", body("pseudo").isLength({
-    min: 3
-}).trim().escape(),
+        min: 3
+    }).trim().escape(),
     body("password").isLength({
         min: 3
     }).trim(),
@@ -148,12 +148,12 @@ app.post("/signup", body("pseudo").isLength({
 );
 
 app.post("/login", body("pseudo").isLength({
-    min: 3,
-}).trim().escape(),
+        min: 3,
+    }).trim().escape(),
     body("password").isLength({
         min: 3,
     })
-        .trim(),
+    .trim(),
     (req, res) => {
         console.log("--- LOG IN ---");
 
@@ -249,10 +249,6 @@ let allRooms = [],
     disconnectedUsers = [];
 
 io.on("connection", (socket) => {
-    console.log(socket.handshake.session.idRoom)
-
-
-
     if (socket.handshake.session.idRoom === undefined) {
         console.log("--- LOBBY ---");
         console.log("Connexion de ", socket.handshake.session.username, " au Lobby");
@@ -263,7 +259,7 @@ io.on("connection", (socket) => {
         socket.join(idRoom)
 
         if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
-            console.log("hqhsjdkfbeskwhjfbd", allRooms[idRoom])
+            console.log(allRooms[idRoom])
             io.to(idRoom).emit("timeToPlay");
         }
         // io.to(idRoom).emit("disconnection")
@@ -308,7 +304,11 @@ io.on("connection", (socket) => {
     socket.on("host-room", () => {
         let username = socket.handshake.session.username;
         const roomData = [];
-        roomData.push({ name: username, playerId: 0, validGrid: false });
+        roomData.push({
+            name: username,
+            playerId: 0,
+            validGrid: false
+        });
         allRooms.push(roomData);
 
         let res = allRooms.findIndex(e => e[0].name == username)
@@ -328,11 +328,16 @@ io.on("connection", (socket) => {
 
             let username = socket.handshake.session.username;
             if (hostName != username) {
-                allRooms[res].push({ name: username, playerId: 1, validGrid: false });
+                allRooms[res].push({
+                    name: username,
+                    playerId: 1,
+                    validGrid: false
+                });
                 socket.handshake.session.idRoom = res;
 
                 console.log(username, " Joined room : room-", res, " hosted by ", hostName);
                 io.emit("hide-card", hostName);
+
                 socket.disconnect();
             }
         }
@@ -360,35 +365,40 @@ io.on("connection", (socket) => {
 
         let nbSheep = 0;
 
-        for (let x = 0; x < 10; x++)
-            for (let y = 0; y < 10; y++)
-                if (grid[x][y] != undefined)
+        for (let x = 0; x < 10; x++) {
+            for (let y = 0; y < 10; y++) {
+                if (grid[x][y] != undefined) {
                     nbSheep++;
+                }
+            }
+        }
 
 
         // if (nbSheep === 20) result = true;
         // else result = false;
 
         if (nbSheep === 20) {
-            allRooms[idRoom].forEach(player => {
-                if (player.name  === username) player.validGrid = true;
+            let idArray = allRooms.findIndex(function (e) {
+                return (e[0].name == username || e[1].name == username);
             });
-            allRooms[idRoom].forEach(player => {
-                if (player.name  !== username) 
-                    if (player.validGrid = true)
-                        return io.to(idRoom).emit("startGameplay");
-                else return io.to(socket.id).emit("resultGrid", true);
-            });
+            let idPlayer = allRooms[idArray].findIndex(e => e.name == username)
+
+            allRooms[idArray][idPlayer].validGrid = true; 
+
+            if (allRooms[idArray].every(e => e.validGrid == true)) {
+                return io.to(idRoom).emit("startGameplay");
+            }
+            else return socket.emit("resultGrid", true);
         }
-        return io.to(socket.id).emit("resultGrid", false);
+        return socket.emit("resultGrid", false);
     });
 
     socket.on("getPlayerGrid", () => {
         const idRoom = socket.handshake.session.idRoom;
         const username = socket.handshake.session.username;
-        let id;
+        let id = 0;
         allRooms[idRoom][0].name === username ? id = 0 : id = 1;
-        io.to(socket.id).emit("resultPlayerId", id);
+        socket.emit("resultPlayerId", id);
     })
 
 
@@ -402,25 +412,17 @@ io.on("connection", (socket) => {
 
         if (reason == "transport close") {
             disconnectedUsers.push(socket.handshake.session.username);
-            // socket.handshake.session.idRoom = -1;
             console.log(disconnectedUsers);
-
-            // if (idRoom != null && allRooms[idRoom].length <= 2) {
-
-            // io.to(idRoom).emit("disconnection")
-
-
-            // socket.leave(idRoom);
 
             if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
                 allRooms[idRoom].pop()
             } else {
                 allRooms.splice(idRoom, 1);
-
             }
-            console.log("All Rooms : ", allRooms)
-            console.table("Personnes dans la room : ", allRooms[idRoom])
-            console.log("Socket ID : ", socket.handshake.session.idRoom);
+            console.log("All Rooms : " + allRooms)
+            console.table("Personnes dans la room : " + allRooms[idRoom])
+            console.log("Socket ID : " + socket.handshake.session.idRoom);
+            socket.to(idRoom).emit("disconnection");
 
 
             // } else {
