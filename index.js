@@ -253,10 +253,6 @@ let allRooms = [],
     disconnectedUsers = [];
 
 io.on("connection", (socket) => {
-    console.log(socket.handshake.session.idRoom)
-
-
-
     if (socket.handshake.session.idRoom === undefined) {
         console.log("--- LOBBY ---");
         console.log("Connexion de " + socket.handshake.session.username + " au Lobby");
@@ -384,13 +380,14 @@ io.on("connection", (socket) => {
 
             if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
                 allRooms[idRoom].pop()
-            } else {
+            } else {  
                 allRooms.splice(idRoom, 1);
 
             }
             console.log("All Rooms : " + allRooms)
             console.table("Personnes dans la room : " + allRooms[idRoom])
             console.log("Socket ID : " + socket.handshake.session.idRoom);
+            socket.to(idRoom).emit("disconnection"); 
 
 
             // } else {
