@@ -189,11 +189,8 @@ export class setPlayerGrid extends grid {
                 currentBox = currentBox.parentElement;
 
             const currentSheep = this.tabSheep[currentBox.classList[1]];
-            if (currentBox.parentElement.id != currentSheep.firstPosition) {
-                const container = document.getElementById(currentSheep.firstPosition)
-                container.append(currentBox);
-            }
-            this.rangeSheep(currentSheep.firstPosition, currentSheep.direction, currentSheep.sheepSize, currentSheep.sheepSize);
+            if (currentBox.parentElement.id == currentSheep.firstPosition)
+                this.rangeSheep(currentSheep.firstPosition, currentSheep.direction, currentSheep.sheepSize, currentSheep.sheepSize);
             this.displayGrid();
             currentBox.removeAttribute("moving");
             this.displayOnScreen();
@@ -222,18 +219,19 @@ export class setPlayerGrid extends grid {
                 const data = event.dataTransfer.getData("text/plain");
                 const currentBox = document.getElementsByClassName(data)[0];
                 const currentSheep = this.tabSheep[currentBox.classList[1]];
-                if (!currentContainer.hasChildNodes()) {
-                    if (wrapPosition(this.grid, Number(currentContainer.id[0]), Number(currentContainer.id[2]), currentSheep.sheepSize, this.rotation)) {
-                        currentContainer.appendChild(currentBox);
-                        currentSheep.firstPosition = currentContainer.id;
-                        currentSheep.direction = this.rotation;
-                        
-                        // Check if sheepBox is empty
-                        const sheepBox = document.getElementById("sheepBox");
-                        if (sheepBox.children.length === 0)
-                            sheepBox.style.display = "none";
+                if (currentContainer.nodeName == "TD")
+                    if (!currentContainer.hasChildNodes()) {
+                        if (wrapPosition(this.grid, Number(currentContainer.id[0]), Number(currentContainer.id[2]), currentSheep.sheepSize, this.rotation)) {
+                            currentContainer.appendChild(currentBox);
+                            currentSheep.firstPosition = currentContainer.id;
+                            currentSheep.direction = this.rotation;
+                            
+                            // Check if sheepBox is empty
+                            const sheepBox = document.getElementById("sheepBox");
+                            if (sheepBox.children.length === 0)
+                                sheepBox.style.display = "none";
+                        }
                     }
-                }
             })
         }
     }

@@ -1,6 +1,8 @@
 import { HUD } from '../ThreeJS/gameplay/HUD.js';
+import Game from "../ThreeJS/game.js";
 
-let socket = io()
+let socket = io();
+let view3D;
 
 // let currentPlayerId, view3D;
 
@@ -48,11 +50,10 @@ socket.on("resultGrid", (result) => {
     HUD.hideStartGrid();
     if (result) {
         HUD.showAnnouncement("The other player is setting up his grid", "Please wait...")
-        // raycaster.isActive = true;
+        Game.setRaycasterState(true);
     }
     else {
         HUD.showAnnouncementDuring("Invalid grid", "try another grid", 1000);
-        console.log("ok")
         setTimeout(HUD.showStartGrid, 2000);
     }
 })
@@ -75,7 +76,7 @@ socket.on("disconnection", () => {
 // /* -------------------------------------------------------------------------- */
 
 function init(view) {
-    let view3D = view;
+    view3D = view;
 }
 
 export default {
