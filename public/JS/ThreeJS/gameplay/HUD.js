@@ -14,7 +14,7 @@ export const HUD = (function () {
     let
         chronoMinutes = 0,
         chronoSeconds = 0,
-        stopChrono = false;
+        stopChrono = true;
     
     // Weapons
     let currentWeapon = "Shears";
@@ -143,16 +143,19 @@ export const HUD = (function () {
                 return;
             if (typeof seconds !== 'number' || seconds < 0 || seconds > 59)
                 return;
-            
+
             // Set the chrono
             chronoMinutes = minutes;
             chronoSeconds = seconds;
-
+            
             // Display the chrono
             updateChronoHUD();
-
-            // Start the chrono
-            incrementChrono();
+                
+            if (stopChrono) {
+                // Start the chrono
+                stopChrono = false;
+                incrementChrono();
+            }
         },
 
         /**
