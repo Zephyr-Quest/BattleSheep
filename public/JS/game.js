@@ -4,7 +4,8 @@ import { Config } from "./ThreeJS/config.js";
 import { HUD } from "./ThreeJS/gameplay/HUD.js";
 import SocketManager from './utils/SocketManager.js';
 import { Vector2 } from 'three';
-import SoundDesign from "./utils/SoundDesign.js";
+
+let socket = io();
 
 window.addEventListener("load", () => {
     SplashScreen.start(() => {
@@ -14,6 +15,7 @@ window.addEventListener("load", () => {
         // SocketManager.init(Game.getView());
         Game.init(() => {
             SocketManager.init(Game.getView());
+            Game.setPlayerId = socket.emit("getPlayerId");
             // Game.setRaycasterEvent(() => {
             //     const tmp = [
             //         { x: 0, y: 0, playerId: 0, isSheep: false },
@@ -70,7 +72,6 @@ function updateWorld(startGrid, playerId, currentPlayer, listPos, listWeaponUsed
 function onKeyUp(e) {
     if (e.code === 'Space') {
         // Debug
-        SoundDesign.playRandomSheep();
     } else if (e.key === 'f') {
         const toFullscreen = document.querySelector("body");
         if (toFullscreen.requestFullscreen)
