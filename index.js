@@ -219,10 +219,10 @@ app.get("/lobby", (req, res) => {
 });
 
 app.get("/game", (req, res) => {
-    // if (!req.session.username) {
-    //     res.redirect("/");
-    //     return;
-    // }
+    if (!req.session.username) {
+        res.redirect("/");
+        return;
+    }
 
     res.render("game");
 });
@@ -232,10 +232,6 @@ app.post("/logout", (req, res) => {
     req.session.destroy();
     res.send('OK');
 });
-
-app.post("", (req, res) => {
-
-})
 
 app.get("/not_available", (req, res) => res.render("not_available"));
 

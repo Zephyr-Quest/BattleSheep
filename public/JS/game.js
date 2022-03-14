@@ -30,7 +30,7 @@ window.addEventListener("load", () => {
     window.addEventListener("keyup", onKeyUp);
 });
 
-function updateWorld(startGrid, playerId, currentPlayer, listPos, listWeaponUsed, score, minutes, seconds, endGame, gifName = undefined) {
+function updateWorld(startGrid, playerId, currentPlayer, listPos, listWeaponUsed, minutes, seconds, endGame, gifName = undefined) {
     const view = Game.getView();
 
     view.displayPlayerGrid(startGrid, playerId);
@@ -56,7 +56,6 @@ function updateWorld(startGrid, playerId, currentPlayer, listPos, listWeaponUsed
         view.uncoverGridCase(new Vector2(element.x, element.y), element.playerId, element.isSheep);
     });
 
-    HUD.setScore(score);
     HUD.startChronoFrom(minutes, seconds);
 
     if (endGame) setTimeout(() => {
