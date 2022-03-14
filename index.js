@@ -15,7 +15,7 @@ const {
 const jsonParse = bodyParser.json();
 // const urlencodedParse = bodyParser.urlencoded({extended: false});
 const manageUser = require("./back/manageUser");
-// const gridVerif = require ("./back/verif")
+const chron = require("./back/chrono")
 
 const {
     connect
@@ -249,8 +249,8 @@ app.use((req, res) => res.render("404"));
 
 //TODO comparer les id de session au lieu des pseudos
 
-let allRooms = [],
-    disconnectedUsers = [];
+let allRooms = [];
+let disconnectedUsers = [];
 
 io.on("connection", (socket) => {
     if (socket.handshake.session.idRoom === undefined) {
@@ -266,14 +266,6 @@ io.on("connection", (socket) => {
             console.log(allRooms[idRoom])
             io.to(idRoom).emit("timeToPlay");
         }
-        // io.to(idRoom).emit("disconnection")
-
-        /* const clients = io.sockets.adapter.rooms.get(idRoom);
-        for (const clientId of clients) {
-            const clientSocket = io.sockets.sockets.get(clientId);
-            console.log("- " + clientSocket.handshake.session.username);
-        } 
-        if (clients.size == 2) io.to(idRoom).emit("timeToPlay") */
     }
     if (disconnectedUsers.includes(socket.handshake.session.username)) {
 
@@ -286,11 +278,6 @@ io.on("connection", (socket) => {
 
 
     socket.on('login', () => {
-        /* let srvSockets = io.sockets.sockets;
-        console.log("Personnes connectées au lobby :")
-        srvSockets.forEach(user => {
-            console.log("- " + user.handshake.session.username);
-        }); */
         Database.refreshScore(socket.handshake.session.username, "", "", (a) => {
             io.emit("display-score", a);
         });
@@ -347,21 +334,17 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.on("leave-room", (hostName, username) => {
-        console.log("Trying to disconnect !");
-        let res = allRooms.findIndex(function (el) {
-            return (el[0].name == hostName && el[1].name == username);
-        });
-        allRooms.splice(res, 1);
-        socket.leave(socket.handshake.session.idRoom);
-        socket.handshake.session.idRoom = undefined;
-
-
-        console.log(username, " ", hostName, " Left the room : room-", res);
-        console.log("All rooms : ", allRooms)
-    });
 
     /* ---------------------------------- Game ---------------------------------- */
+
+    socket.on("getPlayerGrid", () => {
+        const idRoom = socket.handshake.session.idRoom;
+        const username = socket.handshake.session.username;
+        let id = 0;
+        allRooms[idRoom][0].name === username ? id = 0 : id = 1;
+        socket.emit("resultPlayerId", id);
+    })
+
     socket.on("checkGrid", (grid) => {
         let idRoom = socket.handshake.session.idRoom;
         let username = socket.handshake.session.username;
@@ -387,24 +370,18 @@ io.on("connection", (socket) => {
             });
             let idPlayer = allRooms[idArray].findIndex(e => e.name == username)
 
-            allRooms[idArray][idPlayer].validGrid = true; 
+            allRooms[idArray][idPlayer].validGrid = true;
 
             if (allRooms[idArray].every(e => e.validGrid == true)) {
+                incrementChrono()
                 return io.to(idRoom).emit("startGameplay");
-            }
-            else return socket.emit("resultGrid", true);
+            } else return socket.emit("resultGrid", true);
         }
         return socket.emit("resultGrid", false);
     });
 
-    socket.on("getPlayerGrid", () => {
-        const idRoom = socket.handshake.session.idRoom;
-        const username = socket.handshake.session.username;
-        let id = 0;
-        allRooms[idRoom][0].name === username ? id = 0 : id = 1;
-        socket.emit("resultPlayerId", id);
-    })
 
+    /* ------------------------------- Disconnect ------------------------------- */
 
     socket.on("disconnect", (reason) => {
         console.log("Disconnection of ", socket.handshake.session.username, " reason : ", reason);
@@ -442,6 +419,8 @@ io.on("connection", (socket) => {
         }
     });
 });
+
+
 
 
 http.listen(process.env.APP_PORT, () => {
