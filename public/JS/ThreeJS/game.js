@@ -19,7 +19,7 @@ let scene, renderer, camera, controls, raycaster, view;
 let stats;
 const DEBUG_STATS = true;
 const USE_ORBIT_CONTROLS = true;
-const DEBUG_RAYCASTER = false;
+const DEBUG_RAYCASTER = true;
 
 /* ---------------------------------- View ---------------------------------- */
 
@@ -53,6 +53,14 @@ function setRaycasterState(state) {
  */
 function setRaycasterEvent(func) {
     raycaster.clickCallback = func;
+}
+
+/**
+ * Set the player id to the raycaster
+ * @param {Number} playerId The player id
+ */
+function setPlayerId(playerId) {
+    raycaster.playerId = playerId;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -110,6 +118,14 @@ function initAfterLoading(callback) {
     // Display all element
     view.displayAllElements();
     
+    // Create the floor
+    const floorGeometry = new THREE.BoxGeometry(25, 0.05, 52);
+    const floorMaterial = new THREE.MeshBasicMaterial({ color: 0x1b6d19 });
+    const floorCube = new THREE.Mesh(floorGeometry, floorMaterial);
+    floorCube.position.set(1, -0.5, 0);
+    floorCube.name = "Floor0";
+    scene.add(floorCube);
+    
     /* --------------------------------- Events --------------------------------- */
     
     raycaster.initEvent();
@@ -117,12 +133,12 @@ function initAfterLoading(callback) {
 
     /* ------------------------------- Start grid ------------------------------- */
 
-    new setPlayerGrid(view, () => {
-        HUD.hideStartGrid();
-        // HUD.showAnnouncement("The other player is setting up his grid", "Please wait...")
-        raycaster.isActive = true;
-    });
-    
+    // new setPlayerGrid(view, () => {
+    //     HUD.hideStartGrid();
+    //     HUD.showAnnouncement("The other player is setting up his grid", "Please wait...")
+    //     raycaster.isActive = true;
+    // });
+    new setPlayerGrid(view);
     /* ---------------------------------- Debug --------------------------------- */
 
     // Display FPS
@@ -138,12 +154,8 @@ function initAfterLoading(callback) {
         controls.update();
     }
 
-    const material = new THREE.SpriteMaterial({ map: Textures.Cross.texture });
-    const sprite = new THREE.Sprite(material);
-    scene.add(sprite);
-
     /* -------------------------------- End debug ------------------------------- */
-
+    
     HUD.showAnnouncement("Waiting for a player", "Please wait...");
 
     callback();
@@ -200,4 +212,11 @@ function onResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-export default { init, getView, setRaycasterState, setRaycasterEvent, setCameraFromVector };
+export default {
+    init,
+    getView,
+    setRaycasterState,
+    setRaycasterEvent,
+    setCameraFromVector,
+    setPlayerId
+};
