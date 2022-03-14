@@ -5,8 +5,6 @@ import { HUD } from "./ThreeJS/gameplay/HUD.js";
 import SocketManager from './utils/SocketManager.js';
 import { Vector2 } from 'three';
 
-let socket = io();
-
 window.addEventListener("load", () => {
     SplashScreen.start(() => {
         // The splash screen is done
@@ -15,7 +13,8 @@ window.addEventListener("load", () => {
         // SocketManager.init(Game.getView());
         Game.init(() => {
             SocketManager.init(Game.getView());
-            Game.setPlayerId = socket.emit("getPlayerId");
+            SocketManager.getPLayerId()
+            //Game.setPlayerId = socket.emit("getPlayerId");
             // Game.setRaycasterEvent(() => {
             //     const tmp = [
             //         { x: 0, y: 0, playerId: 0, isSheep: false },

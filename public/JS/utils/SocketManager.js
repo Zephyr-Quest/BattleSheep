@@ -31,6 +31,10 @@ function checkGrid(grid) {
     socket.emit("checkGrid", grid);
 }
 
+function getPLayerId (){ 
+    socket.emit("getPlayerId")
+ }
+
 socket.on("timeToPlay", () => {
     HUD.showAnnouncement("Other player is connecting", "Please wait...");
     socket.emit("getPlayerId");
@@ -58,6 +62,7 @@ socket.on("resultPlayerId", (result) => {
 });
 
 socket.on("startGameplay", () => {
+    HUD.hideStartGrid();
     HUD.showAnnouncement("Start Gameplay", "");
 })
 
@@ -75,5 +80,6 @@ function init(view) {
 
 export default {
     init,
-    checkGrid
+    checkGrid,
+    getPLayerId
 };
