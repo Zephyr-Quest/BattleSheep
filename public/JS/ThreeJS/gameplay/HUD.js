@@ -342,9 +342,8 @@ export const HUD = (function () {
          * Hide the start grid
          */
         hideStartGrid() {
-            for (const node of document.querySelectorAll(".start-grid, #buttons, main")) {
+            for (const node of document.querySelectorAll(".start-grid, #buttons, main"))
                 node.style.display = "none";
-            }
             document.querySelector('nav').style.display = "flex";
             document.querySelector('main').style.backgroundColor = "transparent";
         },
