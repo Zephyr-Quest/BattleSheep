@@ -1,3 +1,5 @@
+const Chrono = require("./chrono");
+
 module.exports = class BattleSheepGame {
     /**
      * The BattlesheepGame constructor
@@ -13,7 +15,7 @@ module.exports = class BattleSheepGame {
         this.history = [];
         this.currentPlayer = 0;
         this.weaponsUsed = [];
-        this.chrono = null;
+        this.chrono = new Chrono();
         this.isGameFinished = false;
         this.lastEvent = null;
     }
@@ -22,8 +24,8 @@ module.exports = class BattleSheepGame {
      * Add a new player to the game
      * @param {string} username The player name
      */
-    addPlayer(username) {
+    addPlayer(username, grid) {
         this.players.push(username);
-        this.playerStartGrids.push(undefined);
+        this.playerStartGrids.push(grid);
     }
 };

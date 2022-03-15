@@ -15,7 +15,7 @@ const {
 const jsonParse = bodyParser.json();
 // const urlencodedParse = bodyParser.urlencoded({extended: false});
 const manageUser = require("./back/manageUser");
-const chron = require("./back/chrono")
+const BSGame = require("./back/BattlesheepGame")
 
 const {
     connect
@@ -45,6 +45,16 @@ const session = require("express-session")({
         secure: false,
     },
 });
+
+function getMaxKey(obj) {
+    let result = -1;
+
+    Object.keys(obj).forEach(key => {
+        if (key > result) result = key;
+    });
+
+    return result;
+}
 
 app.use(jsonParse);
 app.use(session);
@@ -245,7 +255,8 @@ app.use((req, res) => res.render("404"));
 
 //TODO comparer les id de session au lieu des pseudos
 
-let allRooms = [];
+let allRooms = {};
+let allGames = {};
 let disconnectedUsers = [];
 
 io.on("connection", (socket) => {
@@ -296,9 +307,9 @@ io.on("connection", (socket) => {
             playerId: 0,
             validGrid: false
         });
-        allRooms.push(roomData);
+        let res = ++getMaxKey(allRooms)
+        allRooms[res] = roomData;
 
-        let res = allRooms.findIndex(e => e[0].name == username)
 
         console.log(username, " is hosting room-", res);
         socket.handshake.session.idRoom = res;
@@ -344,39 +355,32 @@ io.on("connection", (socket) => {
     socket.on("checkGrid", (grid) => {
         let idRoom = socket.handshake.session.idRoom;
         let username = socket.handshake.session.username;
-        // let result = false;
 
         let nbSheep = 0;
-
         for (let x = 0; x < 10; x++) {
             for (let y = 0; y < 10; y++) {
-                if (grid[x][y] != undefined) {
-                    nbSheep++;
-                }
+                if (grid[x][y] != undefined) nbSheep++;
             }
         }
 
-
-        // if (nbSheep === 20) result = true;
-        // else result = false;
-
         if (nbSheep === 20) {
-            let idArray = allRooms.findIndex(function (e) {
-                return (e[0].name == username || e[1].name == username);
-            });
-            let idPlayer = allRooms[idArray].findIndex(e => e.name == username)
+            let idPlayer = allRooms[idRoom].findIndex(e => e.name == username)
 
-            allRooms[idArray][idPlayer].validGrid = true;
+            allRooms[idRoom][idPlayer].validGrid = true;
+            let game = new BSGame(idRoom)
+            game.addPlayer(allRooms[idRoom][idPlayer].name, grid)
+            allGames[idRoom] = game;
 
-            if (allRooms[idArray].every(e => e.validGrid == true)) {
-                incrementChrono()
+            if (allRooms[idRoom].every(e => e.validGrid == true)) {
+
+
                 return io.to(idRoom).emit("startGameplay");
             } else return socket.emit("resultGrid", true);
         }
         return socket.emit("resultGrid", false);
     });
 
-
+    allGames[idRoom]
     /* ------------------------------- Disconnect ------------------------------- */
 
     socket.on("disconnect", (reason) => {
@@ -392,9 +396,10 @@ io.on("connection", (socket) => {
             console.log(disconnectedUsers);
 
             if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
-                allRooms[idRoom].pop()
+                allRooms[idRoom].pop();
             } else {
                 allRooms.splice(idRoom, 1);
+                allGames.splice(idRoom, 1);
             }
             console.log("All Rooms : " + allRooms)
             console.table("Personnes dans la room : " + allRooms[idRoom])

@@ -1,6 +1,6 @@
 const delay = 1000;
 
-export class Chrono{
+module.exports = class Chrono{
     constructor(){
         this.minutes = 0;
         this.seconds = 0;
