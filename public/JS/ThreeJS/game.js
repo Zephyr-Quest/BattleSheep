@@ -12,7 +12,7 @@ import { HUD } from './gameplay/HUD.js';
 import { setPlayerGrid } from './grid/setPlayerGrid.js';
 import { Textures } from './level_design/textures.js';
 
-let scene, renderer, camera, controls, raycaster, view;
+let scene, renderer, camera, controls, raycaster, view, playerId;
 
 /* ---------------------------------- Debug --------------------------------- */
 
@@ -57,10 +57,10 @@ function setRaycasterEvent(func) {
 
 /**
  * Set the player id to the raycaster
- * @param {Number} playerId The player id
+ * @param {Number} id The player id
  */
-function setPlayerId(playerId) {
-    raycaster.playerId = playerId;
+function setPlayerId(id) {
+    playerId = id;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -100,6 +100,7 @@ function initAfterLoading(callback) {
 
     // Setting up the raycaster
     raycaster = new CustomRaycaster(scene, camera, view, DEBUG_RAYCASTER);
+    raycaster.playerId = playerId;
     raycaster.isActive = false;
 
     /* --------------------------------- Lights --------------------------------- */
@@ -133,12 +134,8 @@ function initAfterLoading(callback) {
 
     /* ------------------------------- Start grid ------------------------------- */
 
-    // new setPlayerGrid(view, () => {
-    //     HUD.hideStartGrid();
-    //     HUD.showAnnouncement("The other player is setting up his grid", "Please wait...")
-    //     raycaster.isActive = true;
-    // });
     new setPlayerGrid(view);
+    
     /* ---------------------------------- Debug --------------------------------- */
 
     // Display FPS
@@ -173,12 +170,7 @@ function render() {
     // DEBUG : Update OrbitControl (camera control)
     if (USE_ORBIT_CONTROLS) controls.update();
 
-    // Turn the selected grass
-    if (view.sceneState.turningGrass !== null) {
-        view.sceneState.turningGrass.rotY += 0.01;
-        view.sceneState.turningGrass.updateScene();
-    }
-
+    // Animate capillotractoms
     if (view.sceneState.isCapillotractomAnimate) {
         for (let i = 0; i < view.capillotractoms.length; i++) {
             view.capillotractoms[i].position.x += (i === 0 ? -Config.capillotractom.speed : Config.capillotractom.speed);
