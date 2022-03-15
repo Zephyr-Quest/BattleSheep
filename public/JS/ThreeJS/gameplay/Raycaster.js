@@ -119,7 +119,6 @@ export class CustomRaycaster {
                     else searching = false;
                 }
 
-                console.log(currentParent.name);
                 clicked = this.view.allObjects[currentParent.name];
                 if (!clicked && currentParent.name !== "Floor0")
                     throw "The clicked element is not referenced.";
@@ -131,12 +130,6 @@ export class CustomRaycaster {
 
             if (this.debug) console.log(clicked);
 
-            // Down the previous selected grass
-            if (this.view.sceneState.turningGrass !== null) {
-                this.view.sceneState.turningGrass.downGrass();
-                this.view.sceneState.turningGrass = null;
-            }
-
             const clickable = ["Grass", "Target"];
             if (clickable.includes(clicked.type)) {
                 const gridPosition = clicked.getGridPosition();
@@ -145,11 +138,6 @@ export class CustomRaycaster {
                 const playerId = gridPosition.z;
                 if (this.playerId === playerId)
                     return;
-                
-                clicked.upGrass();
-
-                // Turn the selected grass
-                this.view.sceneState.turningGrass = clicked;
 
                 if (this.clickCallback) this.clickCallback(gridPosition);
             }
@@ -257,6 +245,9 @@ export class CustomRaycaster {
         }
     }
 
+    /**
+     * Remove all existing cross and targets
+     */
     resetTargetAndCross() {
         this.targetedGrass = null;
 

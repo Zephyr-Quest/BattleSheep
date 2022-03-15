@@ -15,7 +15,7 @@ const {
 const jsonParse = bodyParser.json();
 // const urlencodedParse = bodyParser.urlencoded({extended: false});
 const manageUser = require("./back/manageUser");
-// const gridVerif = require ("./back/verif")
+const BSGame = require("./back/BattlesheepGame")
 
 const {
     connect
@@ -45,6 +45,16 @@ const session = require("express-session")({
         secure: false,
     },
 });
+
+function getMaxKey(obj) {
+    let result = -1;
+
+    Object.keys(obj).forEach(key => {
+        if (key > result) result = key;
+    });
+
+    return result;
+}
 
 app.use(jsonParse);
 app.use(session);
@@ -245,8 +255,9 @@ app.use((req, res) => res.render("404"));
 
 //TODO comparer les id de session au lieu des pseudos
 
-let allRooms = [],
-    disconnectedUsers = [];
+let allRooms = {};
+let allGames = {};
+let disconnectedUsers = [];
 
 io.on("connection", (socket) => {
     const username = socket.handshake.session.username;
@@ -268,31 +279,21 @@ io.on("connection", (socket) => {
             console.log(allRooms[idRoom])
             io.to(idRoom).emit("timeToPlay");
         }
-        // io.to(idRoom).emit("disconnection")
-
-        /* const clients = io.sockets.adapter.rooms.get(idRoom);
-        for (const clientId of clients) {
-            const clientSocket = io.sockets.sockets.get(clientId);
-            console.log("- " + clientSocket.handshake.session.username);
-        } 
-        if (clients.size == 2) io.to(idRoom).emit("timeToPlay") */
     }
-    if (disconnectedUsers.includes(socket.handshake.session.username)) {
+    if (disconnectedUsers.includes(username)) {
 
         const idRoom = socket.handshake.session.idRoom;
         io.to(idRoom).emit("disconnection");
         socket.leave(idRoom);
         socket.handshake.session.idRoom = undefined;
-        disconnectedUsers.splice(disconnectedUsers.indexOf(socket.handshake.session.username), 1);
+        disconnectedUsers.splice(disconnectedUsers.indexOf(username), 1);
     }
 
+    /* -------------------------------------------------------------------------- */
+    /*                                    Lobby                                   */
+    /* -------------------------------------------------------------------------- */
 
     socket.on('login', () => {
-        /* let srvSockets = io.sockets.sockets;
-        console.log("Personnes connectées au lobby :")
-        srvSockets.forEach(user => {
-            console.log("- " + user.handshake.session.username);
-        }); */
         Database.refreshScore(socket.handshake.session.username, "", "", (a) => {
             io.emit("display-score", a);
         });
@@ -315,9 +316,12 @@ io.on("connection", (socket) => {
             playerId: 0,
             validGrid: false
         });
-        allRooms.push(roomData);
 
-        let res = allRooms.findIndex(e => e[0].name == username)
+        // Create room and game
+        let res = ++getMaxKey(allRooms)
+        allRooms[res] = roomData;
+        allGames[res] = new 
+
 
         console.log(username, " is hosting room-", res);
         socket.handshake.session.idRoom = res;
@@ -349,25 +353,15 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.on("leave-room", (hostName, username) => {
-        console.log("Trying to disconnect !");
-        let res = allRooms.findIndex(function (el) {
-            return (el[0].name == hostName && el[1].name == username);
-        });
-        allRooms.splice(res, 1);
-        socket.leave(socket.handshake.session.idRoom);
-        socket.handshake.session.idRoom = undefined;
 
+    /* -------------------------------------------------------------------------- */
+    /*                                    Game                                    */
+    /* -------------------------------------------------------------------------- */
 
-        console.log(username, " ", hostName, " Left the room : room-", res);
-        console.log("All rooms : ", allRooms)
-    });
-
-    /* ---------------------------------- Game ---------------------------------- */
     socket.on("checkGrid", (grid) => {
         let idRoom = socket.handshake.session.idRoom;
         let username = socket.handshake.session.username;
-        // let result = false;
+        let result = false;
 
         let nbSheep = 0;
 
@@ -381,8 +375,8 @@ io.on("connection", (socket) => {
 
         nbSheep = 20;
 
-        // if (nbSheep === 20) result = true;
-        // else result = false;
+        if (nbSheep === 20) result = true;
+        else result = false;
 
         if (nbSheep === 20) {
             let idArray = allRooms.findIndex(function (e) {
@@ -413,6 +407,36 @@ io.on("connection", (socket) => {
         console.log(pos, playerId, weapon);
     });
 
+    socket.on("checkGrid", (grid) => {
+        let idRoom = socket.handshake.session.idRoom;
+        let username = socket.handshake.session.username;
+
+        let nbSheep = 0;
+        for (let x = 0; x < 10; x++) {
+            for (let y = 0; y < 10; y++) {
+                if (grid[x][y] != undefined) nbSheep++;
+            }
+        }
+
+        if (nbSheep === 20) {
+            let idPlayer = allRooms[idRoom].findIndex(e => e.name == username)
+
+            allRooms[idRoom][idPlayer].validGrid = true;
+            let game = new BSGame(idRoom)
+            game.addPlayer(allRooms[idRoom][idPlayer].name, grid)
+            allGames[idRoom] = game;
+
+            if (allRooms[idRoom].every(e => e.validGrid == true)) {
+
+
+                return io.to(idRoom).emit("startGameplay");
+            } else return socket.emit("resultGrid", true);
+        }
+        return socket.emit("resultGrid", false);
+    });
+
+    allGames[idRoom]
+    /* ------------------------------- Disconnect ------------------------------- */
 
     socket.on("disconnect", (reason) => {
         console.log("Disconnection of ", socket.handshake.session.username, " reason : ", reason);
@@ -427,30 +451,18 @@ io.on("connection", (socket) => {
             console.log(disconnectedUsers);
 
             if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
-                allRooms[idRoom].pop()
+                allRooms[idRoom].pop();
             } else {
                 allRooms.splice(idRoom, 1);
+                allGames.splice(idRoom, 1);
             }
             console.log("All Rooms : " + allRooms)
             console.table("Personnes dans la room : " + allRooms[idRoom])
             console.log("Socket ID : " + socket.handshake.session.idRoom);
             socket.to(idRoom).emit("disconnection");
-
-
-            // } else {
-            //     console.log("Déconnexion de " + socket.handshake.session.username + " du lobby");
-            // }
-
-            // for (const clientId of clients) {
-            //     const clientSocket = io.sockets.sockets.get(clientId);
-            //     clientSocket.leave(idRoom);
-            //     clientSocket.handshake.session.idRoom = null
-            //     console.log("Déconnexion de " + clientSocket.handshake.session.username + " du jeu")
-            // }
         }
     });
 });
-
 
 http.listen(process.env.APP_PORT, () => {
     console.log("Serveur lancé sur le port", process.env.APP_PORT);
