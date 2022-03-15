@@ -5,27 +5,30 @@ socket.emit("login", "");
 /* ---------------------- Display the differents rooms ---------------------- */
 socket.on("display-rooms", (allRooms) => {
     let htmlScore = "";
-    allRooms.forEach(element => {
-        console.log(element);
-        if (element.length < 2)
-            htmlScore += '<div class="card" title="Click to join ' + element[0].name + '\'s game"><ion-icon name="log-in"></ion-icon><ul><li class="name">Host : <strong class="green">' + element[0].name + '</strong></li><li class="score">High score : <strong>' + "blabla" + '</strong></li></ul></div>'
+    Object.keys(allRooms).forEach(key => {
+        console.log(Object.keys(allRooms).length);
+        if (allRooms[key].length < 2)
+            htmlScore += '<div class="card" title="Click to join ' + allRooms[key][0].name + '\'s game"><ion-icon name="log-in"></ion-icon><ul><li class="name">Host : <strong class="green">' + allRooms[key][0].name + '</strong></li><li class="score">High score : <strong>' + "blabla" + '</strong></li></ul></div>'
     });
     document.getElementById("games-display").innerHTML = htmlScore;
-        
-    
+
+
     for (const card of document.querySelectorAll("#games-display .card")) {
         card.addEventListener("click", () => {
             let host = card.getElementsByClassName("green")[0].innerText;
-            let res = allRooms.findIndex(e => e[0].name == host)
-            
+            let res = Object.keys(allRooms).findIndex(key => allRooms[key][0].name == host)
+            console.log("host : " + allRooms[res])
             if (allRooms[res] && allRooms[res].length < 2) {
                 socket.emit("join-room", host);
                 window.location.href = "/game";
             }
         })
     }
-    allRooms.forEach(element => {
-        element.forEach(e => socket.emit("get-score", e.name));
+    console.log("iiccccccccccccccccccccccccciii")
+    Object.keys(allRooms).forEach(key => {
+        console.log(allRooms[key])
+        socket.emit("get-score", allRooms[key][0].name)
+        //allRooms[key].forEach(key2 => socket.emit("get-score", allRooms[key][0].name));
     });
 })
 

@@ -24,13 +24,9 @@ module.exports = class BattleSheepGame {
      * Add a new player to the game
      * @param {string} username The player name
      */
-    addPlayer(username, grid) {
+    addPlayer(username) {
         this.players.push(username);
-<<<<<<< HEAD
         this.playerStartGrids.push(undefined);
         this.weaponsUsed.push(new Array)
-=======
-        this.playerStartGrids.push(grid);
->>>>>>> server
     }
 };

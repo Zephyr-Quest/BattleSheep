@@ -259,6 +259,8 @@ let allRooms = {};
 let allGames = {};
 let disconnectedUsers = [];
 
+let iiiii = 0;
+
 io.on("connection", (socket) => {
     const username = socket.handshake.session.username;
 
@@ -270,9 +272,9 @@ io.on("connection", (socket) => {
         console.log("--- GAME ---")
         console.log("Connexion de ", username, " à la room ", idRoom);
         socket.join(idRoom)
-
+        console.log(allRooms[idRoom])
         if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
-            console.log(allRooms[idRoom])
+            console.log("Time to play")
             io.to(idRoom).emit("timeToPlay");
         }
     }
@@ -306,14 +308,13 @@ io.on("connection", (socket) => {
     /* ---------------------------------- Rooms ---------------------------------- */
     socket.on("host-room", () => {
         let username = socket.handshake.session.username;
-        const roomData = [];
-        roomData.push({
+        let res = iiiii++;
+        let data = {
             name: username,
             playerId: 0,
             validGrid: false
-        });
-        let res = ++getMaxKey(allRooms)
-        allRooms[res] = roomData;
+        };
+        allRooms[res] = [data]
 
 
         console.log(username, " is hosting room-", res);
@@ -325,19 +326,19 @@ io.on("connection", (socket) => {
     });
 
     socket.on("join-room", (hostName) => {
-        let res = allRooms.findIndex(e => e[0].name == hostName)
-
+        let res = Object.keys(allRooms).findIndex(key => allRooms[key][0].name == hostName)
+        console.log(allRooms[res])
         if (allRooms[res] && allRooms[res].length < 2) {
 
             let username = socket.handshake.session.username;
             if (hostName != username) {
-                allRooms[res].push({
+                let data = {
                     name: username,
                     playerId: 1,
                     validGrid: false
-                });
+                };
+                allRooms[res].push(data);
                 socket.handshake.session.idRoom = res;
-
                 console.log(username, " Joined room : room-", res, " hosted by ", hostName);
                 io.emit("hide-card", hostName);
 
@@ -376,12 +377,11 @@ io.on("connection", (socket) => {
             });
             let idPlayer = allRooms[idArray].findIndex(e => e.name == username)
 
-            allRooms[idArray][idPlayer].validGrid = true; 
+            allRooms[idArray][idPlayer].validGrid = true;
 
             if (allRooms[idArray].every(e => e.validGrid == true)) {
                 return io.to(idRoom).emit("startGameplay");
-            }
-            else return socket.emit("resultGrid", true);
+            } else return socket.emit("resultGrid", true);
         }
         return socket.emit("resultGrid", false);
     });
@@ -422,7 +422,6 @@ io.on("connection", (socket) => {
         return socket.emit("resultGrid", false);
     });
 
-    allGames[idRoom]
     /* ------------------------------- Disconnect ------------------------------- */
 
     socket.on("disconnect", (reason) => {
@@ -431,20 +430,28 @@ io.on("connection", (socket) => {
 
 
         console.log("All Rooms : ", allRooms)
-        console.table("Room ID : ", allRooms[idRoom])
+        console.log("Room ID : ", allRooms[idRoom])
 
         if (reason == "transport close") {
             disconnectedUsers.push(socket.handshake.session.username);
             console.log(disconnectedUsers);
 
             if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
-                allRooms[idRoom].pop();
-            } else {
-                allRooms.splice(idRoom, 1);
-                allGames.splice(idRoom, 1);
-            }
+                for (let i = 0; i < 2; i++) {
+                    allRooms[idRoom][i].playerId = undefined;
+                    allRooms[idRoom][i].validGrid = false;
+                } 
+                delete allRooms[idRoom];
+
+               // allRooms[idRoom].pop()
+            }// } else {
+            //     delete allRooms[idRoom]
+            //     //delete allGames[idRoom]
+            //     // allRooms.splice(idRoom, 1);
+            //     // allGames.splice(idRoom, 1);
+            // }
             console.log("All Rooms : " + allRooms)
-            console.table("Personnes dans la room : " + allRooms[idRoom])
+            console.log("Personnes dans la room : " + allRooms[idRoom])
             console.log("Socket ID : " + socket.handshake.session.idRoom);
             socket.to(idRoom).emit("disconnection");
 
