@@ -12,8 +12,10 @@ window.addEventListener("load", () => {
         // Game.init();
         // SocketManager.init(Game.getView());
         Game.init(() => {
+            Game.setRaycasterState(false);
             SocketManager.init(Game.getView());
-            SocketManager.getPLayerId()
+            Game.setRaycasterEvent(clickEvent);
+            // SocketManager.getPLayerId()
             //Game.setPlayerId = socket.emit("getPlayerId");
             // Game.setRaycasterEvent(() => {
             //     const tmp = [
@@ -30,37 +32,9 @@ window.addEventListener("load", () => {
     window.addEventListener("keyup", onKeyUp);
 });
 
-function updateWorld(startGrid, playerId, currentPlayer, listPos, listWeaponUsed, minutes, seconds, endGame, gifName = undefined) {
-    const view = Game.getView();
-
-    view.displayPlayerGrid(startGrid, playerId);
-
-    if (playerId != currentPlayer) {
-        Game.setRaycasterState(false);
-        HUD.showAnnouncementDuring("Enemy turn", "Just wait... Keep calm...", 1500);
-    }
-    else {
-        Game.setRaycasterState(true);
-        HUD.showAnnouncementDuring("Your turn", "Get fun", 1000);
-    }
-
-    listWeaponUsed.forEach(weaponName => {
-        HUD.blockWeapon(weaponName);
-        // HUD.setWeapon("Shears");
-    });
-
-    if (gifName !== undefined)
-        HUD.showGifDuring(gifName, 2000);
-
-    listPos.forEach(element => {
-        view.uncoverGridCase(new Vector2(element.x, element.y), element.playerId, element.isSheep);
-    });
-
-    HUD.startChronoFrom(minutes, seconds);
-
-    if (endGame) setTimeout(() => {
-        HUD.showAnnouncement("Game finished", "Try another Game");
-    }, 1000);
+function clickEvent(pos) {
+    console.log(pos);
+    SocketManager.play(pos, HUD.getCurrentWeapon());
 }
 
 /**

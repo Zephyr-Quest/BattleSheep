@@ -12,7 +12,7 @@ import { HUD } from './gameplay/HUD.js';
 import { setPlayerGrid } from './grid/setPlayerGrid.js';
 import { Textures } from './level_design/textures.js';
 
-let scene, renderer, camera, controls, raycaster, view;
+let scene, renderer, camera, controls, raycaster, view, playerId;
 
 /* ---------------------------------- Debug --------------------------------- */
 
@@ -57,10 +57,10 @@ function setRaycasterEvent(func) {
 
 /**
  * Set the player id to the raycaster
- * @param {Number} playerId The player id
+ * @param {Number} id The player id
  */
-function setPlayerId(playerId) {
-    raycaster.playerId = playerId;
+function setPlayerId(id) {
+    playerId = id;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -100,6 +100,7 @@ function initAfterLoading(callback) {
 
     // Setting up the raycaster
     raycaster = new CustomRaycaster(scene, camera, view, DEBUG_RAYCASTER);
+    raycaster.playerId = playerId;
     raycaster.isActive = false;
 
     /* --------------------------------- Lights --------------------------------- */

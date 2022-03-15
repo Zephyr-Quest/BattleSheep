@@ -73,7 +73,7 @@ export class CustomRaycaster {
 
         this.targetedGrass = null;
         this.crossAndTarget = [];
-        this.currentPlayerId = null;
+        this.playerId = null;
     }
 
     /**
@@ -119,6 +119,7 @@ export class CustomRaycaster {
                     else searching = false;
                 }
 
+                console.log(currentParent.name);
                 clicked = this.view.allObjects[currentParent.name];
                 if (!clicked && currentParent.name !== "Floor0")
                     throw "The clicked element is not referenced.";
@@ -136,13 +137,19 @@ export class CustomRaycaster {
                 this.view.sceneState.turningGrass = null;
             }
 
-            if (clicked.type === 'Grass') {
+            const clickable = ["Grass", "Target"];
+            if (clickable.includes(clicked.type)) {
+                const gridPosition = clicked.getGridPosition();
+
+                // Check if the player click on his own grid
+                const playerId = gridPosition.z;
+                if (this.playerId === playerId)
+                    return;
+                
                 clicked.upGrass();
 
                 // Turn the selected grass
                 this.view.sceneState.turningGrass = clicked;
-                
-                const gridPosition = clicked.getGridPosition();
 
                 if (this.clickCallback) this.clickCallback(gridPosition);
             }

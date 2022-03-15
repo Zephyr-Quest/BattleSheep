@@ -91,13 +91,13 @@ app.get("/signup", (req, res) => {
             title: "BattleSheep | Sign up, Log in",
             description: "Sign up or log in to BattleSheep",
             scripts: [{
-                    name: "http",
-                    type: "text/javascript",
-                },
-                {
-                    name: "signup",
-                    type: "text/javascript",
-                },
+                name: "http",
+                type: "text/javascript",
+            },
+            {
+                name: "signup",
+                type: "text/javascript",
+            },
             ],
         });
     } else {
@@ -108,8 +108,8 @@ app.get("/signup", (req, res) => {
 });
 
 app.post("/signup", body("pseudo").isLength({
-        min: 3
-    }).trim().escape(),
+    min: 3
+}).trim().escape(),
     body("password").isLength({
         min: 3
     }).trim(),
@@ -148,12 +148,12 @@ app.post("/signup", body("pseudo").isLength({
 );
 
 app.post("/login", body("pseudo").isLength({
-        min: 3,
-    }).trim().escape(),
+    min: 3,
+}).trim().escape(),
     body("password").isLength({
         min: 3,
     })
-    .trim(),
+        .trim(),
     (req, res) => {
         console.log("--- LOG IN ---");
 
@@ -249,14 +249,20 @@ let allRooms = [],
     disconnectedUsers = [];
 
 io.on("connection", (socket) => {
+    const username = socket.handshake.session.username;
+
     if (socket.handshake.session.idRoom === undefined) {
         console.log("--- LOBBY ---");
-        console.log("Connexion de ", socket.handshake.session.username, " au Lobby");
+        console.log("Connexion de ", username, " au Lobby");
     } else {
         let idRoom = socket.handshake.session.idRoom
         console.log("--- GAME ---")
-        console.log("Connexion de ", socket.handshake.session.username, " à la room ", idRoom);
+        console.log("Connexion de ", username, " à la room ", idRoom);
         socket.join(idRoom)
+
+        // Send the player id
+        const id = allRooms[idRoom][0].name === username ? 0 : 1;
+        socket.emit("resultPlayerId", id);
 
         if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
             console.log(allRooms[idRoom])
@@ -373,6 +379,7 @@ io.on("connection", (socket) => {
             }
         }
 
+        nbSheep = 20;
 
         // if (nbSheep === 20) result = true;
         // else result = false;
@@ -383,7 +390,7 @@ io.on("connection", (socket) => {
             });
             let idPlayer = allRooms[idArray].findIndex(e => e.name == username)
 
-            allRooms[idArray][idPlayer].validGrid = true; 
+            allRooms[idArray][idPlayer].validGrid = true;
 
             if (allRooms[idArray].every(e => e.validGrid == true)) {
                 return io.to(idRoom).emit("startGameplay");
@@ -400,6 +407,11 @@ io.on("connection", (socket) => {
         allRooms[idRoom][0].name === username ? id = 0 : id = 1;
         socket.emit("resultPlayerId", id);
     })
+
+    socket.on("playerPlayed", (pos, playerId, weapon) => {
+        // The player with the id "playerId", play on the case "pos" with the weapon "weapon" 
+        console.log(pos, playerId, weapon);
+    });
 
 
     socket.on("disconnect", (reason) => {

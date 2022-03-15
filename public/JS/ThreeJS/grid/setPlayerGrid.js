@@ -124,7 +124,7 @@ export class setPlayerGrid extends grid {
         }
 
         const simpleGrid = this.getSimpleGrid();
-        this.view3d.displayPlayerGrid(simpleGrid, 0);
+        this.view3d.displayPlayerGrid(simpleGrid, SocketManager.getPlayerId());
     }
 
     rangeSheep(sheepPosition, rotate, range, value) {
