@@ -25,5 +25,6 @@ module.exports = class BattleSheepGame {
     addPlayer(username) {
         this.players.push(username);
         this.playerStartGrids.push(undefined);
+        this.weaponsUsed.push(new Array)
     }
 };

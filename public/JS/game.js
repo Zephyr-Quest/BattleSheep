@@ -46,8 +46,8 @@ function updateWorld(startGrid, playerId, currentPlayer, listPos, listWeaponUsed
 
     listWeaponUsed.forEach(weaponName => {
         HUD.blockWeapon(weaponName);
-        // HUD.setWeapon("Shears");
     });
+    HUD.setWeapon("Shears");
 
     if (gifName !== undefined)
         HUD.showGifDuring(gifName, 2000);

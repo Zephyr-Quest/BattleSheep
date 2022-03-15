@@ -249,13 +249,15 @@ let allRooms = [],
     disconnectedUsers = [];
 
 io.on("connection", (socket) => {
+    const username = socket.handshake.session.username;
+
     if (socket.handshake.session.idRoom === undefined) {
         console.log("--- LOBBY ---");
-        console.log("Connexion de ", socket.handshake.session.username, " au Lobby");
+        console.log("Connexion de ", username, " au Lobby");
     } else {
         let idRoom = socket.handshake.session.idRoom
         console.log("--- GAME ---")
-        console.log("Connexion de ", socket.handshake.session.username, " à la room ", idRoom);
+        console.log("Connexion de ", username, " à la room ", idRoom);
         socket.join(idRoom)
 
         if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
@@ -271,15 +273,18 @@ io.on("connection", (socket) => {
         } 
         if (clients.size == 2) io.to(idRoom).emit("timeToPlay") */
     }
-    if (disconnectedUsers.includes(socket.handshake.session.username)) {
+    if (disconnectedUsers.includes(username)) {
 
         const idRoom = socket.handshake.session.idRoom;
         io.to(idRoom).emit("disconnection");
         socket.leave(idRoom);
         socket.handshake.session.idRoom = undefined;
-        disconnectedUsers.splice(disconnectedUsers.indexOf(socket.handshake.session.username), 1);
+        disconnectedUsers.splice(disconnectedUsers.indexOf(username), 1);
     }
 
+    /* -------------------------------------------------------------------------- */
+    /*                                    Lobby                                   */
+    /* -------------------------------------------------------------------------- */
 
     socket.on('login', () => {
         /* let srvSockets = io.sockets.sockets;
@@ -309,7 +314,10 @@ io.on("connection", (socket) => {
             playerId: 0,
             validGrid: false
         });
+
+        // Create the new room/game
         allRooms.push(roomData);
+        
 
         let res = allRooms.findIndex(e => e[0].name == username)
 
@@ -357,7 +365,10 @@ io.on("connection", (socket) => {
         console.log("All rooms : ", allRooms)
     });
 
-    /* ---------------------------------- Game ---------------------------------- */
+    /* -------------------------------------------------------------------------- */
+    /*                                    Game                                    */
+    /* -------------------------------------------------------------------------- */
+
     socket.on("checkGrid", (grid) => {
         let idRoom = socket.handshake.session.idRoom;
         let username = socket.handshake.session.username;
