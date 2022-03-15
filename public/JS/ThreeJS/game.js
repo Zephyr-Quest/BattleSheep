@@ -133,12 +133,8 @@ function initAfterLoading(callback) {
 
     /* ------------------------------- Start grid ------------------------------- */
 
-    // new setPlayerGrid(view, () => {
-    //     HUD.hideStartGrid();
-    //     HUD.showAnnouncement("The other player is setting up his grid", "Please wait...")
-    //     raycaster.isActive = true;
-    // });
     new setPlayerGrid(view);
+    
     /* ---------------------------------- Debug --------------------------------- */
 
     // Display FPS
@@ -173,12 +169,7 @@ function render() {
     // DEBUG : Update OrbitControl (camera control)
     if (USE_ORBIT_CONTROLS) controls.update();
 
-    // Turn the selected grass
-    if (view.sceneState.turningGrass !== null) {
-        view.sceneState.turningGrass.rotY += 0.01;
-        view.sceneState.turningGrass.updateScene();
-    }
-
+    // Animate capillotractoms
     if (view.sceneState.isCapillotractomAnimate) {
         for (let i = 0; i < view.capillotractoms.length; i++) {
             view.capillotractoms[i].position.x += (i === 0 ? -Config.capillotractom.speed : Config.capillotractom.speed);

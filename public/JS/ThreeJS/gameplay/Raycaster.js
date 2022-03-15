@@ -130,18 +130,7 @@ export class CustomRaycaster {
 
             if (this.debug) console.log(clicked);
 
-            // Down the previous selected grass
-            if (this.view.sceneState.turningGrass !== null) {
-                this.view.sceneState.turningGrass.downGrass();
-                this.view.sceneState.turningGrass = null;
-            }
-
-            if (clicked.type === 'Grass') {
-                clicked.upGrass();
-
-                // Turn the selected grass
-                this.view.sceneState.turningGrass = clicked;
-                
+            if (clicked.type === 'Grass') {                
                 const gridPosition = clicked.getGridPosition();
 
                 if (this.clickCallback) this.clickCallback(gridPosition);
@@ -250,6 +239,9 @@ export class CustomRaycaster {
         }
     }
 
+    /**
+     * Remove all existing cross and targets
+     */
     resetTargetAndCross() {
         this.targetedGrass = null;
 

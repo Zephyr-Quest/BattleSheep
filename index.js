@@ -312,8 +312,11 @@ io.on("connection", (socket) => {
             playerId: 0,
             validGrid: false
         });
+
+        // Create room and game
         let res = ++getMaxKey(allRooms)
         allRooms[res] = roomData;
+        allGames[res] = new 
 
 
         console.log(username, " is hosting room-", res);
