@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="author" content="Martin Delebecque" />
-    
+
     <link rel="stylesheet" href="CSS/lobby.css" />
     <title>BattleSheep | Lobby</title>
 
@@ -17,56 +18,63 @@
 
     <!-- HTTP JS module -->
     <script src="JS/http.js" type="text/javascript"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
 </head>
+
 <body>
     <!-- Log out button -->
     <ion-icon name="log-out" class="log-out" id="log_out"></ion-icon>
 
     <main>
-        <h1>Welcome <i>UserPseudo</i></h1>
-        
+        <h1>Welcome <i><span id="username">UserPseudo</span></i></h1>
+
         <!-- Scoreboard -->
-        <section class="scoreboard">
-            <h2><ion-icon name="ribbon"></ion-icon>Your 3 best scores :</h2>
-            
+        <section class="scoreboard" id="scoreboard">
+            <h2>
+                <ion-icon name="ribbon"></ion-icon>Your 3 best scores :
+            </h2>
+
             <!-- High scores list -->
-            <div class="card">
+            <div class="card" id="card1">
                 <h3 class="green">#1</h3>
                 <ul>
-                    <li>Against : <strong>OtherPseudo</strong></li>
-                    <li>Score : <strong class="green">1000</strong></li>
+                    <li>Against : <strong><span id="firstName">OtherPseudo</span></strong></li>
+                    <li>Score : <strong class="green"><span id="firstScore">1000</span></strong></li>
                 </ul>
             </div>
-            <div class="card">
+            <div class="card" id="card2">
                 <h3 class="green">#2</h3>
                 <ul>
-                    <li>Against : <strong>OtherPseudo</strong></li>
-                    <li>Score : <strong class="green">500</strong></li>
+                    <li>Against : <strong><span id="secondName">OtherPseudo</span></strong></li>
+                    <li>Score : <strong class="green"><span id="secondScore">500</span></strong></li>
                 </ul>
             </div>
-            <div class="card">
+            <div class="card" id="card3">
                 <h3 class="green">#3</h3>
                 <ul>
-                    <li>Against : <strong>OtherPseudo</strong></li>
-                    <li>Score : <strong class="green">250</strong></li>
+                    <li>Against : <strong><span id="thirdName">OtherPseudo</span></strong></li>
+                    <li>Score : <strong class="green"><span id="thirdScore">250</span></strong></li>
                 </ul>
             </div>
         </section>
-        
+
         <hr />
-        
+
         <!-- Waiting player -->
-        <nav class="games">
-            <h2><ion-icon name="game-controller"></ion-icon>All waiting players :</h2>
-            
+        <nav class="games" id="games">
+            <h2>
+                <ion-icon name="game-controller"></ion-icon>All waiting players :
+            </h2>
+
             <!-- Button to host a new game -->
             <div class="card" id="new_game" title="Click to host your own game">
                 <ion-icon name="globe-outline"></ion-icon>
                 <h3>Host my own game</h3>
             </div>
-
+            <section id="games-display"></section>
             <!-- All of available games -->
-            <div class="card" title="Click to join the OtherPseudo's game">
+            <!-- <div class="card" title="Click to join the OtherPseudo's game">
                 <ion-icon name="log-in"></ion-icon>
                 <ul>
                     <li>Host : <strong class="green">OtherPseudo</strong></li>
@@ -86,7 +94,7 @@
                     <li>Host : <strong class="green">OtherPseudo</strong></li>
                     <li>High score : <strong>1500</strong></li>
                 </ul>
-            </div>
+            </div> -->
         </nav>
     </main>
 
@@ -96,5 +104,8 @@
 
     <!-- Logout -->
     <script src="JS/logout.js" type="text/javascript"></script>
+    <script src="JS/lobby.js" type="text/javascript"></script>
+
 </body>
+
 </html>

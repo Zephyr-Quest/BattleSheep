@@ -4,6 +4,13 @@ let manageUser = (function () {
 
 
     return {
+
+        /**
+         * Encrypt password and add the user to the DB
+         * 
+         * @param {string} password     password to crypt
+         * @param {function} callback   callback when password crypted
+         */
         signUp(password, callback) {
             bcrypt.hash(password, saltRounds, function (err, crypted) {
                 if (err) {
@@ -28,6 +35,12 @@ let manageUser = (function () {
             });
         },
 
+        /**
+         * Connect the user to the DB
+         * 
+         * @param {string} password     password not crypted
+         * @param {function} callback
+         */
         signIn(password, callback) {
             callback(password); // Transmission BDD
         }

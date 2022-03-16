@@ -40,7 +40,9 @@ toggleBtn.addEventListener('click', () => {
         = loginForm.style.display === 'none' ? 'block' : 'none';
 });
 
-/* ------------------------------- signup Form ------------------------------ */
+/* -------------------------------------------------------------------------- */
+/*                                 Signup form                                */
+/* -------------------------------------------------------------------------- */
 
 signupForm.addEventListener('submit', e => {
     e.preventDefault();
@@ -74,13 +76,19 @@ signupForm.addEventListener('submit', e => {
     console.log(data);
 
     // Send HTTP POST request
-    http.post('/signup',
-              data,
-              () => window.location.href = 'lobby',
-              err => console.error(err));
+    http.post(
+        '/signup', data,
+        () => window.location.href = 'lobby',
+        err => {
+            console.error(err);
+            errorOnForm(e.target);
+        }
+    );
 });
 
-/* ------------------------------- login Form ------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                 Login form                                 */
+/* -------------------------------------------------------------------------- */
 
 loginForm.addEventListener('submit', e => {
     e.preventDefault();
@@ -110,8 +118,25 @@ loginForm.addEventListener('submit', e => {
     }
 
     console.log(data)
-    http.post('/login',
-              data,
-              () => window.location.href = 'lobby',
-              err => console.error(err));
+    http.post(
+        '/login', data,
+        () => window.location.href = 'lobby',
+        err => {
+            console.error(err);
+            errorOnForm(e.target);
+        }
+    );
 });
+
+/* -------------------------------------------------------------------------- */
+/*                                    Utils                                   */
+/* -------------------------------------------------------------------------- */
+
+function errorOnForm(form) {
+    // Get all target inputs
+    const inputs = form.querySelectorAll('input[type=text], input[type=password]');
+
+    // Update style
+    for (const input of inputs)
+        input.style.borderColor = "#FF5733";
+}

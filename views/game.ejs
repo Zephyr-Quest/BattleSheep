@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,13 +15,14 @@
     <link href="https://fonts.googleapis.com/css2?family=KoHo:wght@300&display=swap" rel="stylesheet" />
 
     <link rel="icon" type="image/png" sizes="16x16" href="img/ZephyrStudio_logo.png" />
-    
+
     <!-- Socket IO -->
     <script src="/socket.io/socket.io.js"></script>
 </head>
+
 <body>
+    <!-- The score and timer display -->
     <header>
-        <!-- The score and timer display -->
         <section>
             <img src="img/sheep.png" alt="Sheep" />
             <span class="scoreboard">
@@ -33,6 +35,61 @@
         </section>
     </header>
 
+    <!-- Weapons menu -->
+    <nav style="display: none;">
+        <div class="weapons" id="weapons_menu">
+            <div class="weapon" id="weapon_shears" title="Shears">
+                <img src="img/weapons/shears.png" alt="Shears" class="icon" style="display: none;" />
+                <img src="img/weapons/shears_colored.png" alt="Shears colored" class="icon-selected" style="display: block;" />
+            </div>
+            <div class="weapon" id="weapon_strimmer" title="Strimmer">
+                <img src="img/weapons/strimmer.png" alt="Strimmer" class="icon" />
+                <img src="img/weapons/strimmer_colored.png" alt="Strimmer colored" class="icon-selected" />
+            </div>
+            <div class="weapon" id="weapon_epidemic" title="Epidemic">
+                <img src="img/weapons/epidemic.png" alt="Epidemic" class="icon" />
+                <img src="img/weapons/epidemic_colored.png" alt="Epidemic colored" class="icon-selected" />
+            </div>
+            <div class="weapon" id="weapon_wolf" title="Wolf">
+                <img src="img/weapons/wolf.png" alt="Wolf" class="icon" />
+                <img src="img/weapons/wolf_colored.png" alt="Wolf colored" class="icon-selected" />
+            </div>
+        </div>
+    </nav>
+
+    <main style="display: none;">
+        <!-- Announcement -->
+        <div class="announcement" id="announcement" style="display: none; opacity: 0;">
+            <h1>A title</h1>
+            <h2>A subtitle</h2>
+        </div>
+
+        <!-- GIFs -->
+        <div class="gif-display" id="gif_display" style="display: none; opacity: 0;">
+            <img src="img/gifs/ValMouaaaa.gif" alt="Gif" />
+        </div>
+
+        <!-- Start grid -->
+        <div class="start-grid" style="display: none;">
+            <div id="sheepBox"></div>
+            <table id="playerGrid"></table>
+            <div id="buttons">
+                <a href="#" id="rotate" title="Rotate sheeps">
+                    <ion-icon name="refresh-circle"></ion-icon>
+                </a>
+                <a href="#" id="reset" title="Reset the grid">
+                    <ion-icon name="close-circle"></ion-icon>
+                </a>
+                <a href="#" id="valid" title="Valid the grid">
+                    <ion-icon name="checkmark-circle"></ion-icon>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- A little footer -->
+    <footer title="Made by the Zephyr Studio team !">by Zephyr Studio</footer>
+
     <!-- ThreeJS -->
     <script type="text/javascript" src="JS/ThreeJS/stats.min.js"></script>
     <script type="importmap">
@@ -42,14 +99,17 @@
             }
         }
     </script>
-    
+
     <!-- Main script -->
     <script type="module" src="JS/ThreeJS/game.js"></script>
 
     <!-- Ionicons -->
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    
-    <script>socket = io()</script>
+
+    <script>
+        socket = io()
+    </script>
 </body>
+
 </html>

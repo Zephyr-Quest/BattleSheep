@@ -189,8 +189,39 @@ class BDD {
     }
 
     refreshScore(user, against, score, callback) {
-        if (user == "" || against == "" || score == "") {
-            return;
+        if (against == "" || score == "") {
+            let que = 'SELECT * from users WHERE username=?';
+            this.con.query(que, [user], (err, result) => {
+                if (err) throw err;
+                if (result == "") callback(false);
+                else {
+
+                    const scoreObj = {
+                        firstScore: result[0].firstScore,
+                        firstName: result[0].firstName,
+                        secondScore: result[0].secondScore,
+                        secondName: result[0].secondName,
+                        thirdScore: result[0].thirdScore,
+                        thirdName: result[0].thirdName
+                    };
+                    let Podium = {
+                        first: {
+                            name: scoreObj.firstName,
+                            score: scoreObj.firstScore,
+                        },
+                        second: {
+                            name: scoreObj.secondName,
+                            score: scoreObj.secondScore,
+                        },
+                        third: {
+                            name: scoreObj.thirdName,
+                            score: scoreObj.thirdScore,
+                        }
+                    }
+                    callback(Podium);
+                };
+            })
+
         } else {
             let que = 'SELECT * from users WHERE username=?';
             this.con.query(que, [user], (err, result) => {
@@ -240,7 +271,7 @@ class BDD {
                                 name: scoreObj.thirdName,
                                 score: scoreObj.thirdScore,
                             }
-                        };
+                        }
                         callback(Podium);
                     });
                 }

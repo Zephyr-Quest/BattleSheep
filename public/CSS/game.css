@@ -64,6 +64,177 @@ header section:nth-child(2) span {
 header section:nth-child(2) ion-icon {
   margin-left: 5px;
 }
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+nav .weapons {
+  background-color: rgba(238, 238, 238, 0.5);
+  border-radius: 20px;
+  border: 3px solid #3ca50c;
+  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.4);
+}
+nav .weapons .weapon {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+nav .weapons .weapon .icon-selected {
+  display: none;
+}
+nav .weapons .weapon .icon {
+  display: block;
+}
+nav .weapons .weapon img {
+  width: 70px;
+  height: 70px;
+}
+nav .weapons .disabled img {
+  opacity: 0.5;
+}
+nav .weapons :not(.disabled):hover .icon {
+  opacity: 0.7;
+}
+main {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  justify-content: center;
+  align-items: center;
+  z-index: 0;
+  flex-direction: column;
+}
+main .announcement {
+  transition: opacity 0.5s;
+}
+main .announcement h1,
+main .announcement h2 {
+  color: #fff;
+  font-family: 'KoHo', sans-serif;
+  text-shadow: 3px 3px 7px rgba(0, 0, 0, 0.7);
+  text-align: center;
+}
+main .announcement h1 {
+  font-size: 5rem;
+}
+main .announcement h2 {
+  font-size: 3.5rem;
+}
+main .gif-display {
+  transition: opacity 0.5s;
+}
+main .gif-display img {
+  margin: auto;
+  height: 200px;
+  border-radius: 20px;
+}
+main .start-grid {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+}
+main .start-grid table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+main .start-grid table td {
+  border: 3px solid #fff;
+  display: table-cell;
+  width: 70px;
+  height: 70px;
+  text-align: center;
+  padding: 0;
+}
+main .start-grid table td img {
+  height: 68px;
+  width: 68px;
+}
+main .start-grid table td span {
+  display: none;
+}
+main .start-grid table tr:first-child td {
+  border-top-style: none;
+}
+main .start-grid table tr:last-child td {
+  border-bottom-style: none;
+}
+main .start-grid table tr td:first-child {
+  border-left-style: none;
+}
+main .start-grid table tr td:last-child {
+  border-right-style: none;
+}
+main .start-grid #sheepBox {
+  background-color: rgba(238, 238, 238, 0.5);
+  border-radius: 20px;
+  border: 3px solid #3ca50c;
+  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.4);
+  padding: 10px;
+}
+main .start-grid #sheepBox .box {
+  cursor: move;
+  margin-bottom: 10px;
+}
+main .start-grid #sheepBox .box:last-child {
+  margin-bottom: 0;
+}
+main .start-grid #sheepBox .box img {
+  height: 70px;
+  width: 70px;
+}
+main .start-grid #sheepBox .box span {
+  font-family: 'KoHo', sans-serif;
+  font-weight: bold;
+  margin: 0;
+  margin-top: -10px;
+  margin-left: -20px;
+  padding: 5px;
+  padding-left: 11px;
+  padding-right: 11px;
+  background-color: #fff;
+  border-radius: 50px;
+  color: #3ca50c;
+}
+main .start-grid #buttons {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+}
+main .start-grid #buttons a {
+  display: flex;
+  color: #fff;
+  font-size: 3rem;
+  text-decoration: none;
+  margin-bottom: 50px;
+}
+main .start-grid #buttons a:last-child {
+  margin-bottom: 0;
+}
+main .start-grid #buttons a:hover {
+  opacity: 0.7;
+}
+footer {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 1.2rem;
+  color: #fff;
+  font-family: 'KoHo';
+  text-shadow: 3px 3px 7px #000000;
+}
 /* -------------------------------------------------------------------------- */
 /*                              Responsive design                             */
 /* -------------------------------------------------------------------------- */

@@ -4,7 +4,20 @@ import { Vector2, Vector3 } from 'three';
 /*                         List all displayed elements                        */
 /* -------------------------------------------------------------------------- */
 const tmpElements = [
-    { type: 'Map' , name: 'Map0', position: new Vector3(0, 0, 0) }
+    { type: 'Map', name: 'Map0', position: new Vector3(0, 0, 0) },
+    
+    // Side 1
+    { type: 'RedFarm', name: 'RedFarm0', position: new Vector3(-23, 0, -20), rotation: new Vector3(0, Math.PI / 2 + 0.3, 0) },
+    { type: 'Tree', name: 'Tree0', position: new Vector3(-14, 0, -30) },
+    { type: 'Bush', name: 'Bush0', position: new Vector3(15, 0, -33), rotation: new Vector3(0, Math.PI, 0) },
+    { type: 'Bush', name: 'Bush1', position: new Vector3(15, 0, -28), rotation: new Vector3(0, -0.5, 0) },
+    
+    // Side 0
+    { type: 'BlueFarm', name: 'BlueFarm0', position: new Vector3(23, 0, 20), rotation: new Vector3(0, -Math.PI / 2 + 0.3, 0) },
+    { type: 'Tree', name: 'Tree1', position: new Vector3(14, 0, 30) },
+    { type: 'Tree', name: 'Tree2', position: new Vector3(6, 0, 31), rotation: new Vector3(0, -0.5, 0) },
+    { type: 'Bush', name: 'Bush2', position: new Vector3(25, 0, 10), rotation: new Vector3(0, 1, 0) },
+
 ];
 
 /* --------------------------------- Fences --------------------------------- */
@@ -52,12 +65,13 @@ function createGrass(pos, playerId) {
  * Generate a sheep level design object
  * @param {THREE.Vector2} pos The 2D position
  * @param {Number} playerId The grid id
+ * @param {boolean} isShorn If the sheep must be shorn or not
  * @returns The sheep data
  */
-function createSheep(pos, playerId) {
+function createSheep(pos, playerId, isShorn = false) {
     const sheep = {
-        type: 'Sheep',
-        name: 'Sheep' + sheepCounter,
+        type: (isShorn ? 'Shorn' : '') + 'Sheep',
+        name: (isShorn ? 'Shorn' : '') + 'Sheep' + sheepCounter,
         position: getPositionFromPlayerId(pos, playerId),
         rotation: getRandomRotationY()
     };
