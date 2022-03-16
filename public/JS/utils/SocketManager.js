@@ -1,17 +1,47 @@
 import { HUD } from '../ThreeJS/gameplay/HUD.js';
 import Game from "../ThreeJS/game.js";
 
+/* -------------------------------------------------------------------------- */
+/*                               Some variables                               */
+/* -------------------------------------------------------------------------- */
 let socket = io();
 let view3D, playerId;
 
+
+/* -------------------------------------------------------------------------- */
+/*                                  Functions                                 */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Transfer grid of the player to chek it in back part
+ *
+ * @param   {Array}  grid  Grid of the player
+ * 
+ */
 function checkGrid(grid) {
     socket.emit("checkGrid", grid);
 }
 
-function play(pos, weapon) {
-    socket.emit("playerPlayed", pos, playerId, weapon);
+/**
+ * Transfer to back part the shoot of the player
+ *
+ * @param   {Number}  x       x Position of the shot in the grid
+ * @param   {Number}  y       y position ot the shoot in the grid
+ * @param   {String}  weapon  Name of weapon used
+ *
+ */
+function play(x,y, weapon) {
+    socket.emit("playerPlayed", x, y, playerId, weapon);
 }
 
+
+/* -------------------------------------------------------------------------- */
+/*                                   Socket                                   */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Begin of gameplay, display grid to set on screen when 2 players are connected in the room
+ */
 socket.on("timeToPlay", () => {
     HUD.showAnnouncement("Other player is connecting", "Please wait...");
     setTimeout(() => {
@@ -20,6 +50,12 @@ socket.on("timeToPlay", () => {
     }, 10000)
 })
 
+/**
+ * receive result of the check grid
+ *
+ * @param   {Boolean}  result      True if the gird is correct, else grid is incorrect
+ *
+ */
 socket.on("resultGrid", (result) => {
     HUD.hideStartGrid();
     if (result) {
@@ -31,32 +67,61 @@ socket.on("resultGrid", (result) => {
     }
 })
 
+/**
+ * Receive player ID
+ *
+ * @param   {Number}  result          ID of the player (0 or 1)
+ *
+ */
 socket.on("resultPlayerId", (result) => {
     console.log("You are the player", result);
     Game.setPlayerId(result);
     playerId = result;
 });
 
+/**
+ * Begin the Game, the players confrontation
+ */
 socket.on("startGameplay", () => {
     HUD.hideStartGrid();
     HUD.showAnnouncementDuring("The game starts", "Enjoy !", 2000);
     Game.setRaycasterState(true);
 });
 
+/**
+ * Receive the result of a shoot to update the grid of the player
+ *
+ * @return  {Function}  updateWorld     Function to update world
+ */
 socket.on("resultPlay", updateWorld);
 
+/**
+ * Disconnection of player
+ */
 socket.on("disconnection", () => {
     window.location.href = "/lobby";
 });
+
 
 // /* -------------------------------------------------------------------------- */
 // /*                                  Functions                                 */
 // /* -------------------------------------------------------------------------- */
 
+/**
+ * Init the view 
+ *
+ * @param   {View}  view    View to display elements on game screen
+ * 
+ */
 function init(view) {
     view3D = view;
 }
 
+/**
+ * Return the player ID
+ *
+ * @return  {Number}  Player ID
+ */
 function getPlayerId() {
     return playerId;
 }
@@ -94,6 +159,8 @@ function updateWorld(startGrid, playerId, currentPlayer, listPos, listWeaponUsed
     }, 1000);
 }
 
+
+/* ----------------------------- Export function ---------------------------- */
 export default {
     init,
     checkGrid,

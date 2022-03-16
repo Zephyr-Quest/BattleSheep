@@ -6,6 +6,7 @@ export class grid {
     constructor() {
         this.gridSize = 10;
 
+        // Init grid        
         this.grid = new Array;
         for (let row = 0; row < this.gridSize; row++) {
             this.grid[row] = new Array;
@@ -15,6 +16,9 @@ export class grid {
         }
     }
 
+    /**
+     * Display grid in console
+     */
     displayGrid() {
         let playerString = "";
         for (let row = 0; row < this.gridSize; row++) {
@@ -27,6 +31,9 @@ export class grid {
         console.log(playerString);
     }
 
+    /**
+     * Reset the grid
+     */
     resetGrid() {
         for (let row = 0; row < this.gridSize; row++) {
             for (let col = 0; col < this.gridSize; col++) {
@@ -35,10 +42,22 @@ export class grid {
         }
     }
 
+    /**
+     * Check if a case if free or not
+     * @param {Number} row row of the grid
+     * @param {Number} col column of the grid
+     * @returns {Boolean} true if there's nothing, false else
+     */
     isFree(row, col) {
         return (this.grid[row][col] === undefined ? true : false);
     }
 
+    /**
+     * Set a case of the grid
+     * @param {Number} row row of the grid to set
+     * @param {Number} col column of the grid to set
+     * @param {Number} value size of the sheep
+     */
     setCase(row, col, value) {
         this.grid[row][col] = value;
     }
