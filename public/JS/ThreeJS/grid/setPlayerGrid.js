@@ -76,7 +76,7 @@ export class setPlayerGrid extends grid {
     }
 
     /**
-     * Display the grid on the game screen
+     * Display grid on the game screen
      */
     displayOnScreen() {
         for (let row = 0; row < this.gridSize; row++) {

@@ -14,6 +14,7 @@ window.addEventListener("load", () => {
             Game.setRaycasterState(false);
             SocketManager.init(Game.getView());
             Game.setRaycasterEvent(clickEvent);
+            Game.setCameraFromVector(Config.cameraPositions[SocketManager.getPlayerId() === 0 ? "q" : "d"]);
         });
     });
 
