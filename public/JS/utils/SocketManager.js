@@ -61,6 +61,20 @@ function getPlayerId() {
     return playerId;
 }
 
+/**
+ * It updates the world by displaying the player grid, the current player, the list of weapon used, the
+ * list of position to uncover, the minutes and seconds of the game, and if the game is finished.
+ * @param {Array} startGrid - the grid of the player who starts the game
+ * @param {Number} playerId - the id of the player who is playing
+ * @param {Number} currentPlayer - the playerId of the current player
+ * @param {Array} listPos - an array of objects with the following structure:
+ * [ { x, y, playerId, state } ]
+ * @param {Array} listWeaponUsed - an array of strings, each string is the name of a weapon used.
+ * @param {Number} minutes - the number of minutes of the game
+ * @param {Number} seconds - the number of seconds left in the game.
+ * @param {Boolean} endGame - If the game is finished
+ * @param [gifName] - the name of the gif to display during the turn
+ */
 function updateWorld(startGrid, playerId, currentPlayer, listPos, listWeaponUsed, minutes, seconds, endGame, gifName = undefined) {
     const view = Game.getView();
 
@@ -90,7 +104,7 @@ function updateWorld(startGrid, playerId, currentPlayer, listPos, listWeaponUsed
     HUD.startChronoFrom(minutes, seconds);
 
     if (endGame) setTimeout(() => {
-        HUD.showAnnouncement("Game finished", "Try another Game");
+        HUD.showEndAnnouncement("Game finished", "Try another Game");
     }, 1000);
 }
 

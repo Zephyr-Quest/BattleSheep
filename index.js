@@ -367,9 +367,9 @@ io.on("connection", (socket) => {
         socket.emit("resultPlayerId", id);
     })
 
-    socket.on("playerPlayed", (pos, playerId, weapon) => {
-        // The player with the id "playerId", played on the case "pos" with the weapon "weapon" 
-        console.log(pos, playerId, weapon);
+    socket.on("playerPlayed", (x, y, playerId, weapon) => {
+        // The player with the id "playerId", played on the case with the position "x", "y", with the weapon "weapon" 
+        console.log(x, y, playerId, weapon);
     });
 
     socket.on("checkGrid", (grid) => {
