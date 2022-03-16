@@ -24,7 +24,6 @@ socket.on("display-rooms", (allRooms) => {
             }
         })
     }
-    console.log("iiccccccccccccccccccccccccciii")
     Object.keys(allRooms).forEach(key => {
         console.log(allRooms[key])
         socket.emit("get-score", allRooms[key][0].name)

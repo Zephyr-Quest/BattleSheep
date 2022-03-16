@@ -70,12 +70,14 @@ export class setPlayerGrid extends grid {
             }
         })
 
-        // validBtn.addEventListener("click", this.endCallback);
         document.getElementById("valid").addEventListener("click", () => {
             SocketManager.checkGrid(this.grid)
         });
     }
 
+    /**
+     * Display grid on the game screen
+     */
     displayOnScreen() {
         for (let row = 0; row < this.gridSize; row++) {
             for (let col = 0; col < this.gridSize; col++) {
@@ -127,6 +129,7 @@ export class setPlayerGrid extends grid {
         this.view3d.displayPlayerGrid(simpleGrid, SocketManager.getPlayerId());
     }
 
+    
     rangeSheep(sheepPosition, rotate, range, value) {
         const row = sheepPosition[0];
         const col = sheepPosition[2];
