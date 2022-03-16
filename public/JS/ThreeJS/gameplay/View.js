@@ -1,4 +1,4 @@
-import { Vector2, LoadingManager, TextureLoader, NearestFilter } from 'three';
+import { Vector2, LoadingManager, TextureLoader, NearestFilter, SpriteMaterial, Sprite } from 'three';
 import { GLTFLoader } from 'https://unpkg.com/three@0.137.0/examples/jsm/loaders/GLTFLoader.js';
 
 import { Config } from '../config.js';
@@ -21,9 +21,11 @@ export class View {
         this.scene = undefined;
 
         this.sceneState = {
-            turningGrass: null
+            turningGrass: null,
+            isCapillotractomAnimate: false
         };
         this.allObjects = {};
+        this.capillotractoms = [];
 
         // Init load managers
         this.loadManager = new LoadingManager();
@@ -50,6 +52,12 @@ export class View {
         }
 
         this.loadManager.onLoad = () => this.loadModels(callback);
+
+        // Create the Capillotractom
+        const capillotractomMaterial = new SpriteMaterial({ map: Textures.Capillotractom.texture });
+        const capillotractom1 = new Sprite(capillotractomMaterial);
+        capillotractom1.scale.multiplyScalar(Config.capillotractom.scale);
+        this.capillotractoms.push(capillotractom1, capillotractom1.clone());
     }
 
     /**
@@ -119,7 +127,9 @@ export class View {
             const obj = this.allObjects[objName];
 
             // Check the object type
-            if (obj.type !== 'Grass' && obj.type !== 'Sheep')
+            // Skip objects which aren't on the grid
+            const interested = ['Grass', 'Sheep', 'ShornSheep'];
+            if (!interested.includes(obj.type))
                 continue;
 
             // Check the object position
@@ -167,9 +177,9 @@ export class View {
      * Uncover a grid case
      * @param {THREE.Vector2} pos The position of the case to uncover
      * @param {Number} playerId The player id
-     * @param {boolean} foundSheep If the player will found a sheep or not
+     * @param {Number} type 0 -> Nothing, 1 -> A basic sheep, 2 -> A shorn sheep
      */
-    uncoverGridCase(pos, playerId, foundSheep = false) {
+    uncoverGridCase(pos, playerId, type = 0) {
         // Down the previous selected grass
         if (this.sceneState.turningGrass !== null) {
             this.sceneState.turningGrass.downGrass();
@@ -178,19 +188,42 @@ export class View {
 
         const grassName = this.getObjectNameOnGrid(pos, playerId);
         const grass = this.allObjects[grassName];
-        if (grass.type !== 'Grass') {
-            console.error("Trying to remove an object, but it's not a grass object.");
-            return;
-        }
         
         // Remove the grass
         grass.removeFromScene(this.scene);
         delete this.allObjects[grassName];
 
         // Show a sheep if it should
-        if (foundSheep) {
-            const newSheep = createSheep(pos, playerId, true);
+        if (type > 0) {
+            const newSheep = createSheep(pos, playerId, type === 2);
             this.displayElement(newSheep);
         }
+    }
+
+    /**
+     * Show Capillotractoms go through the map
+     */
+    showCapillotractoms() {
+        for (let i = 0; i < this.capillotractoms.length; i++) {
+            // Update the capillotractom position
+            this.capillotractoms[i].position.fromArray(Config.capillotractom.startPositions[i].toArray());
+            
+            // Add it to the scene
+            this.scene.add(this.capillotractoms[i]);
+        }
+
+        // Animate
+        this.sceneState.isCapillotractomAnimate = true;
+        
+        setTimeout(() => {
+            // Stop animation
+            this.sceneState.isCapillotractomAnimate = false;
+
+            setTimeout(() => {
+                // Remove them from scene
+                for (const cpt of this.capillotractoms)
+                    this.scene.remove(cpt);
+            }, 1000);
+        }, 2500);
     }
 };

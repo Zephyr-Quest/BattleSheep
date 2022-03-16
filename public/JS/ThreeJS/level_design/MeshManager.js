@@ -58,26 +58,4 @@ export class MeshManager extends Locatable {
         this.mesh.scale.fromArray([1, 1, 1]);
         this.mesh.scale.multiplyScalar(this.scaleFactor);
     }
-
-    /**
-     * Up the mesh if it's a grass mesh
-     */
-    upGrass() {
-        if (this.type !== 'Grass') return;
-        
-        // Up the grass
-        this.y++;
-        this.updateScene();
-    }
-
-    /**
-     * Down the mesh if it's a grass mesh
-     */
-    downGrass() {
-        if (this.type !== 'Grass') return;
-
-        // Up the grass
-        this.y--;
-        this.updateScene();
-    }
 };

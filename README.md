@@ -1,8 +1,31 @@
 # BattleSheep
 
+## Requirements
+
+Our project requires :
+
+* NodeJS + npm
+* Docker + Docker Compose
+* Any correct OS (sorry for Windows users...)
+
 ## How to run BattleSheep with docker
 
-First of all, set up the `.env` file. Rename the `.env.example` file to `.env` and change values between `<` and `>` :
+First of all, set up the `.env` file with the following pattern (change values between `<` and `>`) :
+
+```env
+# MySQL
+
+MYSQL_HOST="db"
+MYSQL_USERNAME="root"
+MYSQL_PASSWORD="<db_password>"
+DATABASE_NAME="battlesheep"
+
+# NodeJS
+
+APP_PORT=8080
+START_CMD="node index.js"
+SESSION_SECRET="<session_secret>"
+```
 
 * `SESSION_SECRET` should be a long string which contains a-z, A-Z letters and 0-9 numbers.
 * `MYSQL_PASSWORD` should be a random generated password with special characters.
@@ -15,6 +38,7 @@ flush privileges;
 
 Start the container :
 ```bash
+npm i # To install all node modules
 npm run docker-start
 ```
 

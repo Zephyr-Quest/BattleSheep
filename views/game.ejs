@@ -64,6 +64,15 @@
             <h2>A subtitle</h2>
         </div>
 
+        <!-- End announcement -->
+        <div class="announcement" id="endAnnouncement" style="display: none; opacity: 0;">
+            <h1>A title</h1>
+            <h2>A subtitle</h2>
+            <a href="/lobby" title="Back to the lobby">
+                <ion-icon name="exit"></ion-icon>
+            </a>
+        </div>
+
         <!-- GIFs -->
         <div class="gif-display" id="gif_display" style="display: none; opacity: 0;">
             <img src="img/gifs/ValMouaaaa.gif" alt="Gif" />
@@ -87,6 +96,17 @@
         </div>
     </main>
 
+    <!-- The splash screen, printed before the game -->
+    <section class="splash-screen" id="splash_screen" style="opacity: 1; display: flex;">
+        <div class="zephyr-studio-game" style="display: none; opacity: 0;">
+            <img src="img/ZephyrStudio_logo.png" alt="ZephyrStudio logo" />
+            <h1>A ZephyrStudio game</h1>
+        </div>
+        <div class="battlesheep-logo" style="display: none; opacity: 0;">
+            <img src="img/BattleSheep_logo_neg.png" alt="BattleSheep logo" />
+        </div>
+    </section>
+
     <!-- A little footer -->
     <footer title="Made by the Zephyr Studio team !">by Zephyr Studio</footer>
 
@@ -101,15 +121,12 @@
     </script>
 
     <!-- Main script -->
-    <script type="module" src="JS/ThreeJS/game.js"></script>
+    <script type="module" src="JS/threejs_check.js"></script>
+    <script type="module" src="JS/game.js"></script>
 
     <!-- Ionicons -->
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-
-    <script>
-        socket = io()
-    </script>
 </body>
 
 </html>

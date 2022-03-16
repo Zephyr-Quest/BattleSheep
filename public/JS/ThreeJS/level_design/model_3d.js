@@ -66,5 +66,19 @@ export const Model3D = {
         scale: 1,
         positionDelta: new Vector3(0, 0.42, 0),
         rotationDelta: new Vector3(0, 0, 0)
+    },
+    Cross: {
+        modelName: 'cross.glb',
+        model: null,
+        scale: 1,
+        positionDelta: new Vector3(0, -0.5, 0),
+        rotationDelta: new Vector3(0, 0, 0)
+    },
+    Target: {
+        modelName: 'target.glb',
+        model: null,
+        scale: 1,
+        positionDelta: new Vector3(0, -0.5, 0),
+        rotationDelta: new Vector3(0, 0, 0)
     }
 };

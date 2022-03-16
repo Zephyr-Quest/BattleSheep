@@ -1,6 +1,7 @@
 import { grid } from './grid.js';
 import { wrapPosition } from './verif.js';
 import { sheep } from './sheep.js';
+import SocketManager from '../../utils/SocketManager.js';
 
 /* -------------------------------------------------------------------------- */
 /*                         Class to manage start grid                         */
@@ -10,15 +11,13 @@ export class setPlayerGrid extends grid {
     /**
      * The setPlayerGrid constructor
      * @param {View} view3d The ThreeJS view
-     * @param {funcion} callback What is run after the selection
      */
-    constructor(view3d, callback) {
+    constructor(view3d) {
         super();
         this.rotation = "row";
         this.nbSheep = 10;
         this.tabSheep = [];
         this.view3d = view3d;
-        this.endCallback = callback;
 
         // Set grid
         const playerGrid = document.getElementById("playerGrid");
@@ -61,6 +60,7 @@ export class setPlayerGrid extends grid {
         })
 
         resetBtn.addEventListener("click", () => {
+            document.getElementById("sheepBox").style.display = "block";
             this.resetGrid();
             this.displayGrid();
             this.CreateSheepOnScreen();
@@ -70,9 +70,14 @@ export class setPlayerGrid extends grid {
             }
         })
 
-        validBtn.addEventListener("click", this.endCallback);
+        document.getElementById("valid").addEventListener("click", () => {
+            SocketManager.checkGrid(this.grid)
+        });
     }
 
+    /**
+     * Display grid on the game screen
+     */
     displayOnScreen() {
         for (let row = 0; row < this.gridSize; row++) {
             for (let col = 0; col < this.gridSize; col++) {
@@ -121,9 +126,10 @@ export class setPlayerGrid extends grid {
         }
 
         const simpleGrid = this.getSimpleGrid();
-        this.view3d.displayPlayerGrid(simpleGrid, 0);
+        this.view3d.displayPlayerGrid(simpleGrid, SocketManager.getPlayerId());
     }
 
+    
     rangeSheep(sheepPosition, rotate, range, value) {
         const row = sheepPosition[0];
         const col = sheepPosition[2];
@@ -137,28 +143,29 @@ export class setPlayerGrid extends grid {
     CreateSheepOnScreen() {
         const div = document.getElementById("sheepBox");
         for (let i = 0; i < this.nbSheep; i++) {
-            if (!document.getElementById(i)) {
-                // Create the sheep div
-                const divSheep = document.createElement("div");
-                divSheep.setAttribute("draggable", "true");
-                divSheep.classList.add("box");
-                divSheep.classList.add(i);
-                divSheep.id = i;
-                
-                // Create the sheep img
-                const imgSheep = document.createElement('img');
-                imgSheep.src = "img/sheep_head.png";
-                imgSheep.alt = "Sheep head";
-                divSheep.append(imgSheep);
+            if (document.getElementById(i))
+                document.getElementById(i).remove();
 
-                // Create indice
-                const nbSpan = document.createElement("span");
-                nbSpan.innerText = this.tabSheep[i].sheepSize;
-                divSheep.append(nbSpan);
+            // Create the sheep div
+            const divSheep = document.createElement("div");
+            divSheep.setAttribute("draggable", "true");
+            divSheep.classList.add("box");
+            divSheep.classList.add(i);
+            divSheep.id = i;
+            
+            // Create the sheep img
+            const imgSheep = document.createElement('img');
+            imgSheep.src = "img/sheep_head.png";
+            imgSheep.alt = "Sheep head";
+            divSheep.append(imgSheep);
 
-                div.append(divSheep);
-                this.setDrag(divSheep);
-            }
+            // Create indice
+            const nbSpan = document.createElement("span");
+            nbSpan.innerText = this.tabSheep[i].sheepSize;
+            divSheep.append(nbSpan);
+
+            div.append(divSheep);
+            this.setDrag(divSheep);
         }
     }
 
@@ -185,12 +192,8 @@ export class setPlayerGrid extends grid {
                 currentBox = currentBox.parentElement;
 
             const currentSheep = this.tabSheep[currentBox.classList[1]];
-            console.log(currentBox, currentSheep);
-            if (currentBox.parentElement.id != currentSheep.firstPosition) {
-                const container = document.getElementById(currentSheep.firstPosition)
-                container.append(currentBox);
-            }
-            this.rangeSheep(currentSheep.firstPosition, currentSheep.direction, currentSheep.sheepSize, currentSheep.sheepSize);
+            if (currentBox.parentElement.id == currentSheep.firstPosition)
+                this.rangeSheep(currentSheep.firstPosition, currentSheep.direction, currentSheep.sheepSize, currentSheep.sheepSize);
             this.displayGrid();
             currentBox.removeAttribute("moving");
             this.displayOnScreen();
@@ -219,14 +222,19 @@ export class setPlayerGrid extends grid {
                 const data = event.dataTransfer.getData("text/plain");
                 const currentBox = document.getElementsByClassName(data)[0];
                 const currentSheep = this.tabSheep[currentBox.classList[1]];
-                if (!currentContainer.hasChildNodes()) {
-                    if (wrapPosition(this.grid, Number(currentContainer.id[0]), Number(currentContainer.id[2]), currentSheep.sheepSize, this.rotation)) {
-                        currentContainer.appendChild(currentBox);
-                        currentSheep.firstPosition = currentContainer.id;
-                        currentSheep.direction = this.rotation;
+                if (currentContainer.nodeName == "TD")
+                    if (!currentContainer.hasChildNodes()) {
+                        if (wrapPosition(this.grid, Number(currentContainer.id[0]), Number(currentContainer.id[2]), currentSheep.sheepSize, this.rotation)) {
+                            currentContainer.appendChild(currentBox);
+                            currentSheep.firstPosition = currentContainer.id;
+                            currentSheep.direction = this.rotation;
+                            
+                            // Check if sheepBox is empty
+                            const sheepBox = document.getElementById("sheepBox");
+                            if (sheepBox.children.length === 0)
+                                sheepBox.style.display = "none";
+                        }
                     }
-                }
-                // socket.emit("wrapPosition", this.grid, Number(this.currentContainer.id[0]), Number(this.currentContainer.id[2]), this.currentSheep.sheepSize, this.rotation);
             })
         }
     }

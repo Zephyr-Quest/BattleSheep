@@ -1,4 +1,3 @@
-// import * as THREE from 'https://cdn.skypack.dev/three';
 import * as THREE from 'three'
 import { GLTFLoader } from 'https://unpkg.com/three@0.137.0/examples/jsm/loaders/GLTFLoader.js';
 

@@ -12,19 +12,56 @@ import { HUD } from './gameplay/HUD.js';
 import { setPlayerGrid } from './grid/setPlayerGrid.js';
 import { Textures } from './level_design/textures.js';
 
-let scene, renderer, camera, controls, raycaster;
+let scene, renderer, camera, controls, raycaster, view, playerId;
 
 /* ---------------------------------- Debug --------------------------------- */
 
 let stats;
 const DEBUG_STATS = true;
 const USE_ORBIT_CONTROLS = true;
-const DEBUG_RAYCASTER = false;
+const DEBUG_RAYCASTER = true;
 
 /* ---------------------------------- View ---------------------------------- */
 
-const view = new View();
-view.load(init);
+/**
+ * Init the view and load models and textures
+ */
+function init(callback) {
+    view = new View();
+    view.load(() => initAfterLoading(callback));
+}
+
+/**
+ * Get the current game view
+ * @returns The game view
+ */
+const getView = () => view;
+
+/* -------------------------------- Raycaster ------------------------------- */
+
+/**
+ * Change the raycaster state
+ * @param {boolean} state If the raycaster must be active or not
+ */
+function setRaycasterState(state) {
+    raycaster.isActive = state;
+}
+
+/**
+ * Set the raycaster event
+ * @param   {function}  func  The raycaster event
+ */
+function setRaycasterEvent(func) {
+    raycaster.clickCallback = func;
+}
+
+/**
+ * Set the player id to the raycaster
+ * @param {Number} id The player id
+ */
+function setPlayerId(id) {
+    playerId = id;
+}
 
 /* -------------------------------------------------------------------------- */
 /*                           ThreeJS main functions                           */
@@ -33,7 +70,7 @@ view.load(init);
 /**
  * Init function
  */
-function init() {
+function initAfterLoading(callback) {
     /* --------------------------- Scene and renderer --------------------------- */
 
     // Setting up the scene
@@ -44,7 +81,8 @@ function init() {
     // Setting up the renderer
     renderer = new THREE.WebGLRenderer({
         antialias: true,
-        alpha: true
+        alpha: true,
+        physicallyCorrectLights: true
     });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -62,11 +100,7 @@ function init() {
 
     // Setting up the raycaster
     raycaster = new CustomRaycaster(scene, camera, view, DEBUG_RAYCASTER);
-    raycaster.clickCallback = (pos) => {
-        setTimeout(() => {
-            view.uncoverGridCase(new THREE.Vector2(pos.x, pos.y), pos.z, true);
-        }, 1000);
-    };
+    raycaster.playerId = playerId;
     raycaster.isActive = false;
 
     /* --------------------------------- Lights --------------------------------- */
@@ -85,18 +119,22 @@ function init() {
     // Display all element
     view.displayAllElements();
     
+    // Create the floor
+    const floorGeometry = new THREE.BoxGeometry(25, 0.05, 52);
+    const floorMaterial = new THREE.MeshBasicMaterial({ color: 0x1b6d19 });
+    const floorCube = new THREE.Mesh(floorGeometry, floorMaterial);
+    floorCube.position.set(1, -0.5, 0);
+    floorCube.name = "Floor0";
+    scene.add(floorCube);
+    
     /* --------------------------------- Events --------------------------------- */
     
     raycaster.initEvent();
-    window.addEventListener("keyup", onKeyUp);
     window.addEventListener('resize', onResize, false);
 
     /* ------------------------------- Start grid ------------------------------- */
 
-    new setPlayerGrid(view, () => {
-        HUD.hideStartGrid();
-        raycaster.isActive = true;
-    });
+    new setPlayerGrid(view);
     
     /* ---------------------------------- Debug --------------------------------- */
 
@@ -113,13 +151,11 @@ function init() {
         controls.update();
     }
 
-    const material = new THREE.SpriteMaterial({ map: Textures.Cross.texture });
-    const sprite = new THREE.Sprite(material);
-    scene.add(sprite);
-
     /* -------------------------------- End debug ------------------------------- */
-
+    
     HUD.showAnnouncement("Waiting for a player", "Please wait...");
+
+    callback();
 
     render();
 }
@@ -134,10 +170,11 @@ function render() {
     // DEBUG : Update OrbitControl (camera control)
     if (USE_ORBIT_CONTROLS) controls.update();
 
-    // Turn the selected grass
-    if (view.sceneState.turningGrass !== null) {
-        view.sceneState.turningGrass.rotY += 0.01;
-        view.sceneState.turningGrass.updateScene();
+    // Animate capillotractoms
+    if (view.sceneState.isCapillotractomAnimate) {
+        for (let i = 0; i < view.capillotractoms.length; i++) {
+            view.capillotractoms[i].position.x += (i === 0 ? -Config.capillotractom.speed : Config.capillotractom.speed);
+        }
     }
 
     // Rendering the 3D scene
@@ -151,56 +188,11 @@ function render() {
 }
 
 /**
- * Callback of keyup event
- * @param {KeyboardEvent} e The keyup event object
+ * Set the camera position from a THREE.Vector3
+ * @param {THREE.Vector3} pos The camera position
  */
-function onKeyUp(e) {
-    // console.log(e);
-
-    if (e.code === 'Space') {
-        HUD.hideAnnouncement();
-        setTimeout(HUD.showStartGrid, 1000);
-    } else if (e.key === 'f') {
-        // const renderDom = renderer.domElement;
-        const renderDom = document.querySelector("body");
-        if (renderDom.requestFullscreen) renderDom.requestFullscreen();
-        else if (renderDom.webkitRequestFullscreen) renderDom.webkitRequestFullscreen();
-        else if (renderDom.msRequestFullscreen) renderDom.msRequestFullscreen();
-    } else if (e.key === 'u') {
-        directionalLight.position.add(new THREE.Vector3(5, 0, 0));
-        lightCube.position.add(new THREE.Vector3(5, 0, 0));
-        console.log(directionalLight.position);
-    } else if (e.key === 'i') {
-        directionalLight.position.add(new THREE.Vector3(0, 5, 0));
-        lightCube.position.add(new THREE.Vector3(0, 5, 0));
-        console.log(directionalLight.position);
-    } else if (e.key === 'o') {
-        directionalLight.position.add(new THREE.Vector3(0, 0, 5));
-        lightCube.position.add(new THREE.Vector3(0, 0, 5));
-        console.log(directionalLight.position);
-    } else if (e.key === 'j') {
-        directionalLight.position.add(new THREE.Vector3(-5, 0, 0));
-        lightCube.position.add(new THREE.Vector3(-5, 0, 0));
-        console.log(directionalLight.position);
-    } else if (e.key === 'k') {
-        directionalLight.position.add(new THREE.Vector3(0, -5, 0));
-        lightCube.position.add(new THREE.Vector3(0, -5, 0));
-        console.log(directionalLight.position);
-    } else if (e.key === 'l') {
-        directionalLight.position.add(new THREE.Vector3(0, 0, -5));
-        lightCube.position.add(new THREE.Vector3(0, 0, -5));
-        console.log(directionalLight.position);
-    } else {
-        // Check camera controls
-        for (const keyCode in Config.cameraPositions) {
-            if (!Config.cameraPositions.hasOwnProperty(keyCode) || e.key !== keyCode)
-                continue;
-
-            // Switch the camera position
-            const pos = Config.cameraPositions[keyCode];
-            camera.position.fromArray(pos.toArray());
-        }
-    }
+function setCameraFromVector(pos) {
+    camera.position.fromArray(pos.toArray());
 }
 
 /**
@@ -211,3 +203,12 @@ function onResize() {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
+
+export default {
+    init,
+    getView,
+    setRaycasterState,
+    setRaycasterEvent,
+    setCameraFromVector,
+    setPlayerId
+};

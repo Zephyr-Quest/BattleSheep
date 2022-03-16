@@ -15,7 +15,7 @@ const {
 const jsonParse = bodyParser.json();
 // const urlencodedParse = bodyParser.urlencoded({extended: false});
 const manageUser = require("./back/manageUser");
-// const gridVerif = require ("./back/verif")
+const BSGame = require("./back/BattlesheepGame");
 
 const {
     connect
@@ -46,6 +46,16 @@ const session = require("express-session")({
     },
 });
 
+function getMaxKey(obj) {
+    let result = -1;
+
+    Object.keys(obj).forEach(key => {
+        if (key > result) result = key;
+    });
+
+    return result;
+}
+
 app.use(jsonParse);
 app.use(session);
 app.use(express.static(path.join(__dirname, "public")));
@@ -68,19 +78,16 @@ io.use(sharedsession(session, {
 /* -------------------------------------------------------------------------- */
 
 app.get("/", (req, res) => {
-    // console.log("Affichage BDD");
-    // Database.getList((res) => {
-    //     console.log(res);
-    // });
-    // console.log("Fin affichage");
-
     res.render("index", {
         title: "BattleSheep by ZephyrStudio",
         description: "Welcome in our Web project !",
         scripts: [{
             name: "home",
             type: "module",
-        }, ],
+        }, {
+            name: "threejs_check",
+            type: "module",
+        }],
     });
 });
 
@@ -88,40 +95,36 @@ app.get("/signup", (req, res) => {
     // Here : check if the user is already connected
     // If he's not, send him the signup page
     // else, redirect him to the scoreboard page
-    let sessionData = req.session;
-    if (!sessionData.username) {
+    if (!req.session.username) {
         console.log("Utilisateur non connecté, envoi vers formulaire de connexion");
         res.render("signup", {
             title: "BattleSheep | Sign up, Log in",
             description: "Sign up or log in to BattleSheep",
             scripts: [{
-                    name: "http",
-                    type: "text/javascript",
-                },
-                {
-                    name: "signup",
-                    type: "text/javascript",
-                },
+                name: "http",
+                type: "text/javascript",
+            },
+            {
+                name: "signup",
+                type: "text/javascript",
+            },
             ],
         });
     } else {
         console.log("Utilisateur connecté, envoi vers le lobby");
-        res.render("lobby", {
-            title: "BattleSheep | Lobby",
-            description: "Lobby page, to join or host a game",
-            // scripts: [{name: '', type: ''}]
-        });
+        res.redirect("/lobby");
+        return;
     }
 });
 
 app.post("/signup", body("pseudo").isLength({
-        min: 3
-    }).trim().escape(),
+    min: 3
+}).trim().escape(),
     body("password").isLength({
         min: 3
     }).trim(),
     (req, res) => {
-        console.log("---SIGN UP---");
+        console.log("--- SIGN UP ---");
 
         let pseudo = req.body.pseudo;
         let password = req.body.password;
@@ -134,14 +137,14 @@ app.post("/signup", body("pseudo").isLength({
                 errors: errors.array(),
             });
         } else {
-            console.log("PSEUDO", pseudo);
-            console.log("MDP", password);
+            // console.log("PSEUDO", pseudo);
+            // console.log("MDP", password);
             manageUser.signUp(password, (mdp) => {
                 Database.signUp(pseudo, mdp, (e) => {
                     if (e == true) {
                         req.session.username = req.body.pseudo;
                         req.session.save();
-                        console.log("Envoi vers le lobby");
+                        // console.log("Envoi vers le lobby");
                         // Database.getList((e) => {
                         //     console.log(e);
                         // });
@@ -155,34 +158,34 @@ app.post("/signup", body("pseudo").isLength({
 );
 
 app.post("/login", body("pseudo").isLength({
-        min: 3,
-    }).trim().escape(),
+    min: 3,
+}).trim().escape(),
     body("password").isLength({
         min: 3,
     })
-    .trim(),
+        .trim(),
     (req, res) => {
-        console.log("---LOG IN---");
+        console.log("--- LOG IN ---");
 
         let pseudo = req.body.pseudo;
         let password = req.body.password;
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            console.log("---ERROR---");
+            console.log("--- ERROR ---");
             console.log(errors);
             res.status(400).json({
                 errors: errors.array(),
             });
         } else {
-            console.log("PSEUDO", pseudo);
-            console.log("MDP", password);
+            // console.log("PSEUDO", pseudo);
+            // console.log("MDP", password);
             manageUser.signIn(password, (mdp) => {
                 Database.signIn(pseudo, mdp, (e) => {
                     if (e == true) {
                         req.session.username = req.body.pseudo;
                         req.session.save();
-                        console.log("Envoi vers le lobby");
+                        // console.log("Envoi vers le lobby");
                         // Database.getList((e) => {
                         //     console.log(e);
                         // });
@@ -204,47 +207,43 @@ app.get("/rules", (req, res) => {
         scripts: [{
             name: "home",
             type: "module",
+        }, {
+            name: "threejs_check",
+            type: "module",
         }],
     });
 });
 
-app.get("/lobby", (req, res) => res.render("lobby"));
+app.get("/lobby", (req, res) => {
+    if (!req.session.username) {
+        res.redirect("/");
+        return;
+    }
 
-app.get("/game", (req, res) => res.render("game"));
-
-app.get("/grid", (req, res) => {
-    res.render("grid", {
-        title: "BattleSheep | grid",
-        description: "grille des moutons",
-        scripts: [{
-                name: "grid",
-                type: "class",
-            },
-            {
-                name: "setPlayerGrid",
-                type: "class",
-            },
-            {
-                name: "sheep",
-                type: "class",
-            },
-            {
-                name: "setPlayerGrid",
-                type: "class",
-            },
-            {
-                name: "main",
-                type: "text/javascript",
-            }
-        ],
+    Database.refreshScore(req.session.username, "", "", (scoreboard) => {
+        res.render("lobby", {
+            username: req.session.username,
+            scoreboard
+        });
     });
 });
 
+app.get("/game", (req, res) => {
+    if (!req.session.username) {
+        res.redirect("/");
+        return;
+    }
+
+    res.render("game");
+});
+
 app.post("/logout", (req, res) => {
-    console.log("---DECONNEXION---");
+    console.log("--- DECONNEXION ---");
     req.session.destroy();
     res.send('OK');
 });
+
+app.get("/not_available", (req, res) => res.render("not_available"));
 
 // Capture 404 requests
 app.use((req, res) => res.render("404"));
@@ -253,97 +252,170 @@ app.use((req, res) => res.render("404"));
 /*                                    ROOMS                                   */
 /* -------------------------------------------------------------------------- */
 
-let allRooms = [];
+
+//TODO comparer les id de session au lieu des pseudos
+
+let allRooms = {};
+let allGames = {};
+let disconnectedUsers = [];
+
 
 io.on("connection", (socket) => {
-    console.log("Connexion d'un joueur au jeu");
-    console.log(socket.handshake.session.idRoom);
+    const username = socket.handshake.session.username;
+
+    if (socket.handshake.session.idRoom === undefined) {
+        console.log("--- LOBBY ---");
+        console.log("Connexion de ", username, " au Lobby");
+    } else {
+        let idRoom = socket.handshake.session.idRoom
+        console.log("--- GAME ---")
+        console.log("Connexion de ", username, " à la room ", idRoom);
+        socket.join(idRoom)
+ 
+        // Send the player id
+        if (!disconnectedUsers.includes(username)) {
+            const id = allRooms[idRoom][0].name === username ? 0 : 1;
+            socket.emit("resultPlayerId", id);
+            if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
+                console.log("Time to play")
+                io.to(idRoom).emit("timeToPlay");
+            }
+        }
+
+    }
+    if (disconnectedUsers.includes(username)) {
+        const idRoom = socket.handshake.session.idRoom;
+        io.to(idRoom).emit("disconnection");
+        socket.leave(idRoom);
+        socket.handshake.session.idRoom = undefined;
+        disconnectedUsers.splice(disconnectedUsers.indexOf(username), 1);
+    }
+
+    /* -------------------------------------------------------------------------- */
+    /*                                    Lobby                                   */
+    /* -------------------------------------------------------------------------- */
 
     socket.on('login', () => {
-        let srvSockets = io.sockets.sockets;
-        srvSockets.forEach(user => {
-            console.log(user.handshake.session.username);
-        });
         Database.refreshScore(socket.handshake.session.username, "", "", (a) => {
             io.emit("display-score", a);
         });
         io.emit("display-rooms", allRooms);
-        io.emit("display-username", socket.handshake.session.username);
+        socket.emit("display-username", socket.handshake.session.username);
     });
 
     socket.on("get-score", user => {
         Database.refreshScore(user, "", "", (a) => {
-            return a.first.score;
+            io.emit("display-room-score", user, a.first.score);
         });
-    })
-
-    socket.on("get-allRooms", () => {
-        io.emit()
     })
 
     /* ---------------------------------- Rooms ---------------------------------- */
     socket.on("host-room", () => {
         let username = socket.handshake.session.username;
-        console.log("Trying to host !");
-        const roomData = [];
-        roomData.push(username);
-        allRooms.push(roomData);
-        let res = allRooms.findIndex(function (el) {
-            return el[0] == username;
-        });
-        console.log(username + " Hosted room : room-" + res);
-        socket.join("room-" + res);
-        socket.handshake.session.idRoom = "room-" + res;
+        let res = Number(getMaxKey(allRooms)) + 1;
+        let data = {
+            name: username,
+            playerId: 0,
+            validGrid: false
+        };
+         
+        // Create room and game
+        allRooms[res] = [data]
+        allGames[res] = new BSGame(res);
 
-        let podium;
-        // Database.refreshScore(socket.handshake.session.username, "", "", (a) => {
-        //     podium = a;
-        // });
-        console.log(allRooms)
+
+        console.log(username, " is hosting room-", res);
+        socket.handshake.session.idRoom = res;
+
         io.emit("display-rooms", allRooms);
+        socket.disconnect(); 
     });
 
     socket.on("join-room", (hostName) => {
-        let username = socket.handshake.session.username;
-        if (hostName != username) {
-            console.log("Trying to join !");
-            let res = allRooms.findIndex(function (el) {
-                return el[0] == hostName;
-            });
-            allRooms[res].push(username);
-            socket.join("room-" + res);
-            console.log(username + " Joined room : room-" + res + " hosted by " + hostName);
-            socket.handshake.session.idRoom = "room-" + res;
+        let res = Object.keys(allRooms).findIndex(key => allRooms[key][0].name == hostName)
+        console.log(allRooms[res])
+        if (allRooms[res] && allRooms[res].length < 2) {
 
-            io.emit("hide-card", hostName);
+            let username = socket.handshake.session.username;
+            if (hostName != username) {
+                let data = {
+                    name: username,
+                    playerId: 1,
+                    validGrid: false
+                };
+                allRooms[res].push(data);
+                allGames[res].addPlayer(username);
+                socket.handshake.session.idRoom = res;
+                console.log(username, " Joined room : room-", res, " hosted by ", hostName);
+                io.emit("hide-card", hostName);
+
+                socket.disconnect();
+            }
         }
     });
 
-    socket.on("leave-room", (hostName, username) => {
-        console.log("Trying to disconnect !");
-        let res = allRooms.findIndex(function (el) {
-            return (el[0] == hostName && el[1] == username);
-        });
-        allRooms.splice(res, 1);
-        socket.leave("room-" + res);
-        console.log(username + " " + hostName + " Left the room : room-" + res);
-        console.log(allRooms);
+ 
+    /* -------------------------------------------------------------------------- */
+    /*                                    Game                                    */
+    /* -------------------------------------------------------------------------- */
+
+    socket.on("getPlayerGrid", () => {
+        const idRoom = socket.handshake.session.idRoom;
+        const username = socket.handshake.session.username;
+        let id = 0;
+        allRooms[idRoom][0].name === username ? id = 0 : id = 1;
+        socket.emit("resultPlayerId", id);
+    })
+
+    socket.on("playerPlayed", (pos, playerId, weapon) => {
+        // The player with the id "playerId", played on the case "pos" with the weapon "weapon" 
+        console.log(pos, playerId, weapon);
     });
 
-    socket.on("wrapPosition", (grid, x, y, size, rotation) => {
-        let res = gridVerif.wrapPosition(grid, x, y, size, rotation);
-        console.log(res)
-        socket.emit("responseWrap", res);
+    socket.on("checkGrid", (grid) => {
+        let idRoom = socket.handshake.session.idRoom;
+        let username = socket.handshake.session.username;
+
+        let nbSheep = 0;
+        for (let x = 0; x < 10; x++) {
+            for (let y = 0; y < 10; y++) {
+                if (grid[x][y] != undefined) nbSheep++;
+            }
+        }
+
+        if (nbSheep === 20) {
+            let idPlayer = allRooms[idRoom].findIndex(e => e.name == username)
+
+            allRooms[idRoom][idPlayer].validGrid = true;
+            allGames[idRoom].playerStartGrids[idPlayer] = grid;
+
+            if (allRooms[idRoom].every(e => e.validGrid == true)) {
+
+
+                return io.to(idRoom).emit("startGameplay");
+            } else return socket.emit("resultGrid", true);
+        }
+        return socket.emit("resultGrid", false);
     });
 
-    /* ---------------------------------- Game ---------------------------------- */
-    socket.on("", () => {
+    /* ------------------------------- Disconnect ------------------------------- */
 
-    });
-    //! A utiliser dans socket du game    socket.to("room-" + res).emit("play");
+    socket.on("disconnect", (reason) => {
+        console.log("Disconnection of ", socket.handshake.session.username, " reason : ", reason);
+        let idRoom = socket.handshake.session.idRoom;
 
-    socket.on("disconnect", () => {
-        console.log("Déconnexion des joueurs");
+        if (reason == "transport close") {
+            disconnectedUsers.push(socket.handshake.session.username);
+            console.log(disconnectedUsers);
+
+            if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
+                allRooms[idRoom].pop()
+                allRooms[idRoom][0].username = "!";
+            }else{
+                delete allRooms[idRoom];
+            }
+            socket.to(idRoom).emit("disconnection");
+        }
     });
 });
 
