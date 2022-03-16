@@ -386,9 +386,9 @@ io.on("connection", (socket) => {
     })
 
     // TODO récup les fonctions de Rémi
-    socket.on("playerPlayed", (pos, playerId, weapon) => {
-        // The player with the id "playerId", played on the case "pos" with the weapon "weapon" 
-        console.log(pos, playerId, weapon);
+    socket.on("playerPlayed", (x, y, playerId, weapon) => {
+        // The player with the id "playerId", played on the case with the position "x", "y", with the weapon "weapon" 
+        console.log(x, y, playerId, weapon);
     });
 
     // Verify the grid when the user validate it, if both grid are verified, start gameplay

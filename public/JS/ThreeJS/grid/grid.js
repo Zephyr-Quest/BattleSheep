@@ -6,6 +6,7 @@ export class grid {
     constructor() {
         this.gridSize = 10;
 
+        // Init grid        
         this.grid = new Array;
         for (let row = 0; row < this.gridSize; row++) {
             this.grid[row] = new Array;

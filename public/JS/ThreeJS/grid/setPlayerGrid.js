@@ -19,7 +19,7 @@ export class setPlayerGrid extends grid {
         this.tabSheep = [];
         this.view3d = view3d;
 
-        // Set grid
+        /* -------------------------------- Set grid -------------------------------- */
         const playerGrid = document.getElementById("playerGrid");
         for (let row = 0; row < this.gridSize; row++) {
             const tr = document.createElement('tr');
@@ -35,7 +35,7 @@ export class setPlayerGrid extends grid {
         this.displayGrid();
         this.setDrop();
 
-        // Set sheeps
+        /* ------------------------------- Set sheeps ------------------------------- */
         for (let i = 0; i < this.nbSheep; i++) {
             if (i < 4)
                 this.tabSheep[i] = new sheep(1, this.rotation, undefined);
@@ -48,7 +48,7 @@ export class setPlayerGrid extends grid {
         }
         this.CreateSheepOnScreen();
 
-        // Set buttons
+        /* ------------------------------- Set buttons ------------------------------ */
         const rotateBtn = document.getElementById("rotate");
         const resetBtn = document.getElementById("reset");
         const validBtn = document.getElementById("valid");
@@ -129,7 +129,15 @@ export class setPlayerGrid extends grid {
         this.view3d.displayPlayerGrid(simpleGrid, SocketManager.getPlayerId());
     }
 
-    
+    /**
+     * Receive first position of a sheep and extend him to his size
+     *
+     * @param   {Array}  sheepPosition  First position of the sheep
+     * @param   {String}  rotate         If the sheep is in row or column
+     * @param   {Number}  range          Size of the sheep
+     * @param   {String}  value          Value of sheep(size and rotation) to complete the grid
+     * 
+     */
     rangeSheep(sheepPosition, rotate, range, value) {
         const row = sheepPosition[0];
         const col = sheepPosition[2];
@@ -140,6 +148,9 @@ export class setPlayerGrid extends grid {
         }
     }
 
+    /**
+     * Create the sheeps to put in the grid in the select barre
+     */
     CreateSheepOnScreen() {
         const div = document.getElementById("sheepBox");
         for (let i = 0; i < this.nbSheep; i++) {
@@ -169,6 +180,17 @@ export class setPlayerGrid extends grid {
         }
     }
 
+
+    /* -------------------------------------------------------------------------- */
+    /*                                Drag and Drop                               */
+    /* -------------------------------------------------------------------------- */
+
+    /**
+     * Set the drag function for drag and drop
+     *
+     * @param   {DIV}  currentBox  DIV of the sheep to move
+     *
+     */
     setDrag(currentBox) {
         currentBox.addEventListener("dragstart", (event) => {
             // console.log("start");
@@ -200,6 +222,9 @@ export class setPlayerGrid extends grid {
         })
     }
 
+    /**
+     * Set the drop function to put a sheep in a case 
+     */
     setDrop() {
         const container = document.querySelectorAll(".container");
 

@@ -9,6 +9,9 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
+/**
+ * Class BDD - Players, scores, login
+ */
 class BDD {
     constructor() {
         this.con = mysql.createConnection({
@@ -24,6 +27,7 @@ class BDD {
      *
      * @param   {string}  user  username to insert
      * @param   {string}  pass  password
+     * @param   {callback}  callback
      *
      * @return  {error}        return if error
      */
@@ -58,8 +62,9 @@ class BDD {
     /**
      * look for user in table with correct password
      *
-     * @param   {string}  user  username
+     * @param   {string}  usr  username
      * @param   {string}  pass  password
+     * @param   {callback}  callback
      *
      * @return  {Array}        array of users matching
      */
@@ -72,7 +77,6 @@ class BDD {
                 if (err) throw err;
                 if (result == "") console.log("Utilisateur introuvable ");
                 else {
-                    // console.log("Résultat trouvé : ");
                     bcrypt.compare(pass, result[0].password, function (err, match) {
                         if (err) {
                             console.log(err);
@@ -93,9 +97,8 @@ class BDD {
 
 
     /**
-     * Get All table
-     *
-     * @param   {string}  user  username
+     * Get All table in BDD for debug
+     * @param   {callback}  callback
      *
      * @return  {Array}       usr and pass
      */
@@ -108,9 +111,10 @@ class BDD {
     }
 
     /**
-     * get user and password for a username given
+     * get user and password for a username given for debug
      *
-     * @param   {string}  user  username
+     * @param   {string}  usr  username
+     * @param   {callback}  callback
      *
      * @return  {Array}       usr and pass
      */
@@ -128,7 +132,8 @@ class BDD {
     /**
      * get user and password for a id given
      *
-     * @param   {string}  id  id
+     * @param   {Number}  id  id
+     * @param   {callback}  callback
      *
      * @return  {Array}       usr and pass
      */
@@ -144,7 +149,7 @@ class BDD {
     }
 
     /**
-     * Remove user from DB
+     * Remove user from BDD
      *
      * @param   {String}  username  Username to remove
      * @param   {callback}  callback
@@ -166,9 +171,8 @@ class BDD {
     }
 
     /**
-     * Remove user from DB
+     * Remove all users from DB
      *
-     * @param   {String}  username  Username to remove
      * @param   {callback}  callback
      *
      * @return  {Array}
@@ -182,6 +186,16 @@ class BDD {
         });
     }
 
+    /**
+     * Take score and user and add it if needed to the BDD
+     *
+     * @param   {String}  user      useraname of player
+     * @param   {String}  against   username of against player
+     * @param   {Number}  score     Score
+     * @param   {Callback}  callback  callback  
+     *
+     * @return  {Object}            Complete and refreshed podium
+     */
     refreshScore(user, against, score, callback) {
         if (against == "" || score == "") {
             let que = 'SELECT * from users WHERE username=?';
@@ -211,10 +225,10 @@ class BDD {
                             name: scoreObj.thirdName,
                             score: scoreObj.thirdScore,
                         }
-                    }
+                    };
                     callback(Podium);
-                };
-            })
+                }
+            });
 
         } else {
             let que = 'SELECT * from users WHERE username=?';
@@ -265,7 +279,7 @@ class BDD {
                                 name: scoreObj.thirdName,
                                 score: scoreObj.thirdScore,
                             }
-                        }
+                        };
                         callback(Podium);
                     });
                 }
@@ -274,6 +288,7 @@ class BDD {
     }
 }
 
+// Export functions 
 module.exports = {
     BDD
 };
