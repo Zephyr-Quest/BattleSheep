@@ -9,22 +9,12 @@ window.addEventListener("load", () => {
     SplashScreen.start(() => {
         // The splash screen is done
         SplashScreen.hideScreen();
-        // Game.init();
-        // SocketManager.init(Game.getView());
+
         Game.init(() => {
             Game.setRaycasterState(false);
             SocketManager.init(Game.getView());
             Game.setRaycasterEvent(clickEvent);
             Game.setCameraFromVector(Config.cameraPositions[SocketManager.getPlayerId() === 0 ? "q" : "d"]);
-            // SocketManager.getPLayerId()
-            //Game.setPlayerId = socket.emit("getPlayerId");
-            // Game.setRaycasterEvent(() => {
-            //     const tmp = [
-            //         { x: 0, y: 0, playerId: 0, isSheep: false },
-            //         { x: 1, y: 0, playerId: 0, isSheep: true }
-            //     ];
-            //     updateWorld(tmp, "Wolf", 5, 3, 10, true);
-            // })
         });
     });
 
@@ -35,7 +25,7 @@ window.addEventListener("load", () => {
 
 function clickEvent(pos) {
     console.log(pos);
-    SocketManager.play(pos, HUD.getCurrentWeapon());
+    SocketManager.play(pos.x, pos.y, HUD.getCurrentWeapon());
 }
 
 /**
