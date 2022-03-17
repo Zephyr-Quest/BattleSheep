@@ -30,6 +30,8 @@ const {
 const {
     hostname
 } = require("os");
+const Verif = require('./back/weapons');
+
 const Database = new BDD();
 
 if (process.env.NODE_ENV !== "production") {
@@ -370,6 +372,8 @@ io.on("connection", (socket) => {
     socket.on("playerPlayed", (x, y, playerId, weapon) => {
         // The player with the id "playerId", played on the case with the position "x", "y", with the weapon "weapon" 
         console.log(x, y, playerId, weapon);
+
+        Verif.attack()
     });
 
     socket.on("checkGrid", (grid) => {

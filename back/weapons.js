@@ -3,13 +3,13 @@
 
 
 // Attack the grid
-function attack(grid, type, x, y) {
+function attack(grid, type, x, y, history, playerId) {
     if (type == "shears") {
         return hit(grid, x, y);
     } else if (type == "radar") {
         return radar(grid, x, y);
     } else if (type == "torpedo") {
-        return torpedo(grid, x, y);
+        return torpedo(grid, x, y, history, playerId);
     } else if (type == "submarine") {
         return submarine(grid, x, y);
     }
@@ -151,4 +151,4 @@ function checkHistory(history, x, y, playerId) {
     return undefined;
 };
 
-export { wrapPosition };
+module.exports = { attack };
