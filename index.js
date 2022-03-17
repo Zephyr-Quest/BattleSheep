@@ -1,3 +1,6 @@
+/* -------------------------------------------------------------------------- */
+/*                                  Libraries                                 */
+/* -------------------------------------------------------------------------- */
 const express = require("express");
 const app = express();
 const http = require("http").Server(app);
@@ -38,6 +41,7 @@ if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
 }
 
+/* ------------------------- Session initialization ------------------------- */
 const session = require("express-session")({
     secret: process.env.SESSION_SECRET,
     resave: true,
@@ -48,15 +52,6 @@ const session = require("express-session")({
     },
 });
 
-function getMaxKey(obj) {
-    let result = -1;
-
-    Object.keys(obj).forEach(key => {
-        if (key > result) result = key;
-    });
-
-    return result;
-}
 
 app.use(jsonParse);
 app.use(session);
@@ -71,14 +66,28 @@ if (app.get("env") === "production") {
 }
 
 io.use(sharedsession(session, {
-    // Session automatiquement sauvegardée en cas de modification
+    // Session automatically change if changement
     autoSave: true
 }));
+
+/**
+ * Obtain the higher id of an object
+ * @param {Object} obj 
+ * @return {String} max id
+ */
+function getMaxKey(obj) {
+    let result = -1;
+
+    Object.keys(obj).forEach(key => {
+        if (key > result) result = key;
+    });
+    return result;
+}
 
 /* -------------------------------------------------------------------------- */
 /*                         Get the different request                          */
 /* -------------------------------------------------------------------------- */
-
+// get the index page
 app.get("/", (req, res) => {
     res.render("index", {
         title: "BattleSheep by ZephyrStudio",
@@ -93,6 +102,7 @@ app.get("/", (req, res) => {
     });
 });
 
+// get the signup page
 app.get("/signup", (req, res) => {
     // Here : check if the user is already connected
     // If he's not, send him the signup page
@@ -103,13 +113,13 @@ app.get("/signup", (req, res) => {
             title: "BattleSheep | Sign up, Log in",
             description: "Sign up or log in to BattleSheep",
             scripts: [{
-                name: "http",
-                type: "text/javascript",
-            },
-            {
-                name: "signup",
-                type: "text/javascript",
-            },
+                    name: "http",
+                    type: "text/javascript",
+                },
+                {
+                    name: "signup",
+                    type: "text/javascript",
+                },
             ],
         });
     } else {
@@ -119,9 +129,10 @@ app.get("/signup", (req, res) => {
     }
 });
 
+// post request to signup
 app.post("/signup", body("pseudo").isLength({
-    min: 3
-}).trim().escape(),
+        min: 3
+    }).trim().escape(),
     body("password").isLength({
         min: 3
     }).trim(),
@@ -159,13 +170,14 @@ app.post("/signup", body("pseudo").isLength({
     }
 );
 
+// post request to login
 app.post("/login", body("pseudo").isLength({
-    min: 3,
-}).trim().escape(),
+        min: 3,
+    }).trim().escape(),
     body("password").isLength({
         min: 3,
     })
-        .trim(),
+    .trim(),
     (req, res) => {
         console.log("--- LOG IN ---");
 
@@ -180,17 +192,11 @@ app.post("/login", body("pseudo").isLength({
                 errors: errors.array(),
             });
         } else {
-            // console.log("PSEUDO", pseudo);
-            // console.log("MDP", password);
             manageUser.signIn(password, (mdp) => {
                 Database.signIn(pseudo, mdp, (e) => {
                     if (e == true) {
                         req.session.username = req.body.pseudo;
                         req.session.save();
-                        // console.log("Envoi vers le lobby");
-                        // Database.getList((e) => {
-                        //     console.log(e);
-                        // });
                         res.send('OK');
                     }
 
@@ -202,6 +208,7 @@ app.post("/login", body("pseudo").isLength({
     }
 );
 
+// get the rule page
 app.get("/rules", (req, res) => {
     res.render("rules", {
         title: "BattleSheep | Rules",
@@ -216,6 +223,7 @@ app.get("/rules", (req, res) => {
     });
 });
 
+// get the lobby page
 app.get("/lobby", (req, res) => {
     if (!req.session.username) {
         res.redirect("/");
@@ -230,6 +238,7 @@ app.get("/lobby", (req, res) => {
     });
 });
 
+// get the game page
 app.get("/game", (req, res) => {
     if (!req.session.username) {
         res.redirect("/");
@@ -239,12 +248,14 @@ app.get("/game", (req, res) => {
     res.render("game");
 });
 
+// post request to logout
 app.post("/logout", (req, res) => {
     console.log("--- DECONNEXION ---");
     req.session.destroy();
     res.send('OK');
 });
 
+// get the not available page (if browser = firefox for example)
 app.get("/not_available", (req, res) => res.render("not_available"));
 
 // Capture 404 requests
@@ -261,7 +272,7 @@ let allRooms = {};
 let allGames = {};
 let disconnectedUsers = [];
 
-
+// connection to socket
 io.on("connection", (socket) => {
     const username = socket.handshake.session.username;
 
@@ -273,8 +284,7 @@ io.on("connection", (socket) => {
         console.log("--- GAME ---")
         console.log("Connexion de ", username, " à la room ", idRoom);
         socket.join(idRoom)
- 
-        // Send the player id
+
         if (!disconnectedUsers.includes(username)) {
             const id = allRooms[idRoom][0].name === username ? 0 : 1;
             socket.emit("resultPlayerId", id);
@@ -297,6 +307,7 @@ io.on("connection", (socket) => {
     /*                                    Lobby                                   */
     /* -------------------------------------------------------------------------- */
 
+    // get and emit to everyone his score and rooms already created
     socket.on('login', () => {
         Database.refreshScore(socket.handshake.session.username, "", "", (a) => {
             io.emit("display-score", a);
@@ -305,13 +316,18 @@ io.on("connection", (socket) => {
         socket.emit("display-username", socket.handshake.session.username);
     });
 
+    // emit to the everyone the score of the actual rooms
     socket.on("get-score", user => {
         Database.refreshScore(user, "", "", (a) => {
             io.emit("display-room-score", user, a.first.score);
         });
     })
 
-    /* ---------------------------------- Rooms ---------------------------------- */
+    /* -------------------------------------------------------------------------- */
+    /*                                    Rooms                                   */
+    /* -------------------------------------------------------------------------- */
+
+    // create a new room and emit it to everyone on lobby
     socket.on("host-room", () => {
         let username = socket.handshake.session.username;
         let res = Number(getMaxKey(allRooms)) + 1;
@@ -320,7 +336,7 @@ io.on("connection", (socket) => {
             playerId: 0,
             validGrid: false
         };
-         
+
         // Create room and game
         allRooms[res] = [data]
         allGames[res] = new BSGame(res);
@@ -330,9 +346,10 @@ io.on("connection", (socket) => {
         socket.handshake.session.idRoom = res;
 
         io.emit("display-rooms", allRooms);
-        socket.disconnect(); 
+        socket.disconnect();
     });
 
+    // join the room clicked (by the hostname) and emit to everyone to hide the joined room
     socket.on("join-room", (hostName) => {
         let res = Object.keys(allRooms).findIndex(key => allRooms[key][0].name == hostName)
         console.log(allRooms[res])
@@ -356,11 +373,12 @@ io.on("connection", (socket) => {
         }
     });
 
- 
+
     /* -------------------------------------------------------------------------- */
     /*                                    Game                                    */
     /* -------------------------------------------------------------------------- */
 
+    // TODO voir à quoi ca sert
     socket.on("getPlayerGrid", () => {
         const idRoom = socket.handshake.session.idRoom;
         const username = socket.handshake.session.username;
@@ -369,6 +387,7 @@ io.on("connection", (socket) => {
         socket.emit("resultPlayerId", id);
     })
 
+    // TODO récup les fonctions de Rémi
     socket.on("playerPlayed", (x, y, playerId, weapon) => {
         // The player with the id "playerId", played on the case with the position "x", "y", with the weapon "weapon" 
         console.log(x, y, playerId, weapon);
@@ -376,6 +395,7 @@ io.on("connection", (socket) => {
         Verif.attack()
     });
 
+    // Verify the grid when the user validate it, if both grid are verified, start gameplay
     socket.on("checkGrid", (grid) => {
         let idRoom = socket.handshake.session.idRoom;
         let username = socket.handshake.session.username;
@@ -394,15 +414,16 @@ io.on("connection", (socket) => {
             allGames[idRoom].playerStartGrids[idPlayer] = grid;
 
             if (allRooms[idRoom].every(e => e.validGrid == true)) {
-
-
                 return io.to(idRoom).emit("startGameplay");
             } else return socket.emit("resultGrid", true);
         }
         return socket.emit("resultGrid", false);
     });
 
-    /* ------------------------------- Disconnect ------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*                                Disconnection                               */
+/* -------------------------------------------------------------------------- */
+
 
     socket.on("disconnect", (reason) => {
         console.log("Disconnection of ", socket.handshake.session.username, " reason : ", reason);
@@ -413,9 +434,9 @@ io.on("connection", (socket) => {
             console.log(disconnectedUsers);
 
             if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
-                allRooms[idRoom].pop()
+                allRooms[idRoom].pop();
                 allRooms[idRoom][0].username = "!";
-            }else{
+            } else {
                 delete allRooms[idRoom];
             }
             socket.to(idRoom).emit("disconnection");
