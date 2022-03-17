@@ -1,19 +1,21 @@
+/* ---------------------------------- Data ---------------------------------- */
+
+const weaponsName = ["Shears", "Strimmer", "Epidemic", "Wolf"];
+
 /* ---------------------------- Weapons functions --------------------------- */
-
-
 
 // Attack the grid
 function attack(grid, type, x, y, history, playerId) {
-    if (type == "shears") {
-        return hit(grid, x, y);
-    } else if (type == "radar") {
-        return radar(grid, x, y);
-    } else if (type == "torpedo") {
-        return torpedo(grid, x, y, history, playerId);
-    } else if (type == "submarine") {
-        return submarine(grid, x, y);
+    let result = [];
+    
+    switch (type) {
+        case "Shears": result = hit(grid, x, y); break;
+        case "Strimmer": result = radar(grid, x, y); break;
+        case "Epidemic": result = submarine(grid, x, y); break;
+        case "Wolf": result = torpedo(grid, x, y, history, playerId); break;
     }
-    return false;
+
+    return result;
 }
 
 /**
@@ -28,11 +30,11 @@ function hit(grid, x, y) {
     if (x < 0 || x > 9 || y < 0 || y > 9) {
         return [];
     } else {
-        return {
+        return [{
             x: x,
             y: y,
-            state: grid[x][y] == undefined ? 0 : 2 // 0 : empty, 1 : ship, 2 : hit
-        }
+            state: grid[y][x] ? 2 : 0 // 0 : empty, 1 : ship, 2 : hit
+        }];
     }
 }
 
@@ -46,7 +48,7 @@ function radar(grid, x, y) {
                 result.push({
                     x: i,
                     y: j,
-                    state: grid[i][j] == undefined ? 0 : 1 // 0 : nothing, 1 : ship visible
+                    state: grid[j][i] ? 1 : 0 // 0 : nothing, 1 : ship visible
                 });
             }
         }
@@ -64,7 +66,7 @@ function torpedo(grid, x, y, history, playerId) {
     }
 
     // If the case is empty
-    if (grid[x][y] == undefined) {
+    if (!grid[y][x]) {
         return [{
             x: x,
             y: y,
@@ -75,10 +77,10 @@ function torpedo(grid, x, y, history, playerId) {
     else {
         let result = [];
         let touched = 0;
-        if (grid[x][y][1] == "c") {
-            const size = Number(grid[x][y][0]);
+        if (grid[y][x][1] == "c") {
+            const size = Number(grid[y][x][0]);
             for (let i = Math.max(0, x - size); i <= Math.mix(10, x + size); i++) {
-                if (grid[i][y][1] === "c" && Number(grid[i][y][0]) === size) {
+                if (grid[y][i][1] === "c" && Number(grid[y][i][0]) === size) {
                     checkHistory(history, i, y, playerId)['state'] === 2 ? touched++ : 0;
                     result.push({
                         x: i,
@@ -90,7 +92,7 @@ function torpedo(grid, x, y, history, playerId) {
         }
         else {
             for (let i = Math.max(y - size, 0); i <= Math.min(y + size, 10); i++) {
-                if (grid[x][i][1] === "r" && Number(grid[x][i][0]) === size) {
+                if (grid[i][x][1] === "r" && Number(grid[i][x][0]) === size) {
                     checkHistory(history, x, i, playerId)['state'] === 2 ? touched++ : 0;
                     result.push({
                         x: i,
@@ -132,7 +134,7 @@ function submarine(grid, x, y) {
             results.push({
                 x: i,
                 y: j,
-                state: grid[i][j] == undefined ? 0 : 2 // 0 : empty, 1 : ship, 2 : hit
+                state: grid[j][i] ? 2 : 0 // 0 : empty, 1 : ship, 2 : hit
             });
         }
     }
@@ -149,6 +151,21 @@ function checkHistory(history, x, y, playerId) {
         }
     }
     return undefined;
-};
+}
 
-module.exports = { attack };
+/**
+ * Check if coords are in the grid
+ * @param {Number} x The x coord
+ * @param {Number} y The y coord
+ * @returns If coords are valid
+ */
+const isCoordValid = (x, y) => x >= 0 && x < 10 && y >= 0 && y < 10;
+
+/**
+ * Check if the name of a weapon is known
+ * @param {String} name The weapon name to check
+ * @returns If the weapon is a correct one
+ */
+const isWeapon = name => weaponsName.includes(name);
+
+module.exports = { attack, isCoordValid, isWeapon };

@@ -123,6 +123,7 @@ export class View {
      * @returns The found object name or null
      */
     getObjectNameOnGrid(pos, playerId) {
+        console.log(this.allObjects);
         for (const objName in this.allObjects) {
             const obj = this.allObjects[objName];
 
@@ -180,13 +181,8 @@ export class View {
      * @param {Number} type 0 -> Nothing, 1 -> A basic sheep, 2 -> A shorn sheep
      */
     uncoverGridCase(pos, playerId, type = 0) {
-        // Down the previous selected grass
-        if (this.sceneState.turningGrass !== null) {
-            this.sceneState.turningGrass.downGrass();
-            this.sceneState.turningGrass = null;
-        }
-
         const grassName = this.getObjectNameOnGrid(pos, playerId);
+        if (!grassName) throw "Error finding an object at (" + pos.x + ", " + pos.y + ", " + playerId + ")";
         const grass = this.allObjects[grassName];
         
         // Remove the grass

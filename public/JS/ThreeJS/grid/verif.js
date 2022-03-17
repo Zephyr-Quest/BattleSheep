@@ -129,3 +129,5 @@ function isPositionValid(grid, ship) {
 
     return true;
 }
+
+export { wrapPosition };

@@ -65,8 +65,7 @@ module.exports = class BattleSheepGame {
             // Check if the whole grid is hitten
             for (let row = 0; row < grid.length; row++) {
                 for (let col = 0; col < grid[row].length; col++) {
-                    const currentCase = grid[row][col];
-                    if (currentCase !== undefined && !isInHistory(row, col, playerId, this.history))
+                    if (grid[row][col] && !isInHistory(col, row, playerId, this.history))
                         gridIsDestroyed = false;
                 }
             }

@@ -340,7 +340,7 @@ io.on("connection", (socket) => {
         // Create room and game
         allRooms[res] = [data]
         allGames[res] = new BSGame(res);
-
+        allGames[res].addPlayer(username);
 
         console.log(username, " is hosting room-", res);
         socket.handshake.session.idRoom = res;
@@ -390,9 +390,57 @@ io.on("connection", (socket) => {
     // TODO récup les fonctions de Rémi
     socket.on("playerPlayed", (x, y, playerId, weapon) => {
         // The player with the id "playerId", played on the case with the position "x", "y", with the weapon "weapon" 
-        console.log(x, y, playerId, weapon);
+        const idRoom = socket.handshake.session.idRoom;
+        const currentGame = allGames[idRoom];
+        const touchedId = playerId === 0 ? 1 : 0;
+        const touchedGrid = currentGame.playerStartGrids[touchedId];
 
-        Verif.attack()
+        // Check attack data
+        let isCorrect = Verif.isCoordValid(x, y);
+        isCorrect &&= (currentGame.currentPlayer === playerId);
+        isCorrect &&= (Verif.isWeapon(weapon));
+        isCorrect &&= (!currentGame.weaponsUsed[playerId].includes(weapon));
+        if (!isCorrect) return;
+
+        console.log("### Player", playerId, "is playing ###");
+        console.log("Weapon :", weapon);
+        console.log("Target position :", x, y);
+        console.log("Target grid :", touchedGrid);
+
+        // Calcul damages
+        const result = Verif.attack(touchedGrid, weapon, x, y, currentGame.history, touchedId);
+        for (let i = 0; i < result.length; i++)
+            result[i].playerId = touchedId;
+        console.log("The player touched :", result);
+
+        // Update the game state
+        result.forEach(damage => {
+            currentGame.addToHistory(damage);
+        });
+        currentGame.currentPlayer = touchedId;
+        if (weapon !== "Shears")
+            currentGame.weaponsUsed[playerId].push(weapon);
+        
+        // Send the refresh to the front-end
+        const players = io.sockets.adapter.rooms.get(idRoom);
+        for (const p of players) {
+            const pSocket = io.sockets.sockets.get(p);
+            const pUsername = pSocket.handshake.session.username;
+            const pId = allRooms[idRoom].findIndex(e => e.name == pUsername);
+
+            console.log(pId, currentGame);
+
+            pSocket.emit(
+                "resultPlay",
+                currentGame.playerStartGrids[pId],
+                currentGame.currentPlayer,
+                currentGame.history,
+                currentGame.weaponsUsed[pId],
+                currentGame.chrono.minutes,
+                currentGame.chrono.seconds,
+                currentGame.isGameFinished
+            );
+        }
     });
 
     // Verify the grid when the user validate it, if both grid are verified, start gameplay

@@ -133,6 +133,7 @@ export class CustomRaycaster {
             const clickable = ["Grass", "Target"];
             if (clickable.includes(clicked.type)) {
                 const gridPosition = clicked.getGridPosition();
+                this.resetTargetAndCross();
 
                 // Check if the player click on his own grid
                 const playerId = gridPosition.z;
