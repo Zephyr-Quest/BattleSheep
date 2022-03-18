@@ -9,5 +9,5 @@ let score = 0;
  * @return  {Number} score             Score of the player
  */
 function calculScore(time, nbNewSheepFound) {
-    score += nbNewSheepFound*100/sqrt(time);
+    score += nbNewSheepFound*100/Math.sqrt(time);
 }
