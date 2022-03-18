@@ -151,7 +151,6 @@ function submarine(grid, x, y) {
         const tmpY = y + target[1];
         if (!isCoordValid(tmpX, tmpY)) return;
 
-        console.log(tmpX, tmpY);
         results.push({
             x: tmpX,
             y: tmpY,

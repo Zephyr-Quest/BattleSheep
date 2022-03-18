@@ -134,7 +134,7 @@ export class CustomRaycaster {
             if (this.debug) console.log(clicked);
 
 
-            const clickable = ["Grass", "Target"];
+            const clickable = ["Grass", "Target", "Sheep"];
             if (clickable.includes(clicked.type)) {
                 const gridPosition = clicked.getGridPosition();
                 this.resetTargetAndCross();

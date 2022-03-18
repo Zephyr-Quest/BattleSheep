@@ -219,7 +219,7 @@ export class View {
                 // Remove them from scene
                 for (const cpt of this.capillotractoms)
                     this.scene.remove(cpt);
-            }, 1000);
-        }, 2500);
+            }, Config.capillotractom.durationBeforeRemove);
+        }, Config.capillotractom.duration);
     }
 };

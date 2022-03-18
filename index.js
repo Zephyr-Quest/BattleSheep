@@ -402,7 +402,7 @@ io.on("connection", (socket) => {
         isCorrect &&= (!currentGame.weaponsUsed[playerId].includes(weapon));
         if (!isCorrect) return;
 
-        console.log("### Player", playerId, "is playing ###");
+        console.log("### Player", playerId, "is playing (room " + idRoom + ") ###");
         console.log("Weapon :", weapon);
         console.log("Target position :", x, y);
 
@@ -453,8 +453,6 @@ io.on("connection", (socket) => {
             }
         }
 
-        // TODO: Remove
-        nbSheep = 20;
         if (nbSheep === 20) {
             let idPlayer = allRooms[idRoom].findIndex(e => e.name == username)
 
@@ -462,7 +460,9 @@ io.on("connection", (socket) => {
             allGames[idRoom].playerStartGrids[idPlayer] = grid;
 
             if (allRooms[idRoom].every(e => e.validGrid == true)) {
-                return io.to(idRoom).emit("startGameplay");
+                io.to(idRoom).emit("startGameplay");
+                allGames[idRoom].chrono.incrementChrono();
+                return;
             } else return socket.emit("resultGrid", true);
         }
         return socket.emit("resultGrid", false);
