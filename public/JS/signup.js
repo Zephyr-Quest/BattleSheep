@@ -73,8 +73,6 @@ signupForm.addEventListener('submit', e => {
         return;
     }
 
-    console.log(data);
-
     // Send HTTP POST request
     http.post(
         '/signup', data,
@@ -117,7 +115,6 @@ loginForm.addEventListener('submit', e => {
         return;
     }
 
-    console.log(data)
     http.post(
         '/login', data,
         () => window.location.href = 'lobby',

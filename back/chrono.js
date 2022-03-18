@@ -9,15 +9,15 @@ module.exports = class Chrono{
     
     incrementChrono() {
         // Increment seconds
-        chronoSeconds++;
+        this.seconds++;
     
         // Increment minutes
-        if (chronoSeconds > 59) {
-            chronoSeconds = 0;
-            chronoMinutes++;
+        if (this.seconds > 59) {
+            this.seconds = 0;
+            this.minutes++;
         }
     
         // Continue
-        if (!stopChrono) setTimeout(this.incrementChrono(), delay);
+        if (!this.stopChrono) setTimeout(() => this.incrementChrono(), delay);
     }
 }

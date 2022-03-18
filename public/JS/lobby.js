@@ -6,7 +6,6 @@ socket.emit("login", "");
 socket.on("display-rooms", (allRooms) => {
     let htmlScore = "";
     Object.keys(allRooms).forEach(key => {
-        console.log(Object.keys(allRooms).length);
         if (allRooms[key].length < 2)
             htmlScore += '<div class="card" title="Click to join ' + allRooms[key][0].name + '\'s game"><ion-icon name="log-in"></ion-icon><ul><li class="name">Host : <strong class="green">' + allRooms[key][0].name + '</strong></li><li class="score">High score : <strong>' + "blabla" + '</strong></li></ul></div>'
     });
@@ -17,7 +16,6 @@ socket.on("display-rooms", (allRooms) => {
         card.addEventListener("click", () => {
             let host = card.getElementsByClassName("green")[0].innerText;
             let res = Object.keys(allRooms).findIndex(key => allRooms[key][0].name == host)
-            console.log("host : " + allRooms[res])
             if (allRooms[res] && allRooms[res].length < 2) {
                 socket.emit("join-room", host);
                 window.location.href = "/game";
@@ -25,7 +23,6 @@ socket.on("display-rooms", (allRooms) => {
         })
     }
     Object.keys(allRooms).forEach(key => {
-        console.log(allRooms[key])
         socket.emit("get-score", allRooms[key][0].name)
         //allRooms[key].forEach(key2 => socket.emit("get-score", allRooms[key][0].name));
     });
@@ -44,7 +41,6 @@ socket.on("display-room-score", (user, score) => {
 /* -------------------------- Button to host a game ------------------------- */
 
 document.getElementById("new_game").addEventListener("click", () => {
-    console.log("Clicked to host !")
     socket.emit("host-room", "");
     window.location.href = "/game";
 });
@@ -52,7 +48,6 @@ document.getElementById("new_game").addEventListener("click", () => {
 /* ----------------------------- Hide full room ----------------------------- */
 
 socket.on("hide-card", host => {
-    console.log(host)
     for (const card of document.querySelectorAll("#games-display .card")) {
         let usr = card.getElementsByClassName("green")[0].innerText;
         if (usr == host) {

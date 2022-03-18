@@ -3,7 +3,6 @@ import SplashScreen from "./utils/SplashScreen.js";
 import { Config } from "./ThreeJS/config.js";
 import { HUD } from "./ThreeJS/gameplay/HUD.js";
 import SocketManager from './utils/SocketManager.js';
-import { Vector2 } from 'three';
 
 window.addEventListener("load", () => {
     SplashScreen.start(() => {
@@ -24,7 +23,6 @@ window.addEventListener("load", () => {
 });
 
 function clickEvent(pos) {
-    console.log(pos);
     SocketManager.play(pos.x, pos.y, HUD.getCurrentWeapon());
 }
 

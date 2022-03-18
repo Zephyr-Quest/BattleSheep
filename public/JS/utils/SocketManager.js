@@ -1,6 +1,8 @@
 import { HUD } from '../ThreeJS/gameplay/HUD.js';
 import Game from "../ThreeJS/game.js";
 import { Vector2 } from "three";
+import SoundDesign from './SoundDesign.js';
+import { Config } from '../ThreeJS/config.js';
 
 /* -------------------------------------------------------------------------- */
 /*                               Some variables                               */
@@ -86,6 +88,7 @@ socket.on("resultPlayerId", (result) => {
 socket.on("startGameplay", () => {
     HUD.hideStartGrid();
     HUD.showAnnouncementDuring("The game starts", "Enjoy !", 2000);
+    HUD.startChronoFrom(0, 0);
     if(playerId === 0)
         Game.setRaycasterState(true);
 });
@@ -144,46 +147,54 @@ function getPlayerId() {
 function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes, seconds, endGame, gifName = undefined) {
     const view = Game.getView();
 
+    // Print the player grid
     view.displayPlayerGrid(startGrid, playerId);
     Game.setRaycasterState(false);
 
-    console.log(listWeaponUsed);
+    // Update his weapon list
     listWeaponUsed.forEach(weaponName => {
         HUD.blockWeapon(weaponName);
     });
     HUD.setCurrentWeapon("Shears");
 
+    // Update his chrono
     HUD.startChronoFrom(minutes, seconds);
 
+    // Start animations
     view.showCapillotractoms();
+    SoundDesign.playCapillotractom();
     setTimeout(() => {
+        // Print found sheeps
+        // Calcul the player score
+        let score = 0;
         listPos.forEach(element => {
-            console.log(element);
             view.uncoverGridCase(new Vector2(element.x, element.y), element.playerId, element.state);
+            score += element.playerId !== playerId && element.state === 2 ? 1 : 0;
         });
+        SoundDesign.playRandomSheep();
+        HUD.setScore(score);
 
-        if (playerId != currentPlayer) {
-            HUD.showAnnouncementDuring("Enemy turn", "Just wait... Keep calm...", 1000);
-        } else {
-            Game.setRaycasterState(true);
-            HUD.showAnnouncementDuring("Your turn", "Get fun !", 1000);
-        }
+        // Switch player
+        if (!endGame) {
+            if (playerId != currentPlayer) {
+                HUD.showAnnouncementDuring("Enemy turn", "Just wait... Keep calm...", 1000);
+            } else {
+                Game.setRaycasterState(true);
+                HUD.showAnnouncementDuring("Your turn", "Get fun !", 1000);
+            }
+        } else Game.setRaycasterState(false);
 
+        // Show gif and end announcement
         setTimeout(() => {
             if (gifName !== undefined) {
                 HUD.showGifDuring(gifName, 2000);
-                if (endGame) {
-                    Game.setRaycasterState(false);
-                    setTimeout(() => {
-                        HUD.showEndAnnouncement("Game finished", "Try another Game");
-                    }, 3000);
-                }
-            } else if (endGame) {
-                Game.setRaycasterState(false);
+                if (endGame) setTimeout(() => {
+                    HUD.showEndAnnouncement("Game finished", "Try another Game");
+                }, 3000);
+            } else if (endGame)
                 HUD.showEndAnnouncement("Game finished", "Try another Game");
-            }
-        }, 2000);
-    }, 3500);
+        }, endGame ? 10 : 2000);
+    }, Config.capillotractom.duration + Config.capillotractom.durationBeforeRemove);
 }
 
 
