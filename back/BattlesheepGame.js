@@ -59,13 +59,13 @@ module.exports = class BattleSheepGame {
         this.history.push(data);
 
         // Check if the game is finished
-        this.playerStartGrids.forEach((playerId, grid) => {
+        this.playerStartGrids.forEach((grid, playerId) => {
             let gridIsDestroyed = true;
             
             // Check if the whole grid is hitten
-            for (let row = 0; row < grid.length; row++) {
-                for (let col = 0; col < grid[row].length; col++) {
-                    if (grid[row][col] && !isInHistory(col, row, playerId, this.history))
+            for (let x = 0; x < grid.length; x++) {
+                for (let y = 0; y < grid.length; y++) {
+                    if (grid[y][x] && !isInHistory(x, y, playerId, this.history))
                         gridIsDestroyed = false;
                 }
             }

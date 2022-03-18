@@ -405,7 +405,6 @@ io.on("connection", (socket) => {
         console.log("### Player", playerId, "is playing ###");
         console.log("Weapon :", weapon);
         console.log("Target position :", x, y);
-        console.log("Target grid :", touchedGrid);
 
         // Calcul damages
         const result = Verif.attack(touchedGrid, weapon, x, y, currentGame.history, touchedId);
@@ -420,6 +419,7 @@ io.on("connection", (socket) => {
         currentGame.currentPlayer = touchedId;
         if (weapon !== "Shears")
             currentGame.weaponsUsed[playerId].push(weapon);
+        console.log("The game is finished ?", currentGame.isGameFinished);
         
         // Send the refresh to the front-end
         const players = io.sockets.adapter.rooms.get(idRoom);
@@ -427,8 +427,6 @@ io.on("connection", (socket) => {
             const pSocket = io.sockets.sockets.get(p);
             const pUsername = pSocket.handshake.session.username;
             const pId = allRooms[idRoom].findIndex(e => e.name == pUsername);
-
-            console.log(pId, currentGame);
 
             pSocket.emit(
                 "resultPlay",
@@ -455,6 +453,8 @@ io.on("connection", (socket) => {
             }
         }
 
+        // TODO: Remove
+        nbSheep = 20;
         if (nbSheep === 20) {
             let idPlayer = allRooms[idRoom].findIndex(e => e.name == username)
 

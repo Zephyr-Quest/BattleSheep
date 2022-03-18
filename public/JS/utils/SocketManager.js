@@ -86,7 +86,8 @@ socket.on("resultPlayerId", (result) => {
 socket.on("startGameplay", () => {
     HUD.hideStartGrid();
     HUD.showAnnouncementDuring("The game starts", "Enjoy !", 2000);
-    Game.setRaycasterState(true);
+    if(playerId === 0)
+        Game.setRaycasterState(true);
 });
 
 /**
@@ -171,16 +172,18 @@ function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes,
         setTimeout(() => {
             if (gifName !== undefined) {
                 HUD.showGifDuring(gifName, 2000);
-                if (endGame) setTimeout(() => {
-                    HUD.showEndAnnouncement("Game finished", "Try another Game");
-                }, 3000);
-            } else if (endGame)
+                if (endGame) {
+                    Game.setRaycasterState(false);
+                    setTimeout(() => {
+                        HUD.showEndAnnouncement("Game finished", "Try another Game");
+                    }, 3000);
+                }
+            } else if (endGame) {
+                Game.setRaycasterState(false);
                 HUD.showEndAnnouncement("Game finished", "Try another Game");
-        }, 1500);
+            }
+        }, 2000);
     }, 3500);
-    
-
-    
 }
 
 
