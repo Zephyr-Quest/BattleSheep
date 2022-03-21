@@ -10,7 +10,6 @@ import { HUD } from './gameplay/HUD.js';
 
 // Grid imports
 import { setPlayerGrid } from './grid/setPlayerGrid.js';
-import { Textures } from './level_design/textures.js';
 
 let scene, renderer, camera, controls, raycaster, view, playerId;
 
@@ -18,8 +17,8 @@ let scene, renderer, camera, controls, raycaster, view, playerId;
 
 let stats;
 const DEBUG_STATS = true;
-const USE_ORBIT_CONTROLS = true;
-const DEBUG_RAYCASTER = true;
+const USE_ORBIT_CONTROLS = false;
+const DEBUG_RAYCASTER = false;
 
 /* ---------------------------------- View ---------------------------------- */
 
@@ -45,6 +44,7 @@ const getView = () => view;
  */
 function setRaycasterState(state) {
     raycaster.isActive = state;
+    raycaster.resetTargetAndCross();
 }
 
 /**

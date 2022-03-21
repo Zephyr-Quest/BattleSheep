@@ -77,11 +77,15 @@ function torpedo(grid, x, y, history, playerId) {
     else {
         let result = [];
         let touched = 0;
+        const size = Number(grid[y][x][0]);
         if (grid[y][x][1] == "c") {
-            const size = Number(grid[y][x][0]);
-            for (let i = Math.max(0, x - size); i <= Math.mix(10, x + size); i++) {
+            for (let i = Math.max(0, x - size); i <= Math.min(9, x + size); i++) {
+                if (!grid[y][i]) continue;
+
                 if (grid[y][i][1] === "c" && Number(grid[y][i][0]) === size) {
-                    checkHistory(history, i, y, playerId)['state'] === 2 ? touched++ : 0;
+                    const isTouched = checkHistory(history, i, y, playerId);
+                    if (isTouched && isTouched.state === 2)
+                        touched++;
                     result.push({
                         x: i,
                         y: y,
@@ -91,12 +95,16 @@ function torpedo(grid, x, y, history, playerId) {
             }
         }
         else {
-            for (let i = Math.max(y - size, 0); i <= Math.min(y + size, 10); i++) {
+            for (let i = Math.max(y - size, 0); i <= Math.min(y + size, 9); i++) {
+                if (!grid[i][x]) continue;
+
                 if (grid[i][x][1] === "r" && Number(grid[i][x][0]) === size) {
-                    checkHistory(history, x, i, playerId)['state'] === 2 ? touched++ : 0;
+                    const isTouched = checkHistory(history, x, i, playerId);
+                    if (isTouched && isTouched.state === 2)
+                        touched++;
                     result.push({
-                        x: i,
-                        y: y,
+                        x: x,
+                        y: i,
                         state: 2
                     });
                 }
@@ -106,14 +114,14 @@ function torpedo(grid, x, y, history, playerId) {
         if (touched === 2) {
             return result;
         } else if (touched > 2) {
-                return result.slice(0, 2);
-            } else {
+            return result.slice(0, 2);
+        } else {
             return [{
                 x: x,
                 y: y,
                 state: 2
-                }]
-            }
+            }]
+        }
 
 
     }
@@ -128,16 +136,28 @@ function submarine(grid, x, y) {
     if (x < 0 || x > 9 || y < 0 || y > 9) {
         return [];
     }
+
     let results = [];
-    for (let i = Math.max(x, x - 2); i < Math.min(x, x + 2); i++) {
-        for (let j = Math.max(y, y - 2); j < Math.min(y, y + 2); j++) {
-            results.push({
-                x: i,
-                y: j,
-                state: grid[j][i] ? 2 : 0 // 0 : empty, 1 : ship, 2 : hit
-            });
-        }
-    }
+    const targets = [
+        [0, 0],
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+    ]
+
+    targets.forEach(target => {
+        const tmpX = x + target[0];
+        const tmpY = y + target[1];
+        if (!isCoordValid(tmpX, tmpY)) return;
+
+        results.push({
+            x: tmpX,
+            y: tmpY,
+            state: grid[tmpY][tmpX] ? 2 : 0 // 0 : empty, 1 : ship, 2 : hit
+        });
+    });
+
     return results;
 }
 

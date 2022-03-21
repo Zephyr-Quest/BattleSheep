@@ -121,7 +121,10 @@ export class CustomRaycaster {
 
                 clicked = this.view.allObjects[currentParent.name];
                 if (!clicked && currentParent.name !== "Floor0")
-                    throw "The clicked element is not referenced.";
+                throw "The clicked element is not referenced.";
+                
+                // The player clicked the ground
+                if (currentParent.name === "Floor0") return;
             } catch (error) {
                 console.error('Error finding the clicked element.');
                 if (this.debug) console.error(error);
@@ -130,7 +133,8 @@ export class CustomRaycaster {
 
             if (this.debug) console.log(clicked);
 
-            const clickable = ["Grass", "Target"];
+
+            const clickable = ["Grass", "Target", "Sheep"];
             if (clickable.includes(clicked.type)) {
                 const gridPosition = clicked.getGridPosition();
                 this.resetTargetAndCross();
@@ -235,6 +239,8 @@ export class CustomRaycaster {
                     // Get the targeted object in the case
                     const targetedId = this.view.getObjectNameOnGrid(targetPos, playerId);
                     const targeted = this.view.allObjects[targetedId];
+
+                    if (!targeted) return;
 
                     // Create the target
                     const target = targeted.type === 'ShornSheep' ?

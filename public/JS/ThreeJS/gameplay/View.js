@@ -123,7 +123,6 @@ export class View {
      * @returns The found object name or null
      */
     getObjectNameOnGrid(pos, playerId) {
-        console.log(this.allObjects);
         for (const objName in this.allObjects) {
             const obj = this.allObjects[objName];
 
@@ -182,7 +181,8 @@ export class View {
      */
     uncoverGridCase(pos, playerId, type = 0) {
         const grassName = this.getObjectNameOnGrid(pos, playerId);
-        if (!grassName) throw "Error finding an object at (" + pos.x + ", " + pos.y + ", " + playerId + ")";
+        if (!grassName) return;
+
         const grass = this.allObjects[grassName];
         
         // Remove the grass
@@ -219,7 +219,7 @@ export class View {
                 // Remove them from scene
                 for (const cpt of this.capillotractoms)
                     this.scene.remove(cpt);
-            }, 1000);
-        }, 2500);
+            }, Config.capillotractom.durationBeforeRemove);
+        }, Config.capillotractom.duration);
     }
 };
