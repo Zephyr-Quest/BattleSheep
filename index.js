@@ -455,6 +455,7 @@ io.on("connection", (socket) => {
             }
         }
 
+        nbSheep = 20;
         if (nbSheep === 20) {
             let idPlayer = allRooms[idRoom].findIndex(e => e.name == username)
 

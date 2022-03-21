@@ -135,7 +135,7 @@ export class View {
 
             // Check the object position
             const currentPos = obj.getGridPosition();
-            if (currentPos.x == pos.x && currentPos.y == pos.y && currentPos.z == playerId)
+            if (currentPos.x === pos.x && currentPos.y === pos.y && currentPos.z === playerId)
                 return objName;
         }
 
