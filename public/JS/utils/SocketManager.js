@@ -161,9 +161,8 @@ function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes,
     HUD.startChronoFrom(minutes, seconds);
 
     // Start animations
-    view.showCapillotractoms();
     SoundDesign.playCapillotractom();
-    setTimeout(() => {
+    view.showCapillotractoms(() => {
         // Print found sheeps
         // Calcul the player score
         let score = 0;
@@ -194,7 +193,7 @@ function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes,
             } else if (endGame)
                 HUD.showEndAnnouncement("Game finished", "Try another Game");
         }, endGame ? 10 : 2000);
-    }, Config.capillotractom.duration + Config.capillotractom.durationBeforeRemove);
+    });
 }
 
 

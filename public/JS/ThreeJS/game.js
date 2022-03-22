@@ -174,6 +174,16 @@ function render() {
     if (view.sceneState.isCapillotractomAnimate) {
         for (let i = 0; i < view.capillotractoms.length; i++) {
             view.capillotractoms[i].position.x += (i === 0 ? -Config.capillotractom.speed : Config.capillotractom.speed);
+
+            // Stop capillotractoms
+            let pos = view.capillotractoms[i].position;
+            let posInt = new THREE.Vector3(Math.floor(pos.x), Math.floor(pos.y), Math.floor(pos.z))
+            if (posInt.equals(Config.capillotractom.stopPositions[i])) {
+                view.sceneState.isCapillotractomAnimate = false;
+                setTimeout(() => {
+                    view.hideCapillotractoms();
+                }, Config.capillotractom.durationBeforeRemove);
+            }
         }
     }
 
@@ -193,6 +203,7 @@ function render() {
  */
 function setCameraFromVector(pos) {
     camera.position.fromArray(pos.toArray());
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
 }
 
 /**

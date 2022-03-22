@@ -23,8 +23,11 @@ export const Config = {
             new Vector3(17, 4, 9),
             new Vector3(-17, 4, -9)
         ],
+        stopPositions: [
+            new Vector3(-17, 4, 9),
+            new Vector3(17, 4, -9)
+        ],
         speed: 0.2,
-        duration: 4000,
         durationBeforeRemove: 1000
     }
 };

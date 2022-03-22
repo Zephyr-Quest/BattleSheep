@@ -26,6 +26,7 @@ export class View {
         };
         this.allObjects = {};
         this.capillotractoms = [];
+        this.capillotractomsCallback = null;
 
         // Init load managers
         this.loadManager = new LoadingManager();
@@ -198,8 +199,9 @@ export class View {
 
     /**
      * Show Capillotractoms go through the map
+     * @param {Function} callback What to do after the capillotractom load
      */
-    showCapillotractoms() {
+    showCapillotractoms(callback) {
         for (let i = 0; i < this.capillotractoms.length; i++) {
             // Update the capillotractom position
             this.capillotractoms[i].position.fromArray(Config.capillotractom.startPositions[i].toArray());
@@ -210,16 +212,18 @@ export class View {
 
         // Animate
         this.sceneState.isCapillotractomAnimate = true;
-        
-        setTimeout(() => {
-            // Stop animation
-            this.sceneState.isCapillotractomAnimate = false;
 
-            setTimeout(() => {
-                // Remove them from scene
-                for (const cpt of this.capillotractoms)
-                    this.scene.remove(cpt);
-            }, Config.capillotractom.durationBeforeRemove);
-        }, Config.capillotractom.duration);
+        this.capillotractomsCallback = callback;
+    }
+
+    /**
+     * Remove capillotractoms from scene
+     */
+    hideCapillotractoms() {
+        for (const cpt of this.capillotractoms)
+            this.scene.remove(cpt);
+        
+        if (this.capillotractomsCallback)
+            this.capillotractomsCallback();
     }
 };
