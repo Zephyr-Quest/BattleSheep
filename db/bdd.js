@@ -189,14 +189,14 @@ class BDD {
     /**
      * Take score and user and add it if needed to the BDD
      *
-     * @param   {String}  user      useraname of player
+     * @param   {String}  user      username of player
      * @param   {String}  against   username of against player
      * @param   {Number}  score     Score
      * @param   {Callback}  callback  callback  
      *
      * @return  {Object}            Complete and refreshed podium
      */
-    refreshScore(user, against, score, callback) {
+    refreshScore(user, against, score, callback = null) {
         if (against == "" || score == "") {
             let que = 'SELECT * from users WHERE username=?';
             this.con.query(que, [user], (err, result) => {
@@ -226,7 +226,7 @@ class BDD {
                             score: scoreObj.thirdScore,
                         }
                     };
-                    callback(Podium);
+                    if (callback) callback(Podium);
                 }
             });
 
@@ -280,7 +280,7 @@ class BDD {
                                 score: scoreObj.thirdScore,
                             }
                         };
-                        callback(Podium);
+                        if (callback) callback(Podium);
                     });
                 }
             });

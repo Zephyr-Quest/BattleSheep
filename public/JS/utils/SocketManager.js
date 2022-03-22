@@ -142,9 +142,9 @@ function getPlayerId() {
  * @param {Number} minutes - the number of minutes of the game
  * @param {Number} seconds - the number of seconds left in the game.
  * @param {Boolean} endGame - If the game is finished
- * @param [gifName] - the name of the gif to display during the turn
+ * @param {Number} score The player score
  */
-function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes, seconds, endGame, gifName = undefined) {
+function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes, seconds, endGame, score) {
     const view = Game.getView();
 
     // Print the player grid
@@ -165,13 +165,15 @@ function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes,
     view.showCapillotractoms(() => {
         // Print found sheeps
         // Calcul the player score
-        let score = 0;
+        let nbSheepFound = 0;
         listPos.forEach(element => {
             view.uncoverGridCase(new Vector2(element.x, element.y), element.playerId, element.state);
-            score += element.playerId !== playerId && element.state === 2 ? 1 : 0;
+            nbSheepFound += element.playerId !== playerId && element.state === 2 ? 1 : 0;
         });
         SoundDesign.playRandomSheep();
-        HUD.setScore(score);
+        HUD.setScore(nbSheepFound);
+
+        console.log("Your current score for now is", score);
 
         // Switch player
         if (!endGame) {
@@ -183,15 +185,23 @@ function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes,
             }
         } else Game.setRaycasterState(false);
 
+        // Determine which gif will be displayed
+        let gifName = undefined;
+
+        // Prepare the end message
+        let endMsg = "Try another Game";
+        if (endGame)
+            endMsg = "You " + (nbSheepFound === 20 ? "won" : "lost") + " with the score : " + score;
+
         // Show gif and end announcement
         setTimeout(() => {
             if (gifName !== undefined) {
                 HUD.showGifDuring(gifName, 2000);
                 if (endGame) setTimeout(() => {
-                    HUD.showEndAnnouncement("Game finished", "Try another Game");
+                    HUD.showEndAnnouncement("Game finished", endMsg);
                 }, 3000);
             } else if (endGame)
-                HUD.showEndAnnouncement("Game finished", "Try another Game");
+                HUD.showEndAnnouncement("Game finished", endMsg);
         }, endGame ? 10 : 2000);
     });
 }

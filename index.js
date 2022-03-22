@@ -9,6 +9,7 @@ const path = require("path");
 const mysql = require("mysql");
 const bodyParser = require("body-parser");
 const sharedsession = require('express-socket.io-session');
+const { calculScore } = require('./back/score');
 
 const {
     body,
@@ -412,6 +413,14 @@ io.on("connection", (socket) => {
             result[i].playerId = touchedId;
         console.log("The player touched :", result);
 
+        // Update the player's score
+        let nbNewFoundSheep = 0;
+        result.forEach(res => {
+            if (res.state === 2)
+                nbNewFoundSheep++;
+        })
+        currentGame.scores[playerId] += calculScore(currentGame.chrono.getTimeSeconds(), nbNewFoundSheep);
+
         // Update the game state
         result.forEach(damage => {
             currentGame.addToHistory(damage);
@@ -420,6 +429,10 @@ io.on("connection", (socket) => {
         if (weapon !== "Shears")
             currentGame.weaponsUsed[playerId].push(weapon);
         console.log("The game is finished ?", currentGame.isGameFinished);
+
+        // Store scores
+        if (currentGame.isGameFinished)
+            Database.refreshScore(currentGame.players[playerId], currentGame.players[touchedId], Math.floor(currentGame.scores[playerId]));
         
         // Send the refresh to the front-end
         const players = io.sockets.adapter.rooms.get(idRoom);
@@ -436,7 +449,8 @@ io.on("connection", (socket) => {
                 currentGame.weaponsUsed[pId],
                 currentGame.chrono.minutes,
                 currentGame.chrono.seconds,
-                currentGame.isGameFinished
+                currentGame.isGameFinished,
+                Math.floor(currentGame.scores[pId])
             );
         }
     });

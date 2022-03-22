@@ -20,4 +20,20 @@ module.exports = class Chrono{
         // Continue
         if (!this.stopChrono) setTimeout(() => this.incrementChrono(), delay);
     }
+
+    /**
+     * Get elapased seconds since the start of the chrono
+     * @returns All elapsed seconds
+     */
+    getTimeSeconds() {
+        let seconds = Number(this.seconds);
+        let minutes = Number(this.minutes);
+        
+        while (minutes > 0) {
+            seconds += 60;
+            minutes--;
+        }
+
+        return seconds;
+    }
 }
