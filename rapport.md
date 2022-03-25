@@ -37,8 +37,28 @@ Afin de faciliter le design du site, on a choisit de travailler avec le pré-pro
 	* Lobby
 	* Jeu
 
+
 ### Séléction de la grille
 @MaximeDeclemy
+
+La partie commence par la sélection de la grille. 
+On peut placer 10 groupes de moutons:
+* 4 groupes de 1 mouton
+* 3 groupes de 2 moutons
+* 2 groupes de 3 moutons
+* 1 groupe de 4 moutons
+
+Les moutons qui ne sont pas encore placés sont situés dans une barre à gauche de l'écran à côté de la grille.
+
+Le placement des moutons se fait par un système de drag and drop. Le joueur sélectionne un mouton dans la barre à gauche et le déplace jusqu'à la case du tableau voulu. Lorsqu'il le lâche, si le mouton a un placement convenable alors il est placé sur la grille, sinon il est remis à son ancienne position (dans la barre à gauche si le mouton n'était pas préalablement placé sur la grille, ou à son ancienne position sur la grille).
+
+La mise en place du drag and drop (qui m'a fait perdre trop de temps à cause d'erreurs irrecevables, je ne pouvais pas me laisser faire insulter de la sorte par une banale console, je lui apprends pas mon métier, alors elle va me laisser faire le mien, c'est qui le patron !) a pris plus de temps que prévu, notamment à cause des différents conteneurs utilisés (td du tableau, div du mouton, div de la barre des moutons, le contenu de la div du mouton). J'ai eu beaucoup d'erreurs à cause de ces conteneurs qui n'étaient pas ceux que je souhaitais viser. Une autre erreur qui m'a pris du temps et le remplissage de la grille selon la taille du groupe de mouton. On place dans la grille un seul mouton et il faut créer et placer automatiquement à la suite le nombre de moutons correspondant à la taille du groupe placé. Il a fallu créer de nouveaux moutons, de nouveaux blocs à placer dans les bons conteneurs (encore des erreurs d'éléments visés) et lorsqu'on choisi un mouton du groupe à déplacer, les autres (du groupe séléctionné) sont enlevés pour pouvoir placer le mouton à un nouvel endroit. Si on choisit un mouton dans la grille et que celui est situé au milieu de son groupe, il devient alors le nouveau premier mouton du groupe quand on le place à nouveau.
+
+Le joueur à 3 boutons à droite de la grille :
+* le bouton **Rotate** qui permet de changer la direction des moutons (en ligne ou en colonne), le changement de direction est effectif lorsqu'on déplace un mouton (il faut donc déplacer le mouton pour le faire pivoter et non juste cliquer dessus).
+* le bouton **Reset** qui permet au joueur de recommencer sa grille. Les moutons sont recréés dans la barre à gauche et la grille redevient vierge.
+* le bouton **Valid** qui permet au joueur de soumettre sa grille à la validation. Si sa grille est jugée comme incorrecte, sa grille est réaffichée, remplie avec les moutons tels qu'il les avait placés et devra la modifier. Si sa grille est correcte, la guerre avec l'autre joueur peut commencer (à moins qu'il n'est pas fini sa grille, alors le joueur patiente, mais si l'autre joueur le fait exprès parce qu'il a peur de perdre, il sait que les patates sont cuites et qu'il retarde l'affrontement final, alors l'attente sera longue jusqu'à l'abandon...).
+
 
 ### Page de jeu
 
@@ -67,6 +87,9 @@ Mdrrrr **INTERNET** (*et Audacity*)
 
 * Modules fait pour intéragir avec le back (`http` + `SocketManager`)
 * Difficultés rencontrées
+
+Pour que le jeu puisse fonctionner, il a fallu connecter le front et le back. Pour selon nous avons utilisé des requêtes http et des websockets. 
+Il a donc fallu utiliser ces outils qui nous ont donné du fil à retordre. Le plus difficile a été de relier les joueurs avec le système de room et de récupérer les données de chaque afin de procéder au bon déroulement de la partie (avoir quand les 2 joueurs on leur grille valide pour commencer la partie, savoir quel joueur doit jouer).
 
 ## Back-end
 
