@@ -21,22 +21,22 @@ En parlant de ZephyrStudio, voici une petite présentation de l'équipe et de la
 	* **Tom** : Il crée la base de données et le module *NodeJS* permettant d'intéragir facilement avec elle;
 	* **Rémi** : Il s'occupe des différentes sécurités et du déroulement du jeu;
 
+#
+
 ## Front-end
 
 ### Navigation
 
 Afin de faciliter le design du site, on a choisit de travailler avec le pré-processeur *LESS* (parce que le CSS natif ça va cinq minutes).
 
-**Insérer des screens des pages (sauf page de jeu)**
-
 * Schéma de navigation (@RemiVan-Boxem)
-* Pages
 	* Accueil
 	* Règles
 	* Connexion / Inscription
 	* Lobby
 	* Jeu
 
+**Insérer des screens des pages (sauf page de jeu)**
 
 ### Séléction de la grille
 @MaximeDeclemy
@@ -68,19 +68,53 @@ Sur la page de jeu, le joueur a besoin de plusieurs informations comme le nombre
 
 Il est manipulable via un module *JavaScript* qui permet de modifier le score, les armes utilisées ou celle selectionnée, démarrer le chrono, afficher des annonces ou des GIFs (oui oui des gifs 😏️).
 
-#### 3D
-@MartDel
+**GIF de Béquart**
 
-* ThreeJS (j'en parle pas trop pour pas faire exploser la tête de Béquart)
-* Class `View` (intéraction avec la vue 3D)
-* Raycaster (Gestion du clique et du survol)
-* Sprite et animations (**Capillotractom dans la plaaaace**)
-* Modélisation sur *Blender* (aled)
+### 3D
 
-#### Sound Design
-@MartDel
+Ah, on arrive à la partie intéressante (bien sûr les autres ne sont pas inintéressante mais booon). Pour manipuler la 3D, on utilise la librairie *ThreeJS* qui permet d'intéragir avec *WebGL*, le système 3D des navigateurs. La mise en place d'une interface se fait donc via la création d'une scène, d'un moteur de rendu, d'une caméra, d'une ou plusieurs lumières et de tout ce que vous souhaitez y mettre. On peut y ajouter donc les modèles 3D, les textures, les formes *ThreeJS* (comme les cubes par exemple), etc.
 
-Mdrrrr **INTERNET** (*et Audacity*) 
+Pour gérer tout ce joli foutoir, on a créé une classe `View` qui représente toute la vue 3D (et donc les éléments qui la compose). Comme la grille est représentée dans cette vue, il fallait obligatoirement un moyen de la manipuler facilement. Cette classe permet de :
+
+* Charger les éléments de la scène (modèles et textures)
+* Afficher la grille du joueur (après la sélection du début de partie)
+* Ajouter / supprimer un élément de la grille
+* Récupérer un élément de la grille à partir de sa position
+
+**Photo de la grille en 3D**
+
+En bref, cette classe fournit tout le nécéssaire pour l'intéraction avec la grille. On peut retrouver dans cette grille :
+
+* De l'herbe, cache un mouton... ou pas;
+* Des moutons classiques, ceci n'ont pas encore été touchés... Pour l'instant;
+* Des moutons rasés, dommage pour eux, l'adversaire est passé par là.
+
+Jusqu'à présent on peut donc la manipuler mais on ne peut pas encore détecter lorsque le joueur sélectionne une case. Pour cela on utilise un outil mis à disposition par la librairie : le **Raycaster**.
+
+Comment ça marche ? C'est simple, ça trace un "rayon" là où le joueur clique puis renvoie tous les éléments que le rayon a traversé. On peut donc facilement en déduire la case cliquée (via un petit calcul mathématique des familles) et **PAF ça fait des chocapics**. Évidement on ne s'est pas arrété là... Le simple clique n'étant pas assez ergonomique à notre gout, on a décidé de rajouter un affichage au survol. À chaque passage sur une case différente, on calcul l'impact de l'arme sélectionnée sur la case visée en affichant une cible (en 3D, évidement) au dessus des cases impactées et une croix au dessus des moutons déjà touchés.
+
+**Photo d'un exemple de survol (épidémie)**
+
+Vous trouvez que ça manque d'animation ? De fun ? De tracteur ? Vous n'allez pas être déçu. Je vous présente le ***CAPILLOTRACTOM*** :
+
+![Capillotractom](public/img/textures/capillotractom.png "Capillotractom")
+
+Nommé ainsi pour sa belle cheveulure et son joli visage, le *Capillotractom* vous fera passer de bons moments, seul ou en famille. D'un point de vue plus technique, cette belle texture est implémenter dans le jeu via une *sprite*. Il s'agit d'un élément 3D permettant d'afficher une texture 2D dans l'environnement *ThreeJS*. L'image est donc toujours orientée vers la caméra mais peut se déplacer sur tous les axes. Grâce à cela nous avons pu ajouter une animation faisant translater le *Capillotractom* à travers la grille lorsqu'un des joueurs utilise l'arme *débroussailleuse*.
+
+**Photo du Capillotractom dans le jeu**
+
+Hm ! 🤔️ Je sens que vous n'êtes pas encore satisfait... Eh bien sachez qu'il sagit tout de même d'un jeu **Made by ZephyrStudio**. On ne fait jamais les choses à moitié ici :
+
+**Tous les éléments 3D que vous pouvez admirer dans notre jeu ont été concoctés par nos soins** sur le logiciel *Blender* (RIP Martin).
+
+*Bon ok c'est moche mais chuuut faut pas le dire...*
+
+### Sound Design
+
+Alors... Euh... Comment dire ? On avait plus trop le temps 😅️. Petites recherches internet + un petit tour sur *Audacity* et hop le tour est joué ! Mais ça ne nous a pas empêché de faire les choses bien. Il y a donc un module appelé `SoundDesign` qui permet de lancer au moment souhaité les différents sons enregistrés :
+
+* Un son de tracteur pour le *Capillotractom*;
+* 3 sons différents pour la découverte d'un mouton qui sont joués aléatoirement à chaque fois (ils sont **très fortement** inspiré de ceux de Minecraft).
 
 ### Mise en relation avec le back-end (HTTP + WebSocket)
 @MaximeDeclemy
@@ -120,6 +154,8 @@ Il a donc fallu utiliser ces outils qui nous ont donné du fil à retordre. Le p
 * Vérification grille
 * Calcul impact des armes
 * Représentation / Stockage d'une partie (la class `BattlesheepGame`)
+
+#
 
 ## Conclusion
 @MartDel

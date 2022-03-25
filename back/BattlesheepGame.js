@@ -36,7 +36,7 @@ module.exports = class BattleSheepGame {
         this.weaponsUsed = [];
         this.chrono = new Chrono();
         this.isGameFinished = false;
-        this.lastEvent = null;
+        this.scores = [];
     }
 
     /**
@@ -47,6 +47,7 @@ module.exports = class BattleSheepGame {
         this.players.push(username);
         this.playerStartGrids.push(undefined);
         this.weaponsUsed.push(new Array)
+        this.scores.push(0);
     }
 
     /**

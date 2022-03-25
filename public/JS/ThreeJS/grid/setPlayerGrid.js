@@ -60,7 +60,12 @@ export class setPlayerGrid extends grid {
         })
 
         resetBtn.addEventListener("click", () => {
-            document.getElementById("sheepBox").style.display = "block";
+            const sheepBox = document.getElementById("sheepBox");
+            for (const child of sheepBox.children)
+                if (child.id === "empty")
+                    child.remove();
+            sheepBox.style.opacity = 1;
+
             this.resetGrid();
             this.displayGrid();
             this.CreateSheepOnScreen();
@@ -256,8 +261,14 @@ export class setPlayerGrid extends grid {
                             
                             // Check if sheepBox is empty
                             const sheepBox = document.getElementById("sheepBox");
-                            if (sheepBox.children.length === 0)
-                                sheepBox.style.display = "none";
+                            if (sheepBox.children.length === 0) {
+                                sheepBox.style.opacity = 0;
+                                const emptyDiv = document.createElement("div");
+                                emptyDiv.style.width = "60px";
+                                emptyDiv.style.height = "60px";
+                                emptyDiv.id = "empty";
+                                sheepBox.appendChild(emptyDiv);
+                            }
                         }
                     }
             })
