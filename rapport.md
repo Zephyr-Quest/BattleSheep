@@ -41,15 +41,15 @@ Afin de faciliter le design du site, on a choisit de travailler avec le pré-pro
 ### Séléction de la grille
 @MaximeDeclemy
 
-### Page de jeu
-
-#### HUD
+### HUD
 
 Sur la page de jeu, le joueur a besoin de plusieurs informations comme le nombre de moutons restant de son adversaire, le temps depuis le début de la partie, ses différentes armes, etc. Pour cela nous avons mis en place un **HUD**, c'est à dire une interface en 2D affichée par dessus le jeu.
 
 Il est manipulable via un module *JavaScript* qui permet de modifier le score, les armes utilisées ou celle selectionnée, démarrer le chrono, afficher des annonces ou des GIFs (oui oui des gifs 😏️).
 
-#### 3D
+**GIF de Béquart**
+
+### 3D
 
 Ah, on arrive à la partie intéressante (bien sûr les autres ne sont pas inintéressante mais booon). Pour manipuler la 3D, on utilise la librairie *ThreeJS* qui permet d'intéragir avec *WebGL*, le système 3D des navigateurs. La mise en place d'une interface se fait donc via la création d'une scène, d'un moteur de rendu, d'une caméra, d'une ou plusieurs lumières et de tout ce que vous souhaitez y mettre. On peut y ajouter donc les modèles 3D, les textures, les formes *ThreeJS* (comme les cubes par exemple), etc.
 
@@ -88,7 +88,7 @@ Hm ! 🤔️ Je sens que vous n'êtes pas encore satisfait... Eh bien sachez qu'
 
 *Bon ok c'est moche mais chuuut faut pas le dire...*
 
-#### Sound Design
+### Sound Design
 
 Alors... Euh... Comment dire ? On avait plus trop le temps 😅️. Petites recherches internet + un petit tour sur *Audacity* et hop le tour est joué ! Mais ça ne nous a pas empêché de faire les choses bien. Il y a donc un module appelé `SoundDesign` qui permet de lancer au moment souhaité les différents sons enregistrés :
 
