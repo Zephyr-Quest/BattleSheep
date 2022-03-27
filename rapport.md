@@ -209,6 +209,7 @@ La déconnexion d'un joueur pendant la partie est elle aussi géré (et je peux 
 Ainsi, le nom joueur se déconnectant est stocké dans un tableau de joueur en déconnexion. Lorsqu'il arrive sur la page lobby, ce tableau est parcouru. Si le nom du joueur se trouve dedans, il quitte la room dans laquelle il était et son id de room est remit à *undefined*. Ces deux étapes étaient impossible à faire dans l'event *disconnect* car par définition, le client n'est pllus connecté au WS, donc impossible de mettre à jour ses données. Enfin, un évènement *disconnection* est *emit* au joueur qui ne s'est pas déconnecté afin de le faire quitter la partie, le procédé de déconnexion pour ce joueur est exactement le même. Par principe de sécurité, l'événement *disconnection* est *emit* lorsque le joueur se déconnecte et lorsqu'il arrive sur la page *lobby*.
 #
 La mise en place du système de room a été également assez compliqué à mettre en place, liée en partie à la déconnexion (encore et toujours elle...). Hormis ces points, la principlae difficulté résidait dans le fait que  *Node.js* et le côté serveur était tout nouveau pour ma part.
+
 ### Logique du jeu + Sécurités
 @RemiVan-Boxem
 
