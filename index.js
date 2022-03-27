@@ -379,16 +379,7 @@ io.on("connection", (socket) => {
     /*                                    Game                                    */
     /* -------------------------------------------------------------------------- */
 
-    // TODO voir à quoi ca sert
-    socket.on("getPlayerGrid", () => {
-        const idRoom = socket.handshake.session.idRoom;
-        const username = socket.handshake.session.username;
-        let id = 0;
-        allRooms[idRoom][0].name === username ? id = 0 : id = 1;
-        socket.emit("resultPlayerId", id);
-    })
-
-    // TODO récup les fonctions de Rémi
+    // the player ("playerId") play at the "x", "y" coordinates with the "weapon" 
     socket.on("playerPlayed", (x, y, playerId, weapon) => {
         // The player with the id "playerId", played on the case with the position "x", "y", with the weapon "weapon" 
         const idRoom = socket.handshake.session.idRoom;

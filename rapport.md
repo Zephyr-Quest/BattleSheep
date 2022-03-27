@@ -77,20 +77,43 @@ Mdrrrr **INTERNET** (*et Audacity*)
 @MartDel
 
 ### Serveur HTTP
-@EnguerrandMQT
+Le serveur se base sur le framework *express*, ainsi que *session* et *socket.io* principalement. D'autres framework sont également tels que *path*, *body-parser* ou *express-socket.io-session*.
+Nous aborderons dans cette partie, le routage des pages du site, le système de session et redirections ainsi les requêtes POST pour, nécessairement, l'inscription et la connexion.
 
-* Le routage des pages du site
-* Système de session et redirections
-* Requêtes POST pour connexion, inscriptions, etc...
-* Vérifications des données à la volée (`body`)
+**Routage des pages**
+
+Les pages du site s'obtiennent à travers un *app.get(...)* et sont renvoyés pour la plupart avec un *res.render*. Cela nous permet de passer en paramètre des modules *JavaScript* pour le front en *ejs* 
+
+**Requêtes POST pour connexion, inscriptions**
+
+L'inscription, la connexion et le logout passent par une requête POST. De cette manière, nous n'avons pas de */logout* dans l'url par exemple.
+Cela nous permet également de pouvoir vérifier la longueur du nom d'utilisateur, de le *trim* et de l'*escape* afin d'éviter les injections SQL. Il en est de même avec le mot de passe.
+
+Lorsque les vérifications de session par *express-validator* sont bonnes, le mot de passe est hashé avec *bcrypt*, une vérification de son bon encryptage a lieu puis le nom d'utilisateur et le mot de passe crypté sont envoyés à la base de donnée (via une callback défini dans l'index).  
+
+**Session et redirection**
+
+Lorsqu'un utilisateur s'inscrit ou se connecte, son nom d'utilisateur est enregistré dans la session (le système de token pour sécuriser la session est passé à la trappe...).
+
+Ainsi, lorsque l'utilisateur essaie d'accéder à la page lobby ou game sans s'être connecté, il est automatiquement redirigé vers la page index.
+
 
 ### Serveur WebSocket
-@EnguerrandMQT
+Le périple du back-end arrive à une partie rigolote : le serveur WebSocket (que nous abrégerons WS). Lorsque l'utilisateur arrive sur la page lobby, une connexion au WS est initialisée. Plusieurs vérifications sont alors faite afin de savoir s'il vient de la page de connexion ou s'il vient de quitter une partie.
 
-* Système de *room*
-* Wallah la deconnexion jlui pisse dessus
-* Difficultés rencontrées (autres que la deconnexion)
+Le WS utilise un système de room. Lorsqu'un joueur clique sur *host*, il crée une room. La room est nommée par un **id**, cet id est l'id + 1 de la room ayant le plus haut id. Lorsqu'un joueur clique sur une partie déjà créée, il *join* la room. L'id de la room est stocké dans la session des joueurs (je vous l'accorde, ce n'est pas la manière la plus sécurisée de procéder) pour récupérer plus simplement l'id de la room à laquelle il faut *emit* l'évènement.
 
+Une fois qu'une room est pleine, c'est à dire que 2 joueurs sont dedans, l'évènement *timeToPlay* est envoyé aux 2 joueurs de la room, la partie démarre !
+
+Les joueurs positionnent leurs moutons sur la grille et appuient sur le bouton de validation. L'évènement *checkGrid* est appelé afin de vérifier que la grille est correctement remplie. Si c'est le cas, celle ci est stocké en back (on évite les petits malins qui tenterait de modifier ou voir les moutons adverses). Lorsque les 2 grilles sont vérifiées, l'heure est venue de passer aux choses sérieuses.
+
+A chaque coup, l'évènement *playerPlayed* est appelé, il permet au joueur de tirer sur une case avec une certaine arme. 
+#
+La déconnexion d'un joueur pendant la partie est elle aussi géré (et je peux vous dire que j'ai galéré). Lorsqu'un joueur rafraichit la page **game**, ou la quitte, l'évenement *disconnect* est appelé automatiquement. Cela entrainait des erreurs et bug lorsqu'il revenait sur le lobby.
+
+Ainsi, le nom joueur se déconnectant est stocké dans un tableau de joueur en déconnexion. Lorsqu'il arrive sur la page lobby, ce tableau est parcouru. Si le nom du joueur se trouve dedans, il quitte la room dans laquelle il était et son id de room est remit à *undefined*. Ces deux étapes étaient impossible à faire dans l'event *disconnect* car par définition, le client n'est pllus connecté au WS, donc impossible de mettre à jour ses données. Enfin, un évènement *disconnection* est *emit* au joueur qui ne s'est pas déconnecté afin de le faire quitter la partie, le procédé de déconnexion pour ce joueur est exactement le même. Par principe de sécurité, l'événement *disconnection* est *emit* lorsque le joueur se déconnecte et lorsqu'il arrive sur la page *lobby*.
+#
+La mise en place du système de room a été également assez compliqué à mettre en place, liée en partie à la déconnexion (encore et toujours elle...). Hormis ces points, la principlae difficulté résidait dans le fait que  *Node.js* et le côté serveur était tout nouveau pour ma part.
 ### Logique du jeu + Sécurités
 @RemiVan-Boxem
 
