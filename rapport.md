@@ -2,14 +2,14 @@
 
 ## Introduction
 
-La vie de berger c'est plus ce que c'était ! La guerre fait rage désormais et vous n'y échapperez pas. L'attaque étant la meilleur défense, éliminez les troupeaux de votre adversaire jusque pénurie de laine s'en suive. Pour cela voici vos armes :
+La vie de berger c'est plus ce que c'était ! La guerre fait rage désormais et vous n'y échapperez pas. L'attaque étant la meilleur défense, éliminez les troupeaux de votre adversaire jusqu'à ce que pénurie de laine s'en suive. Pour cela voici vos armes :
 
 * La **tondeuse**, disponible en permanence, est une arme simple mais efficace. Elle atteint une seul case mais ne la rate pas;
 * La **débroussailleuse**, disponible une seule fois dans la partie, affiche les moutons qui se cachent sous les 9 cases autour de celle cliquée;
 * L'**épidémie de calvitie**, le fléau de l'homme moderne. Disponible une seule fois dans la partie, elle provoque une chute de laine sur les 5 cases autour de celle cliquée;
-* Le **loup**, prédateur par excellence, est lui aussi disponible une seul fois dans la partie. Il s'occupe d'achever un troupeau de taille inférieur ou égale à 2. Cette arme fonctionne également sur les troupeaux plus grand qui ont perdu une partie de leur effectif.
+* Le **loup**, prédateur par excellence, est lui aussi disponible une seul fois dans la partie. Il s'occupe d'achever un troupeau de taille inférieur ou égale à 2. Cette arme fonctionne également sur les troupeaux plus grands qui ont perdu une partie de leur effectif.
 
-Ce jeu est signé ZephyrStudio et évidement on ne fait pas les choses à moitié. Histoire de vous en mettre plein la vue, on a choisit de proposer de la 3D en lowpoly comme style graphique (on espère que ça a marché 😅️).
+Ce jeu est signé ZephyrStudio et évidement on ne fait pas les choses à moitié. Histoire de vous en mettre plein la vue, on a choisit de proposer de la 3D en lowpoly comme style graphique (on espère que ça a marché).
 
 En parlant de ZephyrStudio, voici une petite présentation de l'équipe et de la répartition du travail :
 
@@ -29,15 +29,15 @@ En parlant de ZephyrStudio, voici une petite présentation de l'équipe et de la
 
 Afin de faciliter le design du site, on a choisit de travailler avec le pré-processeur *LESS* (parce que le CSS natif ça va cinq minutes).
 
-* Schéma de navigation (@RemiVan-Boxem)
-![Schéma de navigation](public/img/wire.png)
-	* Accueil
-	* Règles
-	* Connexion / Inscription
-	* Lobby
-	* Jeu
+![Schéma de navigation](public/img/rapport/wire.png "Schéma de navigation")
 
-**Insérer des screens des pages (sauf page de jeu)**
+![Page d'accueil](public/img/rapport/homepage.png "Page d'accueil")
+
+![Page de règles](public/img/rapport/rules.png "Page de règles")
+
+![Page de connexion](public/img/rapport/login.png "Page de connexion")
+
+![Page de lobby](public/img/rapport/lobby.png "Page de lobby")
 
 ### Séléction de la grille
 @MaximeDeclemy
@@ -65,11 +65,11 @@ Le joueur à 3 boutons à droite de la grille :
 
 #### HUD
 
-Sur la page de jeu, le joueur a besoin de plusieurs informations comme le nombre de moutons restant de son adversaire, le temps depuis le début de la partie, ses différentes armes, etc. Pour cela nous avons mis en place un **HUD**, c'est à dire une interface en 2D affichée par dessus le jeu.
+Sur la page de jeu, le joueur a besoin de plusieurs informations comme le nombre de moutons qu'il a touché, le temps depuis le début de la partie, ses différentes armes, etc. Pour cela nous avons mis en place un **HUD**, c'est à dire une interface en 2D affichée par dessus le jeu.
 
-Il est manipulable via un module *JavaScript* qui permet de modifier le score, les armes utilisées ou celle selectionnée, démarrer le chrono, afficher des annonces ou des GIFs (oui oui des gifs 😏️).
+Il est manipulable via un module *JavaScript* qui permet de modifier le score, les armes déjà utilisées ou celle selectionnée, démarrer le chrono, afficher des annonces ou des GIFs. Oui oui des gifs ;)
 
-**GIF de Béquart**
+![Gif content](public/img/gifs/ValMouaaaa.gif)
 
 ### 3D
 
@@ -82,7 +82,7 @@ Pour gérer tout ce joli foutoir, on a créé une classe `View` qui représente 
 * Ajouter / supprimer un élément de la grille
 * Récupérer un élément de la grille à partir de sa position
 
-**Photo de la grille en 3D**
+![Grille de départ du joueur en 3D](public/img/rapport/start_grid.png "Grille de départ du joueur en 3D")
 
 En bref, cette classe fournit tout le nécéssaire pour l'intéraction avec la grille. On peut retrouver dans cette grille :
 
@@ -92,9 +92,9 @@ En bref, cette classe fournit tout le nécéssaire pour l'intéraction avec la g
 
 Jusqu'à présent on peut donc la manipuler mais on ne peut pas encore détecter lorsque le joueur sélectionne une case. Pour cela on utilise un outil mis à disposition par la librairie : le **Raycaster**.
 
-Comment ça marche ? C'est simple, ça trace un "rayon" là où le joueur clique puis renvoie tous les éléments que le rayon a traversé. On peut donc facilement en déduire la case cliquée (via un petit calcul mathématique des familles) et **PAF ça fait des chocapics**. Évidement on ne s'est pas arrété là... Le simple clique n'étant pas assez ergonomique à notre gout, on a décidé de rajouter un affichage au survol. À chaque passage sur une case différente, on calcul l'impact de l'arme sélectionnée sur la case visée en affichant une cible (en 3D, évidement) au dessus des cases impactées et une croix au dessus des moutons déjà touchés.
+Comment ça marche ? C'est simple, ça trace un "rayon" là où le joueur clique puis renvoie tous les éléments que le rayon a traversé. On peut donc facilement en déduire la case cliquée (via un petit calcul mathématique) et **PAF ça fait des chocapics**. Évidement on ne s'est pas arrété là... Le simple clique n'étant pas assez ergonomique à notre gout, on a décidé de rajouter un affichage au survol. À chaque passage sur une case différente, on calcul l'impact de l'arme sélectionnée sur la case visée en affichant une cible (en 3D, évidement) au dessus des cases impactées et une croix au dessus des moutons déjà touchés.
 
-**Photo d'un exemple de survol (épidémie)**
+![Survol de la souris avec l'arme épidémie](public/img/rapport/hover.png "Survol de la souris avec l'arme épidémie")
 
 Vous trouvez que ça manque d'animation ? De fun ? De tracteur ? Vous n'allez pas être déçu. Je vous présente le ***CAPILLOTRACTOM*** :
 
@@ -102,20 +102,20 @@ Vous trouvez que ça manque d'animation ? De fun ? De tracteur ? Vous n'allez pa
 
 Nommé ainsi pour sa belle cheveulure et son joli visage, le *Capillotractom* vous fera passer de bons moments, seul ou en famille. D'un point de vue plus technique, cette belle texture est implémenter dans le jeu via une *sprite*. Il s'agit d'un élément 3D permettant d'afficher une texture 2D dans l'environnement *ThreeJS*. L'image est donc toujours orientée vers la caméra mais peut se déplacer sur tous les axes. Grâce à cela nous avons pu ajouter une animation faisant translater le *Capillotractom* à travers la grille lorsqu'un des joueurs utilise l'arme *débroussailleuse*.
 
-**Photo du Capillotractom dans le jeu**
-
-Hm ! 🤔️ Je sens que vous n'êtes pas encore satisfait... Eh bien sachez qu'il sagit tout de même d'un jeu **Made by ZephyrStudio**. On ne fait jamais les choses à moitié ici :
+Hm ! Je sens que vous n'êtes pas encore satisfait... Eh bien sachez qu'il sagit tout de même d'un jeu **Made by ZephyrStudio**. On ne fait jamais les choses à moitié ici :
 
 **Tous les éléments 3D que vous pouvez admirer dans notre jeu ont été concoctés par nos soins** sur le logiciel *Blender* (RIP Martin).
 
 *Bon ok c'est moche mais chuuut faut pas le dire...*
 
+Il faut aussi préciser que le joueur peut contrôler la caméra avec les touches `Q`, `S` et `D`. Il a donc 3 angles de vue différents sur la scène.
+
 ### Sound Design
 
-Alors... Euh... Comment dire ? On avait plus trop le temps 😅️. Petites recherches internet + un petit tour sur *Audacity* et hop le tour est joué ! Mais ça ne nous a pas empêché de faire les choses bien. Il y a donc un module appelé `SoundDesign` qui permet de lancer au moment souhaité les différents sons enregistrés :
+Alors... Euh... Comment dire ? On avait plus trop le temps. Petites recherches internet + un petit tour sur *Audacity* et hop le tour est joué ! Mais ça ne nous a pas empêché de faire les choses bien. Il y a donc un module appelé `SoundDesign` qui permet de lancer au moment souhaité les différents sons enregistrés :
 
 * Un son de tracteur pour le *Capillotractom*;
-* 3 sons différents pour la découverte d'un mouton qui sont joués aléatoirement à chaque fois (ils sont **très fortement** inspiré de ceux de Minecraft).
+* 3 sons différents pour la découverte d'un mouton qui sont joués aléatoirement à chaque fois (ils ne sont **pas du tout** inspiré de ceux de Minecraft, c'est faux).
 
 ### Mise en relation avec le back-end (HTTP + WebSocket)
 @MaximeDeclemy
@@ -132,7 +132,44 @@ Il a donc fallu utiliser ces outils qui nous ont donné du fil à retordre. Le p
 @TomMullier
 
 ### Docker
-@MartDel
+
+Si on devait donner une définition de *Docker* ça serait sûrement : Construire un système de conteneurs interconnectés en pensant gagner du temps mais se rendre compte que, à part perdre un weekend entier, ça aura servi à rien... Oui oui, c'est triste. Mais bon, l'avantage c'est que la mise en place de notre projet se fait très facilement sans avoir besoin de configurer *MySQL* en amont.
+
+**Alors comment ça marche ?** Tout d'abord il faut savoir de quel dépendance le projet a besoin. Jusque là c'est assez simple : *NodeJS* et *MySQL*. Chaque dépendance va donc être gérer par un **conteneur** indépendant (très simplement c'est une sorte de machine virtuelle mais version serveur). Malheureusement, tous ces conteneurs doivent communiquer entre eux. C'est là que *Docker Compose* entre en jeu. Cet outil permet de créer un réseau de conteneur pour qu'il puisse communiquer entre eux. Dans notre cas le serveur qui tourne dans le conteneur *NodeJS* va pouvoir effectuer des requêtes vers le serveur du conteneur *MySQL*. Parfait en somme ! Ensuite il suffit de lier le conteneur *NodeJS* aux sources du projet pour qu'il puisse lancer le serveur et donner au conteneur *MySQL* un fichier décrivant notre base de données pour qu'il puisse la construire au démarrage. On va pas rentrer dans les détails des problèmes de droit d'accès aux fichiers parce que ça nécessiterait pas mal de doliprane.
+
+**Et comment on lance tout ce bazarre ?** Ouhla, ça nécessite un petit tuto :
+
+1. Installer `docker` et `docker-compose` et s'assurer qu'il [fonctionne sans les droits administrateurs](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user "Docker post-installation") (pas nécessaire sous Windows);
+2. Cloner le dépôt [GitHub](https://github.com/Zephyr-Quest/BattleSheep "Dépôt GitHub");
+3. Installer les modules *npm* : `npm install` (comme ça c'est fait);
+4. Créer un fichier `.env` avec le contenu suivant (en modifiant les valeurs de `SESSION_SECRET` et `MYSQL_PASSWORD`) :
+
+```env
+# MySQL
+
+MYSQL_HOST="db"
+MYSQL_USERNAME="root"
+MYSQL_PASSWORD="<db_password>"
+DATABASE_NAME="battlesheep"
+
+# NodeJS
+
+APP_PORT=8080
+START_CMD="node index.js"
+SESSION_SECRET="<session_secret>"
+```
+
+5. Créer un fichier `pass.sql` dans le dossier `db` avec le contenu suivant (en remplaçant `<db_password>` par la valeur que vous avez défini à l'étape précédente) :
+
+```sql
+ALTER USER 'root' IDENTIFIED WITH mysql_native_password BY '<db_password>'; 
+flush privileges;
+```
+
+6. Pour lancer le système il suffit maintenant de faire : `npm run docker-start`;
+7. Une fois les tests terminés, il ne faut pas oublier de l'éteindre : `npm run docker-stop`.
+
+Au final est-ce que utiliser *Docker* était vraiment nécessaire ? Sûrement pas mais ça mériterait quand même bien un point bonus non ? ;)
 
 ### Serveur HTTP
 @EnguerrandMQT
@@ -179,8 +216,5 @@ Cette classe va contenir les méthodes qui seront appelées par le back-end pour
 #
 
 ## Conclusion
-@MartDel
 
-* C'était chaud niveau timing mais ptn on est trop fort
-* Je vous laisse vous enjailler sur les petits gifs et easter eggs ;)
-* Hésitez pas si vous voulez essayer de lancer le serveur et que vous galérez avec docker (hihi je maitrise un outil que le prof maitrise pas jss trop un bg)
+En résumé, c'était un projet très intéressant, autant dans la technique que dans l'organisation. Chaque membre de l'équipe a su apporter sa contribution en surmontant les problèmes un à un (ZephyrStudio dans la place !). N'hésitez pas à nous contacter si vous souhaitez plus de détails ou si vous rencontrez des difficultés à lancer notre projet (*Docker* est un peu capricieux). On vous laisse donc profiter de notre jeu et de ses formidables GIF en espérant que notre **BattleSheep** vous plaira.
