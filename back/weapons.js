@@ -197,12 +197,12 @@ const isCoordValid = (x, y) => x >= 0 && x < 10 && y >= 0 && y < 10;
  */
 const isWeapon = name => weaponsName.includes(name);
 
-function verticalPropagation(grid, x, y) {
+function verticalPropagation(grid, x, y, size) {
     let results = [];
     for (let i = Math.max(y - size, 0); i <= Math.min(y + size, 9); i++) {
         if (!grid[i][x]) continue;
         if (grid[i][x][1] === "c" && Number(grid[i][x][0]) == size) {
-                result.push({
+                results.push({
                     x: x,
                     y: i,
                 });
@@ -211,12 +211,12 @@ function verticalPropagation(grid, x, y) {
     return results;
 }
 
-function horizontalPropagation(grid, x, y) {
+function horizontalPropagation(grid, x, y, size) {
     let results = [];
     for (let i = Math.max(0, x - size); i <= Math.min(9, x + size); i++) {
         if (!grid[y][i]) continue;
         if (grid[y][i][1] === "r" && Number(grid[y][i][0]) == size) {
-            result.push({
+            results.push({
                 x: i,
                 y: y,
             });
@@ -229,13 +229,20 @@ function horizontalPropagation(grid, x, y) {
  * @param {Object} grid The grid to check
  * @param {Number} x The x coord
  * @param {Number} y The y coord
- * @param {String} orientation c for column, r for row
  * @returns The ship
  */
-function propagationWrapper(grid, x, y, orientation) {
-    if (orientation === "r") return horizontalPropagation(grid, x, y);
-    else return verticalPropagation(grid, x, y);
+function propagationWrapper(grid, x, y) {
+    let touched = grid[y][x];
+    let orientation;
+    
+    if (touched) orientation = touched[1];
+    else return null;
+    
+    const size = touched[0];
+    if (orientation === "r") return horizontalPropagation(grid, x, y, size);
+    else if (orientation === "c") return verticalPropagation(grid, x, y, size);
+    else return null;
 }
 
 
-module.exports = { attack, isCoordValid, isWeapon };
+module.exports = { attack, isCoordValid, isWeapon, propagationWrapper };

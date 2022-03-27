@@ -433,6 +433,16 @@ io.on("connection", (socket) => {
         // Store scores
         if (currentGame.isGameFinished)
             Database.refreshScore(currentGame.players[playerId], currentGame.players[touchedId], Math.floor(currentGame.scores[playerId]));
+
+        // Get the touched flock
+        const flock = Verif.propagationWrapper(currentGame.playerStartGrids[touchedId], x, y);
+        console.log(flock);
+
+        // Get the flock state
+        let isFlockDown = true;
+        if (flock)
+            isFlockDown = flock.every( coord => currentGame.isInHistory(coord.x, coord.y, touchedId) );
+        else isFlockDown = false;
         
         // Send the refresh to the front-end
         const players = io.sockets.adapter.rooms.get(idRoom);
@@ -450,6 +460,7 @@ io.on("connection", (socket) => {
                 currentGame.chrono.minutes,
                 currentGame.chrono.seconds,
                 currentGame.isGameFinished,
+                isFlockDown,
                 Math.floor(currentGame.scores[pId])
             );
         }
