@@ -142,9 +142,10 @@ function getPlayerId() {
  * @param {Number} minutes - the number of minutes of the game
  * @param {Number} seconds - the number of seconds left in the game.
  * @param {Boolean} endGame - If the game is finished
+ * @param {Boolean} isFlockDown - If the touched flock is down
  * @param {Number} score The player score
  */
-function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes, seconds, endGame, score) {
+function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes, seconds, endGame, isFlockDown, score) {
     const view = Game.getView();
 
     // Print the player grid
@@ -187,11 +188,22 @@ function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes,
 
         // Determine which gif will be displayed
         let gifName = undefined;
+        if (isFlockDown) {
+            if (playerId === currentPlayer) {
+                // The player's flock is down
+                gifName = "players_flock_down";
+            } else {
+                // The current player down a flock (yeaaah)
+                gifName = "flock_down";
+            }
+        }
 
         // Prepare the end message
         let endMsg = "Try another Game";
-        if (endGame)
+        if (endGame) {
             endMsg = "You " + (nbSheepFound === 20 ? "won" : "lost") + " with the score : " + score;
+            gifName = nbSheepFound === 20 ? "player_won" : "player_lost";
+        }
 
         // Show gif and end announcement
         setTimeout(() => {

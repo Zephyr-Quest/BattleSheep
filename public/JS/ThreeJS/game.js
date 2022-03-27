@@ -16,7 +16,7 @@ let scene, renderer, camera, controls, raycaster, view, playerId;
 /* ---------------------------------- Debug --------------------------------- */
 
 let stats;
-const DEBUG_STATS = true;
+const DEBUG_STATS = false;
 const USE_ORBIT_CONTROLS = false;
 const DEBUG_RAYCASTER = false;
 

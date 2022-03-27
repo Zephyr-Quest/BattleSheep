@@ -1,23 +1,6 @@
 const Chrono = require("./chrono");
 
-/**
- * Check if a position has been hitten during the game
- * @param {Number} x The row position
- * @param {Number} y The col position
- * @param {Number} playerId The playerId in this context
- * @param {Array} history All hitten case
- * @returns If the case is hitten
- */
-function isInHistory(x, y, playerId, history) {
-    let result = false;
 
-    history.forEach(event => {
-        if (event.x === x && event.y === y && event.playerId === playerId && event.state === 2)
-            result = true;
-    });
-
-    return result;
-}
 
 module.exports = class BattleSheepGame {
     /**
@@ -66,12 +49,30 @@ module.exports = class BattleSheepGame {
             // Check if the whole grid is hitten
             for (let x = 0; x < grid.length; x++) {
                 for (let y = 0; y < grid.length; y++) {
-                    if (grid[y][x] && !isInHistory(x, y, playerId, this.history))
+                    if (grid[y][x] && !this.isInHistory(x, y, playerId, this.history))
                         gridIsDestroyed = false;
                 }
             }
 
             if (gridIsDestroyed) this.isGameFinished = true;
         });
+    }
+
+    /**
+     * Check if a position has been hitten during the game
+     * @param {Number} x The row position
+     * @param {Number} y The col position
+     * @param {Number} playerId The playerId in this context
+     * @returns If the case is hitten
+     */
+    isInHistory(x, y, playerId) {
+        let result = false;
+
+        this.history.forEach(event => {
+            if (event.x === x && event.y === y && event.playerId === playerId && event.state === 2)
+                result = true;
+        });
+
+        return result;
     }
 };
