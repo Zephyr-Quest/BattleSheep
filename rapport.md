@@ -130,6 +130,29 @@ Il a donc fallu utiliser ces outils qui nous ont donné du fil à retordre. Le p
 
 ### Base de données
 @TomMullier
+**Fonctionnement de la BDD**
+Pour ce jeu, il faut pouvoir gérer de manière efficace et rapide. On a donc opté pour une gestion en base de donnée (BDD) pour que ce soit plus pratique.
+
+Dans cette BDD, on a tout d'abord géré les utilisateurs lors de l'inscription :
+
+* Gestion des pseudos
+* Gestion des mots de passe
+
+Par sécurité, on effectue quelques vérifications de routine afin d'éviter les injections SQL. Tout est géré dans une class NodeJS appelée BDD, avec en méthodes toutes les actions possibles (SignIn, SignUp, etc...)
+
+Par la suite, après l'incription, on gère aussi les 3 meilleurs scores du joueur connecté, scores que l'on stocke aussi dans la base de donnée sous la forme : 
+* Premier meilleur score
+* Joueur contre lequel ce score a été effectué
+* Deuxième meilleur score
+* Joueur contre lequel ce score a été effectué
+* Troisième meilleur score
+* Joueur contre lequel ce score a été effectué
+
+Tout est récupérable depuis la base de données depuis la classe BDD en NodeJS, et les meilleurs scores sont automatiquement actualisés grâce à la méthode refreshScore.
+
+**Point Sécurité**
+
+Lors de l'accès à une base de données, il faut à tout prix éviter les injections SQL. Par conséquent, on va donc utiliser des "prepared statements" que l'on va mettre directement dans la requête. L'accès à la base de données se fait donc simplement et de manière sécurisée !
 
 ### Docker
 
