@@ -122,10 +122,24 @@ Alors... Euh... Comment dire ? On avait plus trop le temps. Petites recherches i
 * Modules fait pour intéragir avec le back (`http` + `SocketManager`)
 * Difficultés rencontrées
 
-Pour que le jeu puisse fonctionner, il a fallu connecter le client et le serveur. Pour cela nous avons utilisé des requêtes *HTTP* et des événements *WebSocket*. Il a donc fallu utiliser ces outils qui nous ont donné du fil à retordre. Le plus difficile a été de relier les joueurs avec le système de room et de récupérer les données de chaqu'un afin de procéder au bon déroulement de la partie :
+Pour que le jeu puisse fonctionner, il a fallu connecter le client et le serveur. Pour cela nous avons utilisé des requêtes *HTTP* et des événements *WebSocket*. Il a donc fallu utiliser ces outils qui nous ont donné du fil à retordre. Le plus difficile a été de relier les joueurs avec le système de room et de récupérer les données de chaqu'un afin de procéder au bon déroulement de la partie.
 
-* Là tu peux décrire un sorte de fil rouge
-* De tous les événements qui ont été utilisé pour le déroulement de la partie
+Les requêtes http sont utilisées lors :
+* Du passage de la page d'accueil à la page de règles, connexion
+* Pour connecter le joueur avec ses identifiants afin de les vérifier avec les données de la base de données ou la création de compte
+* De la page de connexion à la page de lobby 
+* De la page de lobby à la page de jeu.
+
+Les websockets sont donc utilisés tout au long de la partie (dans la phase de jeu essentiellement) :
+* Lors de l'actualisation de la page pour reconnecter le joueur
+* Lors de la connection du joueur dans la **Room**
+* Lors de la déconnection du joueur
+* Lorsque les 2 joueurs sont connectés pour lancer la partie
+* Pour la vérification des grilles, quand les 2 grilles sont validés pour lancer le jeu
+* A chaque fois que le joueur joue, pour vérifier le coup en back et ensuite actualiser la partie en front, changer de joueur
+* Savoir si une partie est terminée, montrer l'écran de fin de partie aux 2 joueurs.
+
+De plus, dans le projet nous n'utilisons pas ajax mais fetch car il nous semblait plus simple à prendre en main et Martin avait déjà travaillé avec.
 
 ## Back-end
 
