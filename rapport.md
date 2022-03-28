@@ -129,30 +129,32 @@ Il a donc fallu utiliser ces outils qui nous ont donné du fil à retordre. Le p
 ## Back-end
 
 ### Base de données
-@TomMullier
-**Fonctionnement de la BDD**
-Pour ce jeu, il faut pouvoir gérer de manière efficace et rapide. On a donc opté pour une gestion en base de donnée (BDD) pour que ce soit plus pratique.
 
-Dans cette BDD, on a tout d'abord géré les utilisateurs lors de l'inscription :
+**Fonctionnement de la BDD**
+
+Pour ce jeu, il faut pouvoir gérer les données de manière efficace et rapide. On a donc opté pour une gestion en base de données (BDD) pour que ce soit plus pratique.
+
+Dans cette BDD, on a tout d'abord gérer les utilisateurs lors de l'inscription :
 
 * Gestion des pseudos
 * Gestion des mots de passe
 
-Par sécurité, on effectue quelques vérifications de routine afin d'éviter les injections SQL. Tout est géré dans une class NodeJS appelée BDD, avec en méthodes toutes les actions possibles (SignIn, SignUp, etc...)
+Par sécurité, on effectue quelques vérifications de routine afin d'éviter les injections *SQL*. Tout est géré dans une classe *NodeJS* appelée BDD, avec en méthodes toutes les actions possibles (connexion, inscription, etc...)
 
-Par la suite, après l'incription, on gère aussi les 3 meilleurs scores du joueur connecté, scores que l'on stocke aussi dans la base de donnée sous la forme : 
+Par la suite, après l'inscription, on gère aussi les 3 meilleurs scores du joueur connecté, scores que l'on stocke aussi dans la base de donnée sous la forme : 
+
 * Premier meilleur score
-* Joueur contre lequel ce score a été effectué
+* Joueur contre lequel ce premier score a été effectué
 * Deuxième meilleur score
-* Joueur contre lequel ce score a été effectué
+* Joueur contre lequel ce deuxième score a été effectué
 * Troisième meilleur score
-* Joueur contre lequel ce score a été effectué
+* Joueur contre lequel ce troisième score a été effectué
 
-Tout est récupérable depuis la base de données depuis la classe BDD en NodeJS, et les meilleurs scores sont automatiquement actualisés grâce à la méthode refreshScore.
+Tout est récupérable depuis la base de données via la classe BDD en *NodeJS*, et les meilleurs scores sont automatiquement actualisés grâce à la méthode `refreshScore`.
 
-**Point Sécurité**
+**Point sécurité**
 
-Lors de l'accès à une base de données, il faut à tout prix éviter les injections SQL. Par conséquent, on va donc utiliser des "prepared statements" que l'on va mettre directement dans la requête. L'accès à la base de données se fait donc simplement et de manière sécurisée !
+Lors de l'accès à une base de données, il faut à tout prix éviter les **injections SQL**. Par conséquent, on va donc utiliser des _prepared statements_. Ils permettent d'effectuer des requêtes SQL dynamique sans prendre le risque qu'une donnée utilisateur influe sur l'exécution de la requête. L'accès à la base de données se fait donc simplement et de manière sécurisée !
 
 ### Docker
 
@@ -234,15 +236,15 @@ Ainsi, le nom du joueur se déconnectant est stocké dans un tableau de joueur e
 La mise en place du système de *room* a été également assez compliqué à mettre en place, liée en partie à la déconnexion (encore et toujours elle...). Hormis ces points, la principale difficulté résidait dans le fait que  *NodeJS* et le côté serveur était tout nouveau pour moi (Enguerrand).
 
 ### Logique du jeu + Sécurités
-@RemiVan-Boxem
 
 Il est temps d'attaquer une partie importante, la logique du jeu. Même si on a décidé de nommer les armes du jeu de manière différentes (pour coller à la cohérence du jeu), il est important de savoir qu'elles respectent toutes les règles du jeu originel. C'est à dire qu'il y a quatre armes distinctes :
-- Le tir classique (`shears`);
+
+- Le tir classique (qui seulement une case);
 - Le radar (qui découvre une zone circulaire de 3 cases)
 - La torpille (qui détruit le bateau s'il reste deux cases)
-- Le sous-marin (qui détruit une zone circulaire de 2 cases)
+- La bombe à fragment (qui détruit une zone circulaire de 2 cases)
 
-La réalisation de trois des fonctions des tirs était trivial. Pour le tir simple, on vérifie simplement si la case touchée par le tir contenait un bateau, pour le radar et la torpille, on fait un cercle de $x$ cases autour de la case touchée.
+La réalisation de trois des fonctions de tir était trivial. Pour le tir simple, on vérifie simplement si la case touchée par le tir contient un bateau, pour le radar et la torpille, on fait un cercle de $x$ cases autour de la case touchée.
 
 Les choses deviennent moins trivial quand on passe à la torpille. On doit vérifier que la case touchée contient un bateau et que ce dernier possède que deux cases non touchées. Pour cela, on va créer une fonction de propagation qui va s'étendre du point touché à $\pm$ la taille du bateau selon la direction donnée par l'orientation du bateau. Suite à cela, on va compter les cases qui appartiennent à ce bateau et on vérifie qu'il reste bien que deux cases non touchées. 
 
@@ -250,15 +252,11 @@ Mais pour que le jeu se déroule sans accroc, on doit implémenter un plugin ant
 
 Tout d'abord, on doit vérifier que les joueurs ne cassent pas le jeu en posant leurs bateaux sur les mêmes cases. Pour cela, on va créer une fonction qui vérifie que les bateaux ne se superposent pas. On doit aussi vérifier que les bateaux *en vue de leur taille* ne sortent pas du plateau de jeu. 
 
-Dernièrement, on va utiliser une classe `BattleSheepGame` qui nous servira à stocker et gérer la partie.
+Enfin, on va utiliser une classe `BattleSheepGame` qui nous servira à stocker et gérer la partie.
 
-`BattleSheepGame` va être instanciée une seule fois par room, et sera utilisée pour gérer la partie. Elle va contenir les données de la partie, les joueurs, l'historique, la grille de jeu, le score, le temps écoulé, etc.. 
+`BattleSheepGame` va être instanciée une seule fois par room, et sera utilisée pour gérer la partie. Elle va contenir les données de la partie, les joueurs, l'historique des coups, la grille de jeu, le score, le temps écoulé, etc.. 
 
-Cette classe va contenir les méthodes qui seront appelées par le back-end pour gérer la partie. Du fait de sa nature back, les joueurs souhaitant faire joujou avec la console du navigateur se retrouveront face à un mur.
-
-* Vérification grille
-* Calcul impact des armes
-* Représentation / Stockage d'une partie (la class `BattlesheepGame`)
+Cette classe va contenir les méthodes qui seront appelées par le serveur pour gérer la partie. Du fait de sa déclaration côté serveur, les joueurs souhaitant faire joujou avec la console du navigateur se retrouveront face à un mur.
 
 #
 
