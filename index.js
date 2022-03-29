@@ -278,7 +278,6 @@ io.on("connection", (socket) => {
             const id = allRooms[idRoom][0].name === username ? 0 : 1;
             socket.emit("resultPlayerId", id);
             if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
-                console.log("Time to play");
                 io.to(idRoom).emit("timeToPlay");
             }
         }
@@ -406,7 +405,6 @@ io.on("connection", (socket) => {
         currentGame.currentPlayer = touchedId;
         if (weapon !== "Shears")
             currentGame.weaponsUsed[playerId].push(weapon);
-        console.log("The game is finished ?", currentGame.isGameFinished);
 
         // Store scores
         if (currentGame.isGameFinished)
@@ -414,7 +412,6 @@ io.on("connection", (socket) => {
 
         // Get the touched flock
         const flock = Verif.propagationWrapper(currentGame.playerStartGrids[touchedId], x, y);
-        console.log(flock);
 
         // Get the flock state
         let isFlockDown = true;
@@ -484,7 +481,6 @@ io.on("connection", (socket) => {
 
         if (reason == "transport close") {
             disconnectedUsers.push(socket.handshake.session.username);
-            console.log(disconnectedUsers);
 
             if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
                 allRooms[idRoom].pop();
