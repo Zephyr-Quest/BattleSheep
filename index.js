@@ -452,7 +452,8 @@ io.on("connection", (socket) => {
                 currentGame.chrono.seconds,
                 currentGame.isGameFinished,
                 isFlockDown,
-                Math.floor(currentGame.scores[pId])
+                Math.floor(currentGame.scores[pId]),
+                weapon
             );
         }
     });

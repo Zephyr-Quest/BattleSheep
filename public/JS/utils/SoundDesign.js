@@ -5,6 +5,21 @@
 const SOUND_PATH = "../../sound/";
 const SOUND_EXT = ".mp3";
 
+function loop(audio) {
+    if (typeof audio.loop == 'boolean')
+        audio.loop = true;
+    else
+        audio.addEventListener('ended', function () {
+            this.currentTime = 0;
+            this.play();
+        }, false);
+}
+
+
+/* -------------------------------------------------------------------------- */
+/*                              Public functions                              */
+/* -------------------------------------------------------------------------- */
+
 /**
  * Play the Capillotractom sound
  */
@@ -22,4 +37,13 @@ function playRandomSheep() {
     sound.play();
 }
 
-export default { playCapillotractom, playRandomSheep };
+/**
+ * Play the end music
+ */
+function playEndMusic() {
+    const music = new Audio(SOUND_PATH + "music_end_game" + SOUND_EXT);
+    loop(music);
+    music.play();
+}
+
+export default { playCapillotractom, playRandomSheep, playEndMusic };

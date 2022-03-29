@@ -77,7 +77,6 @@ socket.on("resultGrid", (result) => {
  *
  */
 socket.on("resultPlayerId", (result) => {
-    console.log("You are the player", result);
     Game.setPlayerId(result);
     playerId = result;
 });
@@ -145,7 +144,7 @@ function getPlayerId() {
  * @param {Boolean} isFlockDown - If the touched flock is down
  * @param {Number} score The player score
  */
-function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes, seconds, endGame, isFlockDown, score) {
+function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes, seconds, endGame, isFlockDown, score, weapon) {
     const view = Game.getView();
 
     // Print the player grid
@@ -161,9 +160,7 @@ function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes,
     // Update his chrono
     HUD.startChronoFrom(minutes, seconds);
 
-    // Start animations
-    SoundDesign.playCapillotractom();
-    view.showCapillotractoms(() => {
+    const whatDoNext = () => {
         // Print found sheeps
         // Calcul the player score
         let nbSheepFound = 0;
@@ -171,11 +168,12 @@ function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes,
             view.uncoverGridCase(new Vector2(element.x, element.y), element.playerId, element.state);
             nbSheepFound += element.playerId !== playerId && element.state === 2 ? 1 : 0;
         });
-        SoundDesign.playRandomSheep();
+        
+        // Play a sheep sound if new sheeps are found
+        if (HUD.getScore() < nbSheepFound)
+            SoundDesign.playRandomSheep();
         HUD.setScore(nbSheepFound);
-
-        console.log("Your current score for now is", score);
-
+        
         // Switch player
         if (!endGame) {
             if (playerId != currentPlayer) {
@@ -198,11 +196,13 @@ function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes,
             }
         }
 
-        // Prepare the end message
+        // Prepare the end state
         let endMsg = "Try another Game";
         if (endGame) {
-            endMsg = "You " + (nbSheepFound === 20 ? "won" : "lost") + " with the score : " + score;
-            gifName = nbSheepFound === 20 ? "player_won" : "player_lost";
+            const hasWon = nbSheepFound === 20;
+            endMsg = "You " + (hasWon ? "won" : "lost") + " with the score : " + score;
+            gifName = hasWon ? "player_won" : "player_lost";
+            if (hasWon) SoundDesign.playEndMusic();
         }
 
         // Show gif and end announcement
@@ -215,7 +215,13 @@ function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes,
             } else if (endGame)
                 HUD.showEndAnnouncement("Game finished", endMsg);
         }, endGame ? 10 : 2000);
-    });
+    };
+
+    // Start animations
+    if (weapon === 'Strimmer') {
+        SoundDesign.playCapillotractom();
+        view.showCapillotractoms(whatDoNext);
+    } else whatDoNext();
 }
 
 

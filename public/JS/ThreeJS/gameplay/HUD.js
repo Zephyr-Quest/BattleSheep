@@ -128,6 +128,7 @@ export const HUD = (function () {
             // Set the score on the HUD
             scoreSpan.innerText = score;
         },
+        getScore: () => Number(scoreSpan.innerText),
 
         /* -------------------------------------------------------------------------- */
         /*                              Chrono functions                              */

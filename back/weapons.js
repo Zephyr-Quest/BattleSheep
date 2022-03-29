@@ -19,7 +19,7 @@ function attack(grid, type, x, y, history, playerId) {
     
     switch (type) {
         case "Shears": result = hit(grid, x, y); break;
-        case "Strimmer": result = radar(grid, x, y); break;
+        case "Strimmer": result = radar(grid, x, y, history, playerId); break;
         case "Epidemic": result = submarine(grid, x, y); break;
         case "Wolf": result = torpedo(grid, x, y, history, playerId); break;
     }
@@ -49,16 +49,19 @@ function hit(grid, x, y) {
 
 
 // Return the case shown by the radar
-function radar(grid, x, y) {
+function radar(grid, x, y, history, playerId) {
     let result = [];
     for (let i = x - 1; i <= x + 1; i++) {
         for (let j = y - 1; j <= y + 1; j++) {
             if (i >= 0 && i < 10 && j >= 0 && j < 10) {
-                result.push({
-                    x: i,
-                    y: j,
-                    state: grid[j][i] ? 1 : 0 // 0 : nothing, 1 : ship visible
-                });
+                const isTouched = checkHistory(history, i, j, playerId);
+                if (!isTouched) {
+                    result.push({
+                        x: i,
+                        y: j,
+                        state: grid[j][i] ? 1 : 0 // 0 : nothing, 1 : ship visible
+                    });
+                }
             }
         }
     }
