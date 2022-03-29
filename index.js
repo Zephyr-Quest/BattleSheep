@@ -272,13 +272,13 @@ io.on("connection", (socket) => {
         let idRoom = socket.handshake.session.idRoom
         console.log("--- GAME ---")
         console.log("Connexion de ", username, " à la room ", idRoom);
-        socket.join(idRoom)
+        socket.join(idRoom);
 
         if (!disconnectedUsers.includes(username)) {
             const id = allRooms[idRoom][0].name === username ? 0 : 1;
             socket.emit("resultPlayerId", id);
             if (allRooms[idRoom] && allRooms[idRoom].length == 2) {
-                console.log("Time to play")
+                console.log("Time to play");
                 io.to(idRoom).emit("timeToPlay");
             }
         }
@@ -341,7 +341,6 @@ io.on("connection", (socket) => {
     // join the room clicked (by the hostname) and emit to everyone to hide the joined room
     socket.on("join-room", (hostName) => {
         let res = Object.keys(allRooms).findIndex(key => allRooms[key][0].name == hostName)
-        console.log(allRooms[res])
         if (allRooms[res] && allRooms[res].length < 2) {
 
             let username = socket.handshake.session.username;
