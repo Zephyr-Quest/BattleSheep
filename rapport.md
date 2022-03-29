@@ -2,7 +2,7 @@
 
 ## Introduction
 
-La vie de berger ce n'est plus ce que c'était ! La guerre fait rage désormais et vous n'y échapperez pas. L'attaque étant la meilleur défense, éliminez les troupeaux de votre adversaire jusqu'à ce que pénurie de laine s'en suive. Pour cela voici vos armes :
+La vie de berger ce n'est plus ce que c'était ! La guerre fait rage désormais et vous n'y échapperez pas. L'attaque étant la meilleur défense, éliminez les troupeaux de votre adversaire jusqu'à ce que pénurie de laine s'ensuive. Pour cela voici vos armes :
 
 * La **tondeuse**, disponible en permanence, est une arme simple mais efficace. Elle atteint une seul case mais ne la rate pas;
 * La **débroussailleuse**, disponible une seule fois dans la partie, affiche les moutons qui se cachent sous les 9 cases autour de celle cliquée;
@@ -82,10 +82,10 @@ Pour gérer tout ce joli foutoir, on a créé une classe `View` qui représente 
 
 ![Grille de départ du joueur en 3D](public/img/rapport/start_grid.png "Grille de départ du joueur en 3D")
 
-En bref, cette classe fournit tout le nécéssaire pour l'intéraction avec la grille. On peut retrouver dans cette grille :
+En bref, cette classe fournit tout le nécessaire pour l'intéraction avec la grille. On peut retrouver dans cette grille :
 
 * De l'herbe, cache un mouton... ou pas;
-* Des moutons classiques, ceci n'ont pas encore été touchés... Pour l'instant;
+* Des moutons classiques, ceux-ci n'ont pas été touchés... Pour l'instant;
 * Des moutons rasés, dommage pour eux, l'adversaire est passé par là.
 
 Jusqu'à présent on peut donc la manipuler mais on ne peut pas encore détecter lorsque le joueur sélectionne une case. Pour cela on utilise un outil mis à disposition par la librairie : le **Raycaster**.
@@ -98,7 +98,7 @@ Vous trouvez que ça manque d'animation ? De fun ? De tracteur ? Vous n'allez pa
 
 ![Capillotractom](public/img/textures/capillotractom.png "Capillotractom")
 
-Nommé ainsi pour sa belle cheveulure et son joli visage, le *Capillotractom* vous fera passer de bons moments, seul ou en famille. D'un point de vue plus technique, cette belle texture est implémenter dans le jeu via une *sprite*. Il s'agit d'un élément 3D permettant d'afficher une texture 2D dans l'environnement *ThreeJS*. L'image est donc toujours orientée vers la caméra mais peut se déplacer sur tous les axes. Grâce à cela nous avons pu ajouter une animation faisant translater le *Capillotractom* à travers la grille lorsqu'un des joueurs utilise l'arme *débroussailleuse*.
+Nommé ainsi pour sa belle cheveulure et son joli visage, le *Capillotractom* vous fera passer de bons moments, seul ou en famille. D'un point de vue plus technique, cette belle texture est implémenté dans le jeu via une *sprite*. Il s'agit d'un élément 3D permettant d'afficher une texture 2D dans l'environnement *ThreeJS*. L'image est donc toujours orientée vers la caméra mais peut se déplacer sur tous les axes. Grâce à cela nous avons pu ajouter une animation faisant translater le *Capillotractom* à travers la grille lorsqu'un des joueurs utilise l'arme *débroussailleuse*.
 
 Hm ! Je sens que vous n'êtes pas encore satisfait... Eh bien sachez qu'il sagit tout de même d'un jeu **Made by ZephyrStudio**. On ne fait jamais les choses à moitié ici :
 
@@ -113,7 +113,7 @@ Il faut aussi préciser que le joueur peut contrôler la caméra avec les touche
 Alors... Euh... Comment dire ? On avait plus trop le temps. Petites recherches internet + un petit tour sur *Audacity* et hop le tour est joué ! Mais ça ne nous a pas empêché de faire les choses bien. Il y a donc un module appelé `SoundDesign` qui permet de lancer au moment souhaité les différents sons enregistrés :
 
 * Un son de tracteur pour le *Capillotractom*;
-* 3 sons différents pour la découverte d'un mouton qui sont joués aléatoirement à chaque fois (ils ne sont **pas du tout** inspiré de ceux de Minecraft, c'est faux).
+* 3 sons différents pour la découverte d'un mouton qui sont joués aléatoirement à chaque fois (ils ne sont **pas du tout** inspirés de ceux de Minecraft, c'est faux).
 
 ### Mise en relation avec le back-end (HTTP + WebSocket)
 
@@ -121,21 +121,24 @@ Pour que le jeu puisse fonctionner, il a fallu connecter le client et le serveur
 
 Les requêtes http sont utilisées lors :
 
-* De la connexion, on envoie les données du formulaire au serveur via une requête *POST*. Il les vérifie grâce à la base de données et renvoie une réponse pour prévenir le client de ce qu'il doit faire (rediriger ou afficher une erreur);
-* De l'inscription, même procédé que la connexion mais avec une procédure différente côté serveur;
+* De la connexion, on envoie les données du formulaire au serveur via une requête *POST*. Le mot de passe et le nom d'utilisateur sont `trim` et `escape` pour sécuriser une première fois et éviter les injections *SQL* . Il vérifie les données grâce à la base de données et renvoie une réponse pour prévenir le client de ce qu'il doit faire (rediriger ou afficher une erreur);
+* De l'inscription, même procédé que la connexion mais avec une procédure différente côté base de données;
 * De la déconnexion, on envoie une simple requếte *POST* vers `/logout`, le serveur gère le reste.
 
 Parce qu'on est dissident, on utilise l'API *fetch* de *JavaScript* (au lieu d'*AJAX*). L'avantage est surtout dans le fait qu'elle soit native au langage et facile à utiliser. De plus Martin avait déjà travaillé avec.
 
-Le WebSocket est donc utilisé tout au long de la partie (dans la phase de jeu essentiellement) :
+
+Le WebSocket est donc utilisé tout au long de la partie (dans le jeu bien sûr, mais aussi dans le lobby) :
 
 * Lors de l'actualisation de la page pour reconnecter le joueur;
-* Lors de la connection du joueur dans la *room*;
+* Lors de la création d'une *room*;
+* Lors de la connexion du joueur dans la *room*;
 * Lors de la déconnexion du joueur;
 * Lorsque les 2 joueurs sont connectés pour afficher la sélection des grilles de départ;
-* Pour la vérification des grilles, quand les 2 grilles sont validés pour lancer le jeu;
-* A chaque fois que le joueur joue, pour vérifier le coup sur le serveur et ensuite actualiser chaque client, changer de joueur, etc;
+* Pour la vérification des grilles, quand les 2 grilles sont validées pour lancer le jeu;
+* A chaque fois que le joueur joue, pour vérifier le coup sur le serveur, actualiser chaque client, changer de joueur, etc;
 * Savoir si une partie est terminée, montrer l'écran de fin de partie aux 2 joueurs.
+
 
 ## Back-end
 
@@ -145,14 +148,14 @@ Le WebSocket est donc utilisé tout au long de la partie (dans la phase de jeu e
 
 Pour ce jeu, il faut pouvoir gérer les données de manière efficace et rapide. On a donc opté pour une gestion en base de données (BDD) pour que ce soit plus pratique.
 
-Dans cette BDD, on a tout d'abord gérer les utilisateurs lors de l'inscription :
+Dans cette BDD, on a tout d'abord géré les utilisateurs lors de l'inscription :
 
 * Gestion des pseudos
 * Gestion des mots de passe
 
 Par sécurité, on effectue quelques vérifications de routine afin d'éviter les injections *SQL*. Tout est géré dans une classe *NodeJS* appelée BDD, avec en méthodes toutes les actions possibles (connexion, inscription, etc...)
 
-Par la suite, après l'inscription, on gère aussi les 3 meilleurs scores du joueur connecté, scores que l'on stocke aussi dans la base de donnée sous la forme : 
+Par la suite, après l'inscription, on gère aussi les 3 meilleurs scores du joueur connecté, scores que l'on stocke aussi dans la base de données sous la forme : 
 
 * Premier meilleur score
 * Joueur contre lequel ce premier score a été effectué
@@ -161,7 +164,7 @@ Par la suite, après l'inscription, on gère aussi les 3 meilleurs scores du jou
 * Troisième meilleur score
 * Joueur contre lequel ce troisième score a été effectué
 
-Tout est récupérable depuis la base de données via la classe BDD en *NodeJS*, et les meilleurs scores sont automatiquement actualisés grâce à la méthode `refreshScore`.
+Tout est récupérable depuis la base de données via la classe BDD en *NodeJS*, les meilleurs scores sont automatiquement actualisés grâce à la méthode `refreshScore`.
 
 **Point sécurité**
 
@@ -169,11 +172,11 @@ Lors de l'accès à une base de données, il faut à tout prix éviter les **inj
 
 ### Docker
 
-Si on devait donner une définition de *Docker* ça serait sûrement : Construire un système de conteneurs interconnectés en pensant gagner du temps mais se rendre compte que, à part perdre un weekend entier, ça aura servi à rien... Oui oui, c'est triste. Mais bon, l'avantage c'est que la mise en place de notre projet se fait très facilement sans avoir besoin de configurer *MySQL* en amont.
+Si on devait donner une définition de *Docker* ça serait sûrement : construire un système de conteneurs interconnectés en pensant gagner du temps mais se rendre compte que, à part perdre un weekend entier, ça aura servi à rien... Oui oui, c'est triste. Mais bon, l'avantage c'est que la mise en place de notre projet se fait très facilement sans avoir besoin de configurer *MySQL* en amont.
 
-**Alors comment ça marche ?** Tout d'abord il faut savoir de quel dépendance le projet a besoin. Jusque là c'est assez simple : *NodeJS* et *MySQL*. Chaque dépendance va donc être gérer par un **conteneur** indépendant (très simplement c'est une sorte de machine virtuelle mais version serveur). Malheureusement, tous ces conteneurs doivent communiquer entre eux. C'est là que *Docker Compose* entre en jeu. Cet outil permet de créer un réseau de conteneur pour qu'il puisse communiquer entre eux. Dans notre cas le serveur qui tourne dans le conteneur *NodeJS* va pouvoir effectuer des requêtes vers le serveur du conteneur *MySQL*. Parfait en somme ! Ensuite il suffit de lier le conteneur *NodeJS* aux sources du projet pour qu'il puisse lancer le serveur et donner au conteneur *MySQL* un fichier décrivant notre base de données pour qu'il puisse la construire au démarrage. On va pas rentrer dans les détails des problèmes de droit d'accès aux fichiers parce que ça nécessiterait pas mal de doliprane.
+**Alors comment ça marche ?** Tout d'abord il faut savoir de quel dépendance le projet a besoin. Jusque là c'est assez simple : *NodeJS* et *MySQL*. Chaque dépendance va donc être gérer par un **conteneur** indépendant (très simplement c'est une sorte de machine virtuelle mais version serveur). Malheureusement, tous ces conteneurs doivent communiquer entre eux. C'est là que *Docker Compose* entre en jeu. Cet outil permet de créer un réseau de conteneur pour qu'il puisse communiquer entre eux. Dans notre cas le serveur qui tourne dans le conteneur *NodeJS* va pouvoir effectuer des requêtes vers le serveur du conteneur *MySQL*. Parfait en somme ! Ensuite il suffit de lier le conteneur *NodeJS* aux sources du projet pour qu'il puisse lancer le serveur et donner au conteneur *MySQL* un fichier décrivant notre base de données pour qu'il puisse la construire au démarrage. On ne va pas rentrer dans les détails des problèmes de droit d'accès aux fichiers parce que ça nécessiterait pas mal de doliprane.
 
-**Et comment on lance tout ce bazarre ?** Ouhla, ça nécessite un petit tuto :
+**Et comment on lance tout ce bazar ?** Ouhla, ça nécessite un petit tuto :
 
 1. Installer `docker` et `docker-compose` et s'assurer qu'il [fonctionne sans les droits administrateurs](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user "Docker post-installation") (pas nécessaire sous Windows);
 2. Cloner le dépôt [GitHub](https://github.com/Zephyr-Quest/BattleSheep "Dépôt GitHub");
@@ -240,9 +243,9 @@ Les joueurs positionnent leurs moutons sur la grille et appuient sur le bouton d
 
 A chaque coup, l'évènement *playerPlayed* est appelé, il permet au joueur de tirer sur une case avec une certaine arme. C'est à ce moment là que toute les vérifications sont faites. Une fois que tout est OK et que les calculs sont fait, on envoie une actualisation de toutes les données aux clients.
 
-La déconnexion d'un joueur pendant la partie est elle aussi gérée (et je peux vous dire que j'ai galéré). Lorsqu'un joueur rafraichit la page *game*, ou la quitte, l'évenement *disconnect* est appelé automatiquement. Cela entrainait des erreurs et bug lorsqu'il revenait sur le lobby.
+La déconnexion d'un joueur pendant la partie est elle aussi gérée (et je peux vous dire que j'ai galéré). Lorsqu'un joueur rafraichit la page *game*, ou la quitte, l'évenement *disconnect* est appelé automatiquement. Cela entrainait moulte erreurs et bug lorsqu'il revenait sur le lobby.
 
-Ainsi, le nom du joueur se déconnectant est stocké dans un tableau de joueur en déconnexion. Lorsqu'il arrive sur la page lobby, ce tableau est parcouru. Si le nom du joueur se trouve dedans, il quitte la *room* dans laquelle il était et son id de *room* est remit à *undefined*. Ces deux étapes étaient impossible à faire dans l'évenement *disconnect* car par définition, le client n'est plus connecté au WS, donc impossible de mettre à jour ses données. Enfin, un évènement *disconnection* est émit au joueur qui ne s'est pas déconnecté afin de le faire quitter la partie, le procédé de déconnexion pour ce joueur est exactement le même. Par principe de sécurité, l'événement *disconnection* est envoyé lorsque le joueur se déconnecte et lorsqu'il arrive sur la page *lobby*.
+Ainsi, le nom du joueur se déconnectant est stocké dans un tableau de joueur en déconnexion. Lorsqu'il arrive sur la page lobby, ce tableau est parcouru. Si le nom du joueur se trouve dedans, il quitte la *room* dans laquelle il était et son id de *room* est remit à *undefined*. Ces deux étapes étaient impossible à faire dans l'évenement *disconnect* car par définition, le client n'est plus connecté au WS, donc impossible de mettre à jour ses données. Enfin, un évènement *disconnection* est *emit* au joueur qui ne s'est pas déconnecté afin de le faire quitter la partie, le procédé de déconnexion pour ce joueur est exactement le même. Par principe de sécurité, l'événement *disconnection* est envoyé lorsque le joueur se déconnecte et lorsqu'il arrive sur la page *lobby*.
 
 La mise en place du système de *room* a été également assez compliqué à mettre en place, liée en partie à la déconnexion (encore et toujours elle...). Hormis ces points, la principale difficulté résidait dans le fait que  *NodeJS* et le côté serveur était tout nouveau pour moi (Enguerrand).
 
@@ -250,14 +253,14 @@ La mise en place du système de *room* a été également assez compliqué à me
 
 Il est temps d'attaquer une partie importante, la logique du jeu. Même si on a décidé de nommer les armes du jeu de manière différentes (pour coller à la cohérence du jeu), il est important de savoir qu'elles respectent toutes les règles du jeu originel. C'est à dire qu'il y a quatre armes distinctes :
 
-- Le tir classique (qui seulement une case);
+- Le tir classique (qui atteint seulement une case);
 - Le radar (qui découvre une zone circulaire de 3 cases)
 - La torpille (qui détruit le bateau s'il reste deux cases)
 - La bombe à fragment (qui détruit une zone circulaire de 2 cases)
 
-La réalisation de trois des fonctions de tir était trivial. Pour le tir simple, on vérifie simplement si la case touchée par le tir contient un bateau, pour le radar et la torpille, on fait un cercle de $x$ cases autour de la case touchée.
+La réalisation de trois des fonctions de tir était trivial. Pour le tir simple, on vérifie simplement si la case, touchée par le tir, contient un bateau, pour le radar et la torpille, on fait un cercle de $x$ cases autour de la case touchée.
 
-Les choses deviennent moins trivial quand on passe à la torpille. On doit vérifier que la case touchée contient un bateau et que ce dernier possède que deux cases non touchées. Pour cela, on va créer une fonction de propagation qui va s'étendre du point touché à $\pm$ la taille du bateau selon la direction donnée par l'orientation du bateau. Suite à cela, on va compter les cases qui appartiennent à ce bateau et on vérifie qu'il reste bien que deux cases non touchées. 
+Les choses deviennent moins trivial quand on passe à la torpille. On doit vérifier que la case touchée contient un bateau et que ce dernier possède deux cases non touchées. Pour cela, on va créer une fonction de propagation qui va s'étendre du point touché à $\pm$ la taille du bateau selon la direction donnée par l'orientation du bateau. Suite à cela, on va compter les cases qui appartiennent à ce bateau et on vérifie qu'il reste bien juste deux cases non touchées. 
 
 Mais pour que le jeu se déroule sans accroc, on doit implémenter un plugin anti-triche *plus efficace que celui d'Epic Games*. 
 

@@ -151,20 +151,13 @@ app.post("/signup", body("pseudo").isLength({
                 errors: errors.array(),
             });
         } else {
-            // console.log("PSEUDO", pseudo);
-            // console.log("MDP", password);
             manageUser.signUp(password, (mdp) => {
                 Database.signUp(pseudo, mdp, (e) => {
                     if (e == true) {
                         req.session.username = req.body.pseudo;
                         req.session.save();
-                        // console.log("Envoi vers le lobby");
-                        // Database.getList((e) => {
-                        //     console.log(e);
-                        // });
                         res.send('OK');
                     }
-                    // TODO AFFICHER DE RECOMMENCER SI FALSE
                 });
             });
         }
@@ -200,9 +193,6 @@ app.post("/login", body("pseudo").isLength({
                         req.session.save();
                         res.send('OK');
                     }
-
-                    // TODO AFFICHER DE RECOMMENCER SI FALSE      
-
                 });
             });
         }
@@ -266,8 +256,6 @@ app.use((req, res) => res.render("404"));
 /*                                    ROOMS                                   */
 /* -------------------------------------------------------------------------- */
 
-
-//TODO comparer les id de session au lieu des pseudos
 
 let allRooms = {};
 let allGames = {};
@@ -339,7 +327,7 @@ io.on("connection", (socket) => {
         };
 
         // Create room and game
-        allRooms[res] = [data]
+        allRooms[res] = [data];
         allGames[res] = new BSGame(res);
         allGames[res].addPlayer(username);
 
