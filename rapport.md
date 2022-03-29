@@ -2,14 +2,14 @@
 
 ## Introduction
 
-La vie de berger c'est plus ce que c'était ! La guerre fait rage désormais et vous n'y échapperez pas. L'attaque étant la meilleur défense, éliminez les troupeaux de votre adversaire jusqu'à ce que pénurie de laine s'en suive. Pour cela voici vos armes :
+La vie de berger ce n'est plus ce que c'était ! La guerre fait rage désormais et vous n'y échapperez pas. L'attaque étant la meilleur défense, éliminez les troupeaux de votre adversaire jusqu'à ce que pénurie de laine s'en suive. Pour cela voici vos armes :
 
 * La **tondeuse**, disponible en permanence, est une arme simple mais efficace. Elle atteint une seul case mais ne la rate pas;
 * La **débroussailleuse**, disponible une seule fois dans la partie, affiche les moutons qui se cachent sous les 9 cases autour de celle cliquée;
 * L'**épidémie de calvitie**, le fléau de l'homme moderne. Disponible une seule fois dans la partie, elle provoque une chute de laine sur les 5 cases autour de celle cliquée;
 * Le **loup**, prédateur par excellence, est lui aussi disponible une seul fois dans la partie. Il s'occupe d'achever un troupeau de taille inférieur ou égale à 2. Cette arme fonctionne également sur les troupeaux plus grands qui ont perdu une partie de leur effectif.
 
-Ce jeu est signé ZephyrStudio et évidement on ne fait pas les choses à moitié. Histoire de vous en mettre plein la vue, on a choisit de proposer de la 3D en lowpoly comme style graphique (on espère que ça a marché).
+Ce jeu est signé ZephyrStudio et évidemment on ne fait pas les choses à moitié. Histoire de vous en mettre plein la vue, on a choisit de proposer de la 3D en lowpoly comme style graphique (on espère que ça a marché).
 
 En parlant de ZephyrStudio, voici une petite présentation de l'équipe et de la répartition du travail :
 
@@ -27,7 +27,7 @@ En parlant de ZephyrStudio, voici une petite présentation de l'équipe et de la
 
 ### Navigation
 
-Afin de faciliter le design du site, on a choisit de travailler avec le pré-processeur *LESS* (parce que le CSS natif ça va cinq minutes).
+Afin de faciliter le design du site, on a choisi de travailler avec le pré-processeur *LESS* (parce que le CSS natif ça va cinq minutes, mais c'est relou avec le temps).
 
 ![Schéma de navigation](public/img/rapport/wire.png "Schéma de navigation")
 
@@ -53,7 +53,7 @@ Les moutons qui ne sont pas encore placés sont situés dans une barre à gauche
 
 Le placement des moutons se fait par un système de drag and drop. Le joueur sélectionne un mouton dans la barre à gauche et le déplace jusqu'à la case du tableau voulu. Lorsqu'il le lâche, si le mouton a un placement convenable alors il est placé sur la grille, sinon il est remis à son ancienne position (dans la barre à gauche si le mouton n'était pas préalablement placé sur la grille sinon, à son ancienne position sur la grille).
 
-La mise en place du drag and drop (qui m'a fait perdre trop de temps à cause d'erreurs irrecevables, je ne pouvais pas me laisser faire insulter de la sorte par une banale console, je lui apprends pas mon métier, alors elle va me laisser faire le mien, c'est qui le patron !) a pris plus de temps que prévu, notamment à cause des différents conteneurs utilisés (td du tableau, div du mouton, div de la barre des moutons, le contenu de la div du mouton). J'ai eu beaucoup d'erreurs à cause de ces conteneurs qui n'étaient pas ceux que je souhaitais viser. Une autre erreur qui m'a pris du temps est le remplissage de la grille selon la taille du troupeau de mouton. On place dans la grille un seul mouton et il faut créer et placer automatiquement à la suite le nombre de moutons correspondant à la taille du troupeau placé. Il a fallu créer de nouveaux moutons, de nouveaux blocs à placer dans les bons conteneurs (encore des erreurs d'éléments visés) et lorsqu'on choisi un mouton du troupeau à déplacer, les autres (du troupeau séléctionné) sont enlevés pour pouvoir placer le mouton à un nouvel endroit. Si on choisit un mouton dans la grille et qu'il est situé au milieu de son groupe, il devient alors le nouveau premier mouton du troupeau quand on le place à nouveau.
+La mise en place du drag and drop (qui m'a fait perdre trop de temps à cause d'erreurs irrecevables, je ne pouvais pas me laisser faire insulter de la sorte par une banale console, je lui apprends pas mon métier, alors elle va me laisser faire le mien, c'est qui le patron !) a pris plus de temps que prévu, notamment à cause des différents conteneurs utilisés (td du tableau, div du mouton, div de la barre des moutons, le contenu de la div du mouton). J'ai eu beaucoup d'erreurs à cause de ces conteneurs qui n'étaient pas ceux que je souhaitais viser. Une autre erreur qui m'a pris du temps est le remplissage de la grille selon la taille du troupeau de mouton. On place dans la grille un seul mouton et il faut créer et placer automatiquement à la suite le nombre de moutons correspondant à la taille du troupeau placé. Il a fallu créer de nouveaux moutons, de nouveaux blocs à placer dans les bons conteneurs (encore des erreurs d'éléments visés) et lorsqu'on choisit un mouton du troupeau à déplacer, les autres (du troupeau séléctionné) sont enlevés pour pouvoir placer le mouton à un nouvel endroit. Si on choisit un mouton dans la grille et qu'il est situé au milieu de son groupe, il devient alors le nouveau premier mouton du troupeau quand on le place à nouveau.
 
 Le joueur à 3 boutons à droite de la grille :
 
@@ -232,7 +232,7 @@ Ainsi, lorsque l'utilisateur essaie d'accéder à la page *lobby* ou *game* sans
 
 Le périple du back-end arrive à une partie rigolote : le serveur WebSocket (que nous abrégerons WS). Lorsque l'utilisateur arrive sur la page lobby, une connexion au WS est initialisée. Plusieurs vérifications sont alors faites afin de savoir s'il vient de la page de connexion ou s'il vient de quitter une partie.
 
-Le WS utilise un système de *room*. Lorsqu'un joueur choisi de créer une partie, il crée une *room*. La *room* est nommée par un **id**, cet id est l'id + 1 de la *room* ayant le plus haut id. Lorsqu'un joueur clique sur une partie déjà créée, il rejoint la *room*. L'id de la *room* est stockée dans la session des joueurs (je vous l'accorde, ce n'est pas la manière la plus sécurisée de procéder) pour récupérer plus simplement l'id de la *room* à laquelle il faut envoyer l'évènement.
+Le WS utilise un système de *room*. Lorsqu'un joueur choisit de créer une partie, il crée une *room*. La *room* est nommée par un **id**, cet id est l'id + 1 de la *room* ayant le plus haut id. Lorsqu'un joueur clique sur une partie déjà créée, il rejoint la *room*. L'id de la *room* est stockée dans la session des joueurs (je vous l'accorde, ce n'est pas la manière la plus sécurisée de procéder) pour récupérer plus simplement l'id de la *room* à laquelle il faut envoyer l'évènement.
 
 Une fois qu'une *room* est pleine, c'est à dire que 2 joueurs sont dedans, l'évènement *timeToPlay* est envoyé aux 2 joueurs de la *room*, la partie démarre !
 
