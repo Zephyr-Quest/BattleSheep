@@ -55,7 +55,6 @@ export class setPlayerGrid extends grid {
         rotateBtn.addEventListener("click", () => {
             if (this.rotation === "row") this.rotation = "col";
             else this.rotation = "row";
-            console.log(this.rotation);
         })
 
         resetBtn.addEventListener("click", () => {
@@ -196,7 +195,6 @@ export class setPlayerGrid extends grid {
      */
     setDrag(currentBox) {
         currentBox.addEventListener("dragstart", (event) => {
-            // console.log("start");
             let currentBox = event.target;
             if (currentBox.nodeName === 'IMG' || currentBox.nodeName === 'span')
                 currentBox = currentBox.parentElement;
@@ -211,7 +209,6 @@ export class setPlayerGrid extends grid {
         })
 
         currentBox.addEventListener("dragend", (event) => {
-            // console.log("end");
             let currentBox = event.target;
             if (currentBox.nodeName === 'IMG' || currentBox.nodeName === 'span')
                 currentBox = currentBox.parentElement;
@@ -232,18 +229,14 @@ export class setPlayerGrid extends grid {
 
         for (const box of container) {
             box.addEventListener("dragover", (event) => {
-                // console.log("over");//
                 event.preventDefault();
             })
             box.addEventListener("dragleave", () => {
-                // console.log("leave");
             })
             box.addEventListener("dragenter", (event) => {
                 event.preventDefault();
-                // console.log("enter");
             })
             box.addEventListener("drop", (event) => {
-                // console.log("droped");
                 event.stopPropagation();
                 const currentContainer = event.target;
                 const data = event.dataTransfer.getData("text/plain");

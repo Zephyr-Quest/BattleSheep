@@ -164,9 +164,13 @@ function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes,
         // Print found sheeps
         // Calcul the player score
         let nbSheepFound = 0;
+        let alreadyRead = [];
         listPos.forEach(element => {
             view.uncoverGridCase(new Vector2(element.x, element.y), element.playerId, element.state);
-            nbSheepFound += element.playerId !== playerId && element.state === 2 ? 1 : 0;
+            if (element.playerId !== playerId && element.state === 2 && !alreadyRead.includes(element)) {
+                nbSheepFound++;
+                alreadyRead.push(element);
+            }
         });
         
         // Play a sheep sound if new sheeps are found
@@ -199,7 +203,7 @@ function updateWorld(startGrid, currentPlayer, listPos, listWeaponUsed, minutes,
         // Prepare the end state
         let endMsg = "Try another Game";
         if (endGame) {
-            const hasWon = nbSheepFound === 20;
+            const hasWon = nbSheepFound >= 20;
             endMsg = "You " + (hasWon ? "won" : "lost") + " with the score : " + score;
             gifName = hasWon ? "player_won" : "player_lost";
             if (hasWon) SoundDesign.playEndMusic();
