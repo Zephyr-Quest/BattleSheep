@@ -167,7 +167,6 @@ export class CustomRaycaster {
         if (intersects.length > 0) {
             // Choose the best result from raycaster
             const currentIntersect = intersects[0];
-            // if (this.debug) console.log(currentIntersect);
 
             // Try to get the real hover element
             let hovered;

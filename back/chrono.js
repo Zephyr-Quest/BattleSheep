@@ -7,6 +7,9 @@ module.exports = class Chrono{
         this.stopChrono = false;
     }
     
+    /**
+     * Increment the chrono each second
+     */
     incrementChrono() {
         // Increment seconds
         this.seconds++;

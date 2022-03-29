@@ -32,7 +32,6 @@ export class setPlayerGrid extends grid {
             playerGrid.appendChild(tr);
         }
         this.displayOnScreen();
-        this.displayGrid();
         this.setDrop();
 
         /* ------------------------------- Set sheeps ------------------------------- */
@@ -67,7 +66,6 @@ export class setPlayerGrid extends grid {
             sheepBox.style.opacity = 1;
 
             this.resetGrid();
-            this.displayGrid();
             this.CreateSheepOnScreen();
             this.displayOnScreen();
             for (let i = 0; i < this.nbSheep; i++) {
@@ -221,7 +219,6 @@ export class setPlayerGrid extends grid {
             const currentSheep = this.tabSheep[currentBox.classList[1]];
             if (currentBox.parentElement.id == currentSheep.firstPosition)
                 this.rangeSheep(currentSheep.firstPosition, currentSheep.direction, currentSheep.sheepSize, currentSheep.sheepSize);
-            this.displayGrid();
             currentBox.removeAttribute("moving");
             this.displayOnScreen();
         })
