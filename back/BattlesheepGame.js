@@ -1,7 +1,5 @@
 const Chrono = require("./chrono");
 
-
-
 module.exports = class BattleSheepGame {
     /**
      * The BattlesheepGame constructor

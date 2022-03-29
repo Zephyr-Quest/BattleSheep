@@ -109,7 +109,6 @@ app.get("/signup", (req, res) => {
     // If he's not, send him the signup page
     // else, redirect him to the scoreboard page
     if (!req.session.username) {
-        console.log("Utilisateur non connecté, envoi vers formulaire de connexion");
         res.render("signup", {
             title: "BattleSheep | Sign up, Log in",
             description: "Sign up or log in to BattleSheep",
@@ -124,7 +123,6 @@ app.get("/signup", (req, res) => {
             ],
         });
     } else {
-        console.log("Utilisateur connecté, envoi vers le lobby");
         res.redirect("/lobby");
         return;
     }
@@ -145,26 +143,18 @@ app.post("/signup", body("pseudo").isLength({
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            console.log("---ERROR---");
-            console.log(errors);
+            console.error(errors);
             res.status(400).json({
                 errors: errors.array(),
             });
         } else {
-            // console.log("PSEUDO", pseudo);
-            // console.log("MDP", password);
             manageUser.signUp(password, (mdp) => {
                 Database.signUp(pseudo, mdp, (e) => {
                     if (e == true) {
                         req.session.username = req.body.pseudo;
                         req.session.save();
-                        // console.log("Envoi vers le lobby");
-                        // Database.getList((e) => {
-                        //     console.log(e);
-                        // });
                         res.send('OK');
                     }
-                    // TODO AFFICHER DE RECOMMENCER SI FALSE
                 });
             });
         }
@@ -187,8 +177,7 @@ app.post("/login", body("pseudo").isLength({
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            console.log("--- ERROR ---");
-            console.log(errors);
+            console.error(errors);
             res.status(400).json({
                 errors: errors.array(),
             });
@@ -200,9 +189,6 @@ app.post("/login", body("pseudo").isLength({
                         req.session.save();
                         res.send('OK');
                     }
-
-                    // TODO AFFICHER DE RECOMMENCER SI FALSE      
-
                 });
             });
         }
@@ -470,7 +456,6 @@ io.on("connection", (socket) => {
             }
         }
 
-        nbSheep = 20;
         if (nbSheep === 20) {
             let idPlayer = allRooms[idRoom].findIndex(e => e.name == username)
 

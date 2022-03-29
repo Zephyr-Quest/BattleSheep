@@ -79,7 +79,7 @@ class BDD {
                 else {
                     bcrypt.compare(pass, result[0].password, function (err, match) {
                         if (err) {
-                            console.log(err);
+                            console.error(err);
                             return 0;
                         }
                         if (match) {

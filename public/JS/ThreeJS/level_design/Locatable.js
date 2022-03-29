@@ -1,4 +1,4 @@
-import { Vector3, Vector2 } from "three";
+import { Vector3 } from "three";
 
 /* -------------------------------------------------------------------------- */
 /*              Represent a 3D object with position and rotation              */

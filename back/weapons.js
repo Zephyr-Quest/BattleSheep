@@ -138,8 +138,6 @@ function torpedo(grid, x, y, history, playerId) {
 
 
     }
-
-    return result;
 }
 
 // Submarine
