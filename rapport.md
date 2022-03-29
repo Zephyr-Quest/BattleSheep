@@ -119,27 +119,25 @@ Alors... Euh... Comment dire ? On avait plus trop le temps. Petites recherches i
 
 ### Mise en relation avec le back-end (HTTP + WebSocket)
 
-* Modules fait pour intéragir avec le back (`http` + `SocketManager`)
-* Difficultés rencontrées
-
-Pour que le jeu puisse fonctionner, il a fallu connecter le client et le serveur. Pour cela nous avons utilisé des requêtes *HTTP* et des événements *WebSocket*. Il a donc fallu utiliser ces outils qui nous ont donné du fil à retordre. Le plus difficile a été de relier les joueurs avec le système de room et de récupérer les données de chaqu'un afin de procéder au bon déroulement de la partie.
+Pour que le jeu puisse fonctionner, il a fallu connecter le client et le serveur. Pour cela nous avons utilisé des requêtes *HTTP* et des événements *WebSocket*. Il a donc fallu utiliser ces outils qui nous ont donné du fil à retordre. Le plus difficile a été de relier les joueurs avec le système de room et de récupérer les données de chacun afin de procéder au bon déroulement de la partie.
 
 Les requêtes http sont utilisées lors :
-* Du passage de la page d'accueil à la page de règles, connexion
-* Pour connecter le joueur avec ses identifiants afin de les vérifier avec les données de la base de données ou la création de compte
-* De la page de connexion à la page de lobby 
-* De la page de lobby à la page de jeu.
 
-Les websockets sont donc utilisés tout au long de la partie (dans la phase de jeu essentiellement) :
-* Lors de l'actualisation de la page pour reconnecter le joueur
-* Lors de la connection du joueur dans la **Room**
-* Lors de la déconnection du joueur
-* Lorsque les 2 joueurs sont connectés pour lancer la partie
-* Pour la vérification des grilles, quand les 2 grilles sont validés pour lancer le jeu
-* A chaque fois que le joueur joue, pour vérifier le coup en back et ensuite actualiser la partie en front, changer de joueur
+* De la connexion, on envoie les données du formulaire au serveur via une requête *POST*. Il les vérifie grâce à la base de données et renvoie une réponse pour prévenir le client de ce qu'il doit faire (rediriger ou afficher une erreur);
+* De l'inscription, même procédé que la connexion mais avec une procédure différente côté serveur;
+* De la déconnexion, on envoie une simple requếte *POST* vers `/logout`, le serveur gère le reste.
+
+Parce qu'on est dissident, on utilise l'API *fetch* de *JavaScript* (au lieu d'*AJAX*). L'avantage est surtout dans le fait qu'elle soit native au langage et facile à utiliser. De plus Martin avait déjà travaillé avec.
+
+Le WebSocket est donc utilisé tout au long de la partie (dans la phase de jeu essentiellement) :
+
+* Lors de l'actualisation de la page pour reconnecter le joueur;
+* Lors de la connection du joueur dans la *room*;
+* Lors de la déconnexion du joueur;
+* Lorsque les 2 joueurs sont connectés pour afficher la sélection des grilles de départ;
+* Pour la vérification des grilles, quand les 2 grilles sont validés pour lancer le jeu;
+* A chaque fois que le joueur joue, pour vérifier le coup sur le serveur et ensuite actualiser chaque client, changer de joueur, etc;
 * Savoir si une partie est terminée, montrer l'écran de fin de partie aux 2 joueurs.
-
-De plus, dans le projet nous n'utilisons pas ajax mais fetch car il nous semblait plus simple à prendre en main et Martin avait déjà travaillé avec.
 
 ## Back-end
 
