@@ -1,5 +1,7 @@
 # BattleSheep
 
+![Logo](public/img/BattleSheep_logo_neg.png)
+
 ## Requirements
 
 Our project requires :
